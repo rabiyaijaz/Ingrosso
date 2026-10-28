@@ -2,7 +2,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { clx } from "@medusajs/ui"
 import { DeviceFinder } from "@/components/catalog/DeviceFinder"
-import { PartGlyph } from "@/components/catalog/PartGlyph"
 import { Logo } from "@/components/brand/Logo"
 import { GradeTabs } from "@/components/marketing/GradeTabs"
 import { HeroStage } from "@/components/marketing/HeroStage"
@@ -45,11 +44,22 @@ const QUESTIONS = [
 
 const FRAGMENTS = [<FitFragment key="fit" />, <GradeFragment key="grade" />, <PriceFragment key="price" />, <ShipFragment key="ship" />]
 
+// One picture for the hero, then one per question, in order.
 const STAGE = [
-  { src: "/brand/crystal-desk.webp", alt: "The Ingrosso crystal mark standing on a workbench" },
-  { src: "/brand/mark-dark.webp", alt: "The Ingrosso mark as a glass tile on a dark ground" },
-  { src: "/brand/crystal-wordmark.webp", alt: "The crystal mark beside the Ingrosso wordmark", position: "18% 50%" },
-  { src: "/brand/mark-light.webp", alt: "The Ingrosso mark as a glass tile on a light ground" },
+  { src: "/brand/scene-office.webp", alt: "The Ingrosso mark on a glass plinth in a bright office" },
+  { src: "/brand/part-phone-layers.webp", alt: "A phone's housing, logic board and back glass separated in clear glass" },
+  { src: "/brand/shield.webp", alt: "A glass quality shield with a lit check mark" },
+  { src: "/brand/scene-network.webp", alt: "The Ingrosso mark on a plinth over a glowing world map" },
+  { src: "/brand/cargo-cube.webp", alt: "A clear shipping crate holding stacked parts" },
+]
+
+// Part tiles: the five part types with a picture, each linking to its category.
+const PART_TILES = [
+  { cat: "screens", label: "Screens", src: "/brand/part-screen.webp" },
+  { cat: "batteries", label: "Batteries", src: "/brand/part-battery.webp" },
+  { cat: "cameras", label: "Cameras", src: "/brand/part-camera.webp" },
+  { cat: "back-glass", label: "Back glass", src: "/brand/part-phone-layers.webp" },
+  { cat: "tools", label: "Tools", src: "/brand/part-tools.webp" },
 ]
 
 const SLIP = [
@@ -108,7 +118,7 @@ export default async function HomePage() {
           </div>
 
           {QUESTIONS.map((q, i) => (
-            <div key={q.title} data-stage={i} data-reveal className="flex min-h-[60svh] flex-col justify-center gap-5 py-12">
+            <div key={q.title} data-stage={i + 1} data-reveal className="flex min-h-[60svh] flex-col justify-center gap-5 py-12">
               <h2 className="max-w-[18ch] text-[clamp(30px,2.6vw,42px)] leading-[1.05] tracking-[-0.03em] font-medium">{q.title}</h2>
               <p className={clx(body, "max-w-[44ch] text-ig-ink-soft")}>{q.text}</p>
               <div className="max-w-[460px]">{FRAGMENTS[i]}</div>
@@ -132,7 +142,7 @@ export default async function HomePage() {
       {/* Grades: square plate, spare text */}
       <section className="mx-auto grid max-w-page items-center gap-10 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-2">
         <div className="relative mx-auto aspect-square w-full max-w-[640px] overflow-hidden" data-reveal>
-          <Image src="/brand/mark-dark.webp" alt="The Ingrosso glass mark, lit blue from within" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
+          <Image src="/brand/part-screen.webp" alt="A screen assembly separated into its glass, touch and display layers" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
           <div aria-hidden className="absolute inset-x-[10%] bottom-[7%] flex gap-[4px]">
             {Array.from({ length: 10 }, (_, i) => (
               <span key={i} className="h-3 flex-1 rounded-[2px]" style={{ background: `var(--ig-grade-${i + 1})` }} />
@@ -226,16 +236,24 @@ export default async function HomePage() {
           </div>
         </div>
         <div className="flex flex-col justify-center gap-6 lg:col-span-5 lg:col-start-8" data-reveal>
-          <div className="grid grid-cols-3 gap-3">
-            {["screens", "batteries", "cameras", "charging-ports", "back-glass", "tools"].map((c) => (
-              <Link key={c} href={routes.category(c)} aria-label={c.replace("-", " ")} className="grid aspect-square place-items-center bg-white transition-colors hover:bg-ig-blue-wash">
-                <PartGlyph category={c} className="size-[62%]" />
-              </Link>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {PART_TILES.map((t) => (
+              <li key={t.cat}>
+                <Link href={routes.category(t.cat)} className="group flex flex-col gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ig-blue">
+                  <span className="relative block aspect-square overflow-hidden bg-ig-slate">
+                    <Image src={t.src} alt="" fill sizes="(min-width:1024px) 14vw, 45vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
+                  </span>
+                  <span className={clx(small, "font-medium group-hover:text-ig-blue")}>{t.label}</span>
+                </Link>
+              </li>
             ))}
-          </div>
-          <p className={clx(statement, "max-w-[30ch]")}>
-            Start from the handset, or from the part: screens, batteries, cameras, ports, back glass and tools.
-          </p>
+            <li className="flex flex-col justify-end">
+              <p className={clx(small, "text-ig-ink-soft")}>
+                Or start from the handset on your bench.{" "}
+                <Link href={routes.devices()} className="font-medium text-ig-ink hover:text-ig-blue">Shop by device</Link>
+              </p>
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -275,7 +293,7 @@ export default async function HomePage() {
       {/* Closing photograph, text beside */}
       <section className="overflow-hidden bg-ig-slate text-ig-on-slate">
         <div className="relative h-[60svh] overflow-hidden lg:h-[86svh]">
-          <Image src="/brand/crystal-wordmark.webp" alt="The Ingrosso crystal mark and wordmark among floating glass discs" fill sizes="100vw" className="ig-drift object-cover object-[20%_50%]" />
+          <Image src="/brand/scene-office-wide.webp" alt="Glass Ingrosso tiles floating through a bright office" fill sizes="100vw" className="ig-drift object-cover" />
         </div>
         <div className="mx-auto grid max-w-page gap-8 px-[var(--ig-gutter)] py-16 lg:grid-cols-12 lg:py-24" data-reveal>
           <h2 className={clx(sectionTitle, "font-light lg:col-span-6")}>Apply once, buy at your price</h2>
@@ -291,7 +309,7 @@ export default async function HomePage() {
       {/* Footer: photograph half, menu half */}
       <footer className="grid bg-ig-paper lg:min-h-[100svh] lg:grid-cols-2">
         <div className="relative h-[50svh] overflow-hidden lg:h-auto">
-          <Image src="/brand/mark-light.webp" alt="The Ingrosso glass mark, close up" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover object-[30%_60%] scale-[1.35]" />
+          <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" />
         </div>
         <div className="flex flex-col justify-between gap-16 px-[var(--ig-gutter)] py-14 lg:px-[6vw] lg:pt-20">
           <div className="flex flex-col gap-10">

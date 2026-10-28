@@ -16,7 +16,7 @@ import { LOCALES } from "@/lib/routes"
 export const metadata: Metadata = {
   title: { default: "Ingrosso — Trade repair parts", template: "%s · Ingrosso" },
   description: "Trade-only wholesale of phone and tablet repair parts, in every quality grade.",
-  icons: { icon: "/brand/mark-dark.webp" },
+  icons: { icon: "/brand/logo.webp" },
   // Preview builds stay out of search results until launch (BRD gate level 6).
   robots: { index: false, follow: false },
 }

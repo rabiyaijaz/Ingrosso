@@ -16,7 +16,7 @@ export default function SignInPage() {
         <SignInForm />
       </div>
       <div className="hidden overflow-hidden rounded-panel md:block">
-        <Image src="/brand/crystal-wordmark.webp" alt="The Ingrosso crystal mark beside the wordmark" width={1376} height={768} className="h-[520px] w-full object-cover object-left" />
+        <Image src="/brand/scene-space-wide.webp" alt="Glass Ingrosso tiles floating against a starfield" width={2400} height={1018} className="h-[520px] w-full object-cover" />
       </div>
     </PageContainer>
   )

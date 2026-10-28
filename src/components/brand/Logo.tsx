@@ -16,7 +16,7 @@ export function Logo({ tone = "light", size = "md", href = routes.home(), classN
         style={{ width: mark, height: mark, borderRadius: mark * 0.28 }}
       >
         <Image
-          src="/brand/mark-dark.webp"
+          src="/brand/logo.webp"
           alt=""
           width={mark * 2}
           height={mark * 2}
