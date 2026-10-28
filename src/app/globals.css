@@ -107,6 +107,68 @@ body {
   unicode-bidi: plaintext;
 }
 
+/*
+  Glass grade icon: a frosted tile with a top sheen and an inner edge, in the
+  brand's glass style. data-family sets the tint: Genuine is a solid glass of
+  the accent, Aftermarket a clear glass with an accent glyph, Third-party a
+  clear glass with a muted glyph. Colours come from tokens, so every theme
+  re-tints it.
+*/
+.ig-glass-icon {
+  --glass-hi: rgba(255, 255, 255, 0.95);
+  --glass-lo: color-mix(in srgb, var(--ig-blue) 12%, white);
+  --glass-ring: color-mix(in srgb, var(--ig-blue) 22%, transparent);
+  --glass-shadow: color-mix(in srgb, var(--ig-blue) 28%, transparent);
+  --glass-ink: var(--ig-blue);
+  position: relative;
+  isolation: isolate;
+  color: var(--glass-ink);
+  background: linear-gradient(150deg, var(--glass-hi) 0%, var(--glass-lo) 100%);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-ring),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(15, 22, 32, 0.08),
+    0 6px 14px -6px var(--glass-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+/* Top sheen, like light across the face of the glass */
+.ig-glass-icon::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 52%);
+  pointer-events: none;
+}
+.ig-glass-icon svg {
+  display: block;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--glass-ink) 35%, transparent));
+}
+.ig-glass-icon[data-family="Genuine"] {
+  --glass-hi: color-mix(in srgb, var(--ig-blue) 55%, white);
+  --glass-lo: var(--ig-blue);
+  --glass-ring: rgba(255, 255, 255, 0.35);
+  --glass-shadow: color-mix(in srgb, var(--ig-blue) 50%, transparent);
+  --glass-ink: var(--ig-on-accent);
+}
+.ig-glass-icon[data-family="Third-party"] {
+  --glass-lo: color-mix(in srgb, var(--ig-ink) 7%, white);
+  --glass-ring: color-mix(in srgb, var(--ig-ink) 12%, transparent);
+  --glass-shadow: color-mix(in srgb, var(--ig-ink) 18%, transparent);
+  --glass-ink: var(--ig-ink-soft);
+}
+/* Dark themes: clear glass is a light film over the dark ground */
+[data-theme] .ig-glass-icon:not([data-family="Genuine"]) {
+  --glass-hi: rgba(255, 255, 255, 0.16);
+  --glass-lo: rgba(255, 255, 255, 0.04);
+  --glass-ring: rgba(255, 255, 255, 0.14);
+  --glass-shadow: rgba(0, 0, 0, 0.5);
+}
+[data-theme] .ig-glass-icon { box-shadow: inset 0 0 0 1px var(--glass-ring), inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 6px 14px -6px var(--glass-shadow); }
+[data-theme] .ig-glass-icon::before { background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 52%); }
+
 /* One moving picture: a slow drift on the closing photograph */
 @media (prefers-reduced-motion: no-preference) {
   .ig-drift {

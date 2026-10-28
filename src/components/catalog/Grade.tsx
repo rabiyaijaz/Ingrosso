@@ -32,18 +32,20 @@ const ICONS: Record<GradeId, React.ComponentType<{ className?: string }>> = {
 
 export const FAMILIES: Grade["family"][] = ["Genuine", "Aftermarket", "Third-party"]
 
-const TILE: Record<Grade["family"], string> = {
-  Genuine: "bg-ig-blue text-ig-on-accent",
-  Aftermarket: "bg-ig-blue-wash text-ig-blue",
-  "Third-party": "bg-ui-bg-component text-ui-fg-subtle",
+// Box and glyph sizes, glyph about 70% of the tile and centred on both axes.
+const SIZES = {
+  xs: "size-4 rounded-[5px] [&_svg]:size-3",
+  sm: "size-5 rounded-[6px] [&_svg]:size-3.5",
+  md: "size-7 rounded-[9px] [&_svg]:size-5",
+  lg: "size-11 rounded-[13px] [&_svg]:size-7",
 }
 
-export function GradeIcon({ grade, size = "sm", className }: { grade: GradeId; size?: "xs" | "sm" | "md" | "lg"; className?: string }) {
+// The grade's glass icon tile (styles: .ig-glass-icon in globals.css).
+export function GradeIcon({ grade, size = "sm", className }: { grade: GradeId; size?: keyof typeof SIZES; className?: string }) {
   const g = gradeById(grade)
   const Icon = ICONS[grade]
-  const box = { xs: "size-4 rounded-[4px] [&_svg]:size-3", sm: "size-5 rounded-[5px] [&_svg]:size-3.5", md: "size-7 rounded-md [&_svg]:size-4", lg: "size-11 rounded-lg [&_svg]:size-6" }[size]
   return (
-    <span aria-hidden className={clx("inline-grid shrink-0 place-items-center", box, TILE[g.family], className)}>
+    <span aria-hidden data-family={g.family} className={clx("ig-glass-icon inline-flex shrink-0 items-center justify-center", SIZES[size], className)}>
       <Icon />
     </span>
   )

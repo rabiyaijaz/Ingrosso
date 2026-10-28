@@ -32,8 +32,8 @@ export function GradeTabs() {
       </div>
       <ul id="grade-panel" role="tabpanel" className="flex flex-col gap-5">
         {GRADES.filter((g) => g.family === family).map((g) => (
-          <li key={g.id} className="grid grid-cols-[28px_1fr] gap-x-4">
-            <GradeIcon grade={g.id} size="md" className="mt-0.5" />
+          <li key={g.id} className="flex items-center gap-4">
+            <GradeIcon grade={g.id} size="lg" />
             <span>
               <span className="block text-[18px] font-medium leading-7 text-ig-ink">{g.label}</span>
               <span className="block max-w-[44ch] text-[15px] leading-6 text-ig-ink-soft">{g.summary}</span>

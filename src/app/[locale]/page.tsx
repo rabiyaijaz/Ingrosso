@@ -7,8 +7,7 @@ import { GradeTabs } from "@/components/marketing/GradeTabs"
 import { HeroStage } from "@/components/marketing/HeroStage"
 import { FitFragment, GradeFragment, PriceFragment, ShipFragment } from "@/components/marketing/QuestionFragments"
 import { PillLink, body, display, sectionTitle, small, statement } from "@/components/marketing/Primitives"
-import { BRANDS, GRADES, partCount } from "@/lib/catalog"
-import { GradeIcon } from "@/components/catalog/Grade"
+import { BRANDS, partCount } from "@/lib/catalog"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 
@@ -146,11 +145,6 @@ export default async function HomePage() {
       <section className="mx-auto grid max-w-page items-center gap-10 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-2">
         <div className="relative mx-auto aspect-square w-full max-w-[640px] overflow-hidden" data-reveal>
           <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
-          <div aria-hidden className="absolute inset-x-[6%] bottom-[6%] flex justify-between gap-1">
-            {GRADES.map((g) => (
-              <GradeIcon key={g.id} grade={g.id} size="lg" />
-            ))}
-          </div>
         </div>
         <div className="flex min-h-[560px] flex-col justify-between gap-10" data-reveal>
           <GradeTabs />
