@@ -44,22 +44,24 @@ const QUESTIONS = [
 
 const FRAGMENTS = [<FitFragment key="fit" />, <GradeFragment key="grade" />, <PriceFragment key="price" />, <ShipFragment key="ship" />]
 
-// One picture for the hero, then one per question, in order.
+// Landing imagery is Ingrosso logo scenes only (public/brand). Part renders
+// live in public/icons and are used as icons, never as page imagery.
+// One scene for the hero, then one per question, in order.
 const STAGE = [
   { src: "/brand/scene-office.webp", alt: "The Ingrosso mark on a glass plinth in a bright office" },
-  { src: "/brand/part-phone-layers.webp", alt: "A phone's housing, logic board and back glass separated in clear glass" },
-  { src: "/brand/shield.webp", alt: "A glass quality shield with a lit check mark" },
+  { src: "/brand/mark-glass.webp", alt: "The Ingrosso mark as a frosted glass tile" },
+  { src: "/brand/mark-glow.webp", alt: "The Ingrosso mark lit from within on a dark ground" },
   { src: "/brand/scene-network.webp", alt: "The Ingrosso mark on a plinth over a glowing world map" },
-  { src: "/brand/cargo-cube.webp", alt: "A clear shipping crate holding stacked parts" },
+  { src: "/brand/scene-space-wide.webp", alt: "Glass Ingrosso tiles floating against a starfield" },
 ]
 
-// Part tiles: the five part types with a picture, each linking to its category.
+// Part tiles: category icons, each linking to its category.
 const PART_TILES = [
-  { cat: "screens", label: "Screens", src: "/brand/part-screen.webp" },
-  { cat: "batteries", label: "Batteries", src: "/brand/part-battery.webp" },
-  { cat: "cameras", label: "Cameras", src: "/brand/part-camera.webp" },
-  { cat: "back-glass", label: "Back glass", src: "/brand/part-phone-layers.webp" },
-  { cat: "tools", label: "Tools", src: "/brand/part-tools.webp" },
+  { cat: "screens", label: "Screens", src: "/icons/part-screen.webp" },
+  { cat: "batteries", label: "Batteries", src: "/icons/part-battery.webp" },
+  { cat: "cameras", label: "Cameras", src: "/icons/part-camera.webp" },
+  { cat: "back-glass", label: "Back glass", src: "/icons/part-phone-layers.webp" },
+  { cat: "tools", label: "Tools", src: "/icons/part-tools.webp" },
 ]
 
 const SLIP = [
@@ -142,7 +144,7 @@ export default async function HomePage() {
       {/* Grades: square plate, spare text */}
       <section className="mx-auto grid max-w-page items-center gap-10 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-2">
         <div className="relative mx-auto aspect-square w-full max-w-[640px] overflow-hidden" data-reveal>
-          <Image src="/brand/part-screen.webp" alt="A screen assembly separated into its glass, touch and display layers" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
+          <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
           <div aria-hidden className="absolute inset-x-[10%] bottom-[7%] flex gap-[4px]">
             {Array.from({ length: 10 }, (_, i) => (
               <span key={i} className="h-3 flex-1 rounded-[2px]" style={{ background: `var(--ig-grade-${i + 1})` }} />
@@ -309,7 +311,7 @@ export default async function HomePage() {
       {/* Footer: photograph half, menu half */}
       <footer className="grid bg-ig-paper lg:min-h-[100svh] lg:grid-cols-2">
         <div className="relative h-[50svh] overflow-hidden lg:h-auto">
-          <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" />
+          <Image src="/brand/mark-glow.webp" alt="The Ingrosso mark lit from within, close up" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" />
         </div>
         <div className="flex flex-col justify-between gap-16 px-[var(--ig-gutter)] py-14 lg:px-[6vw] lg:pt-20">
           <div className="flex flex-col gap-10">
