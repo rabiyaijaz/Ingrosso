@@ -1,42 +1,135 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Ingrosso tokens — the one stylesheet (BRD R9 / NFR-06).
+  1. Brand tokens (--ig-*) used by marketing pages and custom components.
+  2. Medusa UI variable overrides, so every Medusa component takes the brand.
+  A reskin for another wholesaler changes this block and nothing else.
+*/
+:root:root {
+  /* Brand: cool silver paper, slate ink, crystal blue accent */
+  --ig-paper: #f1f3f6;
+  --ig-paper-2: #e6eaf0;
+  --ig-ink: #0f1620;
+  --ig-ink-soft: #4a5463;
+  --ig-blue: #1f5bff;
+  --ig-blue-ink: #1546d6;
+  --ig-blue-wash: #e9efff;
+  --ig-slate: #212934;
+  --ig-slate-2: #2b3441;
+  --ig-on-slate: #eef2f7;
+  --ig-on-slate-soft: #b3bdcb;
+
+  /* Grade ramp: genuine (deepest) to third-party (palest), one blue family */
+  --ig-grade-1: #0b2f99;
+  --ig-grade-2: #10399f;
+  --ig-grade-3: #1546d6;
+  --ig-grade-4: #1f5bff;
+  --ig-grade-5: #3f73ff;
+  --ig-grade-6: #5e89ff;
+  --ig-grade-7: #7d9fff;
+  --ig-grade-8: #9cb5ff;
+  --ig-grade-9: #bccbff;
+  --ig-grade-10: #d7e0ff;
+
+  --ig-radius-panel: 20px;
+  --ig-page-max: 1440px;
+  --ig-gutter: clamp(16px, 2.2vw, 32px);
+  --ig-header-h: 112px;
+
+  /* Medusa UI overrides (light theme) */
+  --bg-base: #ffffff;
+  --bg-base-hover: #f4f6f9;
+  --bg-base-pressed: #e6eaf0;
+  --bg-subtle: #f4f6f9;
+  --bg-subtle-hover: #eaeef3;
+  --bg-subtle-pressed: #e1e6ed;
+  --bg-component: #f4f6f9;
+  --bg-component-hover: #eaeef3;
+  --bg-component-pressed: #e1e6ed;
+  --bg-field: #f8f9fb;
+  --bg-field-hover: #f1f3f6;
+  --bg-field-component: #ffffff;
+  --bg-field-component-hover: #f8f9fb;
+  --bg-highlight: #e9efff;
+  --bg-highlight-hover: #dce6ff;
+  --bg-interactive: #1f5bff;
+  --bg-switch-off: #dfe4eb;
+  --bg-switch-off-hover: #cfd6df;
+
+  --fg-base: #0f1620;
+  --fg-subtle: #4a5463;
+  --fg-muted: #667183;
+  --fg-interactive: #1f5bff;
+  --fg-interactive-hover: #1546d6;
+
+  --border-base: #e1e5eb;
+  --border-strong: #cbd2db;
+  --border-interactive: #1f5bff;
+  --border-menu-top: #e1e5eb;
+
+  --button-inverted: #1f5bff;
+  --button-inverted-hover: #1546d6;
+  --button-inverted-pressed: #1239b0;
+
+  --contrast-bg-base: #212934;
+  --contrast-bg-base-hover: #2b3441;
+  --contrast-bg-subtle: #2b3441;
+
+  --tag-blue-bg: #e9efff;
+  --tag-blue-border: #c9d7ff;
+  --tag-blue-text: #1239b0;
+  --tag-blue-icon: #1f5bff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-ui-bg-base text-ui-fg-base font-sans antialiased;
+}
+
+/* Every figure — price, SKU, stock, quantity, order ref — aligns (NFR-05) */
+.ig-figure {
+  font-family: theme("fontFamily.mono");
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Arabic text resolves its own direction, layout never mirrors (I18N-07) */
+[lang="ar"] .ig-text {
+  unicode-bidi: plaintext;
+}
+
+/* One moving picture: a slow drift on the closing photograph */
+@media (prefers-reduced-motion: no-preference) {
+  .ig-drift {
+    animation: ig-drift 22s ease-in-out infinite alternate;
   }
 }
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+@keyframes ig-drift {
+  from { transform: scale(1.02) translateX(0); }
+  to { transform: scale(1.08) translateX(-1.5%); }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* Section entrances: content is visible without script, motion is additive */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
   }
+  .js [data-reveal].is-in > * {
+    opacity: 1;
+    transform: none;
+  }
+  .js [data-reveal].is-in > *:nth-child(2) { transition-delay: 80ms; }
+  .js [data-reveal].is-in > *:nth-child(3) { transition-delay: 160ms; }
+  .js [data-reveal].is-in > *:nth-child(4) { transition-delay: 240ms; }
+  .js [data-reveal].is-in > *:nth-child(5) { transition-delay: 320ms; }
 }

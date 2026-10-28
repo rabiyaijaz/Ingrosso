@@ -1,0 +1,143 @@
+import { Button, Heading, Text } from "@medusajs/ui"
+import { GradeBadge, GradeScale } from "@/components/catalog/Grade"
+import { PartGlyph } from "@/components/catalog/PartGlyph"
+import { Figure } from "@/components/commerce/Figure"
+import { GateCallout } from "@/components/commerce/GateCallout"
+import { PriceTag } from "@/components/commerce/PriceTag"
+import { QuantityBreaks } from "@/components/commerce/QuantityBreaks"
+import { StockTag } from "@/components/commerce/StockTag"
+import { Logo } from "@/components/brand/Logo"
+import { PageContainer, PageHeading } from "@/components/layout/Page"
+import { PillLink } from "@/components/marketing/Primitives"
+import { CATEGORIES, GRADES, productBySlug } from "@/lib/catalog"
+import { commercialView } from "@/lib/commerce"
+import { formatMoney } from "@/lib/money"
+import { routes } from "@/lib/routes"
+
+export const metadata = { title: "Design system" }
+
+const TOKENS = [
+  ["--ig-paper", "Paper"], ["--ig-paper-2", "Paper 2"], ["--ig-ink", "Ink"], ["--ig-ink-soft", "Ink soft"],
+  ["--ig-blue", "Crystal blue"], ["--ig-blue-ink", "Blue ink"], ["--ig-blue-wash", "Blue wash"],
+  ["--ig-slate", "Slate"], ["--ig-slate-2", "Slate 2"], ["--ig-on-slate", "On slate"],
+]
+
+// Living catalogue of every shared component and its states. Change a
+// component or a token and it changes here and everywhere it is used.
+export default function SystemPage() {
+  const sample = productBySlug("iphone-17-pro-max-screen-service-pack")!
+  const screws = productBySlug("iphone-17-series-bottom-pentalobe-screws")!
+  const approved = commercialView(sample, { state: "approved", priceLists: ["trade-standard"] })
+
+  return (
+    <PageContainer className="flex flex-col gap-16 pt-10">
+      <PageHeading title="Ingrosso design system" description="Medusa UI with Ingrosso tokens. Every component below is the one used in the app; tokens live in src/app/globals.css." />
+
+      <Block title="Brand">
+        <div className="flex flex-wrap items-center gap-8">
+          <Logo href={null} />
+          <Logo href={null} size="sm" />
+          <span className="rounded-xl bg-ig-slate p-3"><Logo href={null} tone="dark" /></span>
+        </div>
+      </Block>
+
+      <Block title="Colour tokens">
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {TOKENS.map(([v, label]) => (
+            <li key={v} className="flex flex-col gap-2">
+              <span className="h-16 rounded-lg shadow-borders-base" style={{ background: `var(${v})` }} />
+              <span className="txt-compact-small-plus">{label}</span>
+              <Figure className="txt-compact-xsmall text-ui-fg-muted">{v}</Figure>
+            </li>
+          ))}
+        </ul>
+      </Block>
+
+      <Block title="Grade ramp and badges">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap gap-2">{GRADES.map((g) => <GradeBadge key={g.id} grade={g.id} />)}</div>
+          <GradeScale grade="pulled" size="lg" className="max-w-[420px]" />
+        </div>
+      </Block>
+
+      <Block title="Price, every state">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+          <State label="Visitor"><PriceTag view={{ kind: "gated", reason: "visitor" }} /></State>
+          <State label="Pending"><PriceTag view={{ kind: "gated", reason: "pending" }} /></State>
+          <State label="Suspended"><PriceTag view={{ kind: "gated", reason: "suspended" }} /></State>
+          <State label="Masked"><PriceTag view={{ kind: "masked" }} /></State>
+          <State label="Approved"><PriceTag view={approved.price} /></State>
+        </div>
+        <Text size="small" className="mt-4 text-ui-fg-subtle">
+          Four decimals when a price is below a cent: <Figure>{formatMoney(screws.commercial.lists["trade-standard"][0].unit)}</Figure>
+        </Text>
+      </Block>
+
+      <Block title="Stock, three states">
+        <div className="flex flex-wrap gap-8">
+          <State label="Count"><StockTag view={{ kind: "count", available: 142 }} /></State>
+          <State label="Hidden (not approved)"><StockTag view={{ kind: "hidden" }} /></State>
+          <State label="Out of stock"><StockTag view={{ kind: "out" }} /></State>
+        </div>
+      </Block>
+
+      <Block title="Quantity breaks">
+        {approved.price.kind === "priced" && <QuantityBreaks breaks={approved.price.breaks} activeQty={10} className="max-w-[520px]" />}
+      </Block>
+
+      <Block title="Gate callouts">
+        <div className="grid gap-4 lg:grid-cols-3">
+          <GateCallout state="visitor" />
+          <GateCallout state="pending" />
+          <GateCallout state="suspended" />
+        </div>
+      </Block>
+
+      <Block title="Part drawings">
+        <ul className="flex flex-wrap gap-3">
+          {CATEGORIES.map((c) => (
+            <li key={c.slug} className="flex flex-col items-center gap-2">
+              <span className="grid size-20 place-items-center rounded-lg bg-ui-bg-subtle"><PartGlyph category={c.slug} className="size-14" /></span>
+              <span className="txt-compact-xsmall text-ui-fg-subtle">{c.plural}</span>
+            </li>
+          ))}
+        </ul>
+      </Block>
+
+      <Block title="Buttons">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap gap-3">
+            <Button>Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="transparent">Transparent</Button>
+            <Button variant="danger">Danger</Button>
+          </div>
+          <Text size="small" className="text-ui-fg-subtle">Working screens use Medusa buttons above. Marketing pages use the flat pill below.</Text>
+          <div className="flex flex-wrap gap-3 rounded-xl bg-ig-paper p-4">
+            <PillLink href={routes.apply()}>Accent</PillLink>
+            <PillLink href={routes.apply()} tone="ink">Ink</PillLink>
+            <PillLink href={routes.apply()} tone="quiet">Quiet</PillLink>
+          </div>
+        </div>
+      </Block>
+    </PageContainer>
+  )
+}
+
+function Block({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="flex flex-col gap-5">
+      <Heading level="h2" className="txt-xlarge-plus">{title}</Heading>
+      {children}
+    </section>
+  )
+}
+
+function State({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2 rounded-xl bg-ui-bg-base p-4 shadow-elevation-card-rest">
+      <span className="txt-compact-xsmall text-ui-fg-muted">{label}</span>
+      {children}
+    </div>
+  )
+}

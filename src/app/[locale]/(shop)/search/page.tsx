@@ -1,0 +1,30 @@
+import { ListingView } from "@/components/catalog/ListingView"
+import { PageContainer, PageHeading } from "@/components/layout/Page"
+import { searchProducts } from "@/lib/public"
+import { routes } from "@/lib/routes"
+import { getViewer } from "@/lib/viewer"
+
+export const metadata = { title: "Search" }
+
+export default async function SearchPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+  const sp = await searchParams
+  const q = (sp.q ?? "").slice(0, 80)
+  const viewer = await getViewer()
+  const products = searchProducts(q)
+
+  return (
+    <PageContainer className="flex flex-col gap-8 pt-8">
+      <PageHeading
+        title={q ? `Results for “${q}”` : "Search"}
+        description="Search matches part names, model codes such as A3526 or SM-S938B, and SKUs."
+      />
+      <ListingView
+        products={products}
+        viewer={viewer}
+        params={{ grade: sp.grade, cat: sp.cat, brand: sp.brand }}
+        hrefFor={(fp) => `${routes.search(q)}${Object.entries(fp).filter(([, v]) => v).map(([k, v]) => `&${k}=${encodeURIComponent(v!)}`).join("")}`}
+        facets={["cat", "brand"]}
+      />
+    </PageContainer>
+  )
+}
