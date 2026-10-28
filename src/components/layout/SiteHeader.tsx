@@ -8,6 +8,7 @@ import { readCart } from "@/lib/cart"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 import { getViewer } from "@/lib/viewer"
+import { CategoryNav } from "./CategoryNav"
 import { CutoffCountdown } from "./CutoffCountdown"
 import { DeviceMenu } from "./DeviceMenu"
 import { SearchBox } from "./SearchBox"
@@ -71,25 +72,7 @@ export async function SiteHeader() {
         <SearchBox />
       </div>
 
-      <nav aria-label="Categories" className="bg-ui-bg-subtle">
-        <ul className="mx-auto flex h-11 max-w-page items-center gap-1 overflow-x-auto px-[calc(var(--ig-gutter)-12px)] txt-compact-small">
-          {CATEGORIES.map((c) => (
-            <li key={c.slug}>
-              <Link
-                href={routes.category(c.slug)}
-                className="flex h-8 items-center whitespace-nowrap rounded-full px-3 text-ui-fg-subtle hover:bg-ui-bg-base hover:text-ui-fg-base"
-              >
-                {c.plural}
-              </Link>
-            </li>
-          ))}
-          <li className="ml-auto">
-            <Link href={routes.grades()} className="flex h-8 items-center whitespace-nowrap rounded-full px-3 text-ui-fg-interactive hover:bg-ui-bg-base">
-              How we grade parts
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <CategoryNav categories={CATEGORIES.map(({ slug, plural }) => ({ slug, plural }))} />
     </header>
   )
 }
