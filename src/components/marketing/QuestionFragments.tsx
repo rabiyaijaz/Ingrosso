@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { MagnifyingGlass, LockClosedSolid, Clock } from "@medusajs/icons"
 import { GradeBadge, GradeScale } from "@/components/catalog/Grade"
 import { Figure } from "@/components/commerce/Figure"
@@ -16,13 +16,13 @@ export function FitFragment() {
   const parts = PRODUCTS.filter((p) => p.models.includes(ref.model.slug)).length
   return (
     <div data-ui className={frame}>
-      <div className="flex h-11 items-center gap-2 rounded-full bg-white px-4 txt-compact-small shadow-borders-base">
+      <div className="flex h-11 items-center gap-2 rounded-full bg-ig-surface px-4 txt-compact-small shadow-borders-base">
         <MagnifyingGlass className="text-ui-fg-muted" />
         <Figure>SM-S938B</Figure>
       </div>
       <Link
         href={routes.model(ref.brand.slug, ref.series.slug, ref.model.slug)}
-        className="mt-2 flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 hover:bg-ig-blue-wash"
+        className="mt-2 flex items-center justify-between gap-3 rounded-xl bg-ig-surface px-4 py-3 hover:bg-ig-blue-wash"
       >
         <span>
           <span className="block txt-compact-small-plus">{ref.model.name}</span>
@@ -40,7 +40,7 @@ export function GradeFragment() {
     <ul data-ui className={`${frame} flex flex-col gap-2`}>
       {siblings.slice(0, 4).map((p) => (
         <li key={p.slug}>
-          <Link href={routes.product(p.slug)} className="grid grid-cols-[150px_1fr] items-center gap-4 rounded-xl bg-white px-4 py-3 hover:bg-ig-blue-wash">
+          <Link href={routes.product(p.slug)} className="grid grid-cols-[150px_1fr] items-center gap-4 rounded-xl bg-ig-surface px-4 py-3 hover:bg-ig-blue-wash">
             <GradeBadge grade={p.grade!} className="w-fit" />
             <GradeScale grade={p.grade!} />
           </Link>
@@ -58,7 +58,7 @@ export function PriceFragment() {
   const rows = ["1–4", "5–9", "10–24", "25+"]
   return (
     <div data-ui className={frame}>
-      <div className="overflow-hidden rounded-xl bg-white">
+      <div className="overflow-hidden rounded-xl bg-ig-surface">
         <div className="grid grid-cols-2 px-4 py-2 txt-compact-small-plus text-ui-fg-muted">
           <span>Quantity</span>
           <span className="text-right">Your price</span>
@@ -79,7 +79,7 @@ export function PriceFragment() {
 export function ShipFragment() {
   return (
     <div data-ui className={`${frame} flex items-center gap-4`}>
-      <span className="grid size-12 shrink-0 place-items-center rounded-full bg-ig-blue text-white">
+      <span className="grid size-12 shrink-0 place-items-center rounded-full bg-ig-blue text-ig-on-accent">
         <Clock />
       </span>
       <span className="txt-medium-plus text-ig-ink"><CutoffCountdown /></span>

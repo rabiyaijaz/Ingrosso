@@ -3,11 +3,12 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
-import { Button, DropdownMenu, clx, toast } from "@medusajs/ui"
+import { Button, DropdownMenu, Select, clx, toast } from "@medusajs/ui"
 import { ArrowPath, ChevronDown, XMark } from "@medusajs/icons"
-import { resetPrototype, setCartLine, setViewerState } from "@/app/actions"
+import { resetPrototype, setCartLine, setLabTheme, setViewerState } from "@/app/actions"
 import { PreviewAs } from "@/components/layout/PreviewAs"
 import { routes } from "@/lib/routes"
+import { THEMES, type ThemeId } from "@/lib/themes"
 import type { ViewerState } from "@/lib/viewer-states"
 
 const SAMPLE_PART = { slug: "iphone-17-pro-max-screen-pulled", name: "iPhone 17 Pro Max screen, pulled original" }
@@ -26,7 +27,7 @@ const JUMPS: { label: string; href: string }[] = [
 
 // Floating design-lab toolbar: switch account state, take the next step of a
 // flow without filling forms, jump anywhere, reset. Lab builds only.
-export function LabBar({ state, cartLines }: { state: ViewerState; cartLines: number }) {
+export function LabBar({ state, cartLines, theme }: { state: ViewerState; cartLines: number; theme: ThemeId }) {
   const router = useRouter()
   const [open, setOpen] = useState(true)
   const [pending, start] = useTransition()
@@ -91,6 +92,19 @@ export function LabBar({ state, cartLines }: { state: ViewerState; cartLines: nu
         <span className="size-2 rounded-full bg-ig-blue" aria-hidden /> Design lab
       </span>
       <PreviewAs state={state} />
+      <label className="flex items-center gap-2">
+        <span className="whitespace-nowrap txt-compact-small text-ig-on-slate-soft">Theme</span>
+        <Select size="small" value={theme} onValueChange={(v) => run(() => setLabTheme(v as ThemeId))}>
+          <Select.Trigger aria-label="Theme" className="h-6 min-w-[140px] bg-ig-slate-2 text-ig-on-slate shadow-none">
+            <Select.Value />
+          </Select.Trigger>
+          <Select.Content>
+            {THEMES.map((t) => (
+              <Select.Item key={t.id} value={t.id}>{t.label}</Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      </label>
       <div className="flex flex-wrap items-center gap-2">{next}</div>
       <div className="ml-auto flex items-center gap-1">
         <DropdownMenu>

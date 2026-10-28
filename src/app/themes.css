@@ -1,0 +1,348 @@
+/*
+  Ingrosso colour themes. Each theme is switched on by <html data-theme="…">
+  together with Medusa's .dark class, and redefines:
+    1. the Ingrosso tokens (--ig-*) used by every custom component;
+    2. the Medusa UI variables, so every Medusa component follows;
+    3. a small effects layer (page canvas, card surfaces, buttons, fields).
+  With no data-theme attribute nothing here applies, and the light theme in
+  globals.css is what renders. The lab toolbar switches between them.
+*/
+
+/* ───────────────────────── 1 · Cobalt glass ───────────────────────── */
+:root:root[data-theme="cobalt"] {
+  --ig-canvas:
+    radial-gradient(1200px 800px at 12% -10%, rgba(64, 128, 255, 0.38), transparent 60%),
+    radial-gradient(900px 700px at 100% 18%, rgba(24, 70, 210, 0.45), transparent 62%),
+    radial-gradient(1100px 900px at 50% 115%, rgba(12, 36, 130, 0.65), transparent 60%),
+    linear-gradient(180deg, #04070f 0%, #061131 45%, #0a1a4d 100%);
+  --ig-paper: rgba(14, 28, 70, 0.42);
+  --ig-paper-2: rgba(24, 46, 108, 0.5);
+  --ig-surface: rgba(255, 255, 255, 0.07);
+  --ig-on-accent: #ffffff;
+  --ig-ink: #eef3ff;
+  --ig-ink-soft: #a9b8de;
+  --ig-blue: #3d7bff;
+  --ig-blue-ink: #6b9bff;
+  --ig-blue-wash: rgba(61, 123, 255, 0.18);
+  --ig-slate: rgba(3, 8, 24, 0.7);
+  --ig-slate-2: rgba(36, 60, 128, 0.6);
+  --ig-on-slate: #eef3ff;
+  --ig-on-slate-soft: #9fb0d8;
+  --ig-glow: rgba(47, 107, 255, 0.55);
+  --ig-edge: rgba(140, 175, 255, 0.2);
+
+  --ig-grade-1: #8db4ff; --ig-grade-2: #7aa5ff; --ig-grade-3: #6696ff; --ig-grade-4: #5287ff;
+  --ig-grade-5: #4277f0; --ig-grade-6: #3867d6; --ig-grade-7: #2f58b8; --ig-grade-8: #284a9a;
+  --ig-grade-9: #213d7d; --ig-grade-10: #1b3163;
+
+  --bg-base: rgba(12, 22, 54, 0.7);
+  --bg-base-hover: rgba(44, 70, 140, 0.45);
+  --bg-base-pressed: rgba(44, 70, 140, 0.6);
+  --bg-subtle: rgba(255, 255, 255, 0.05);
+  --bg-subtle-hover: rgba(255, 255, 255, 0.09);
+  --bg-subtle-pressed: rgba(255, 255, 255, 0.12);
+  --bg-component: rgba(255, 255, 255, 0.06);
+  --bg-component-hover: rgba(255, 255, 255, 0.1);
+  --bg-component-pressed: rgba(255, 255, 255, 0.14);
+  --bg-field: rgba(4, 10, 30, 0.55);
+  --bg-field-hover: rgba(4, 10, 30, 0.7);
+  --bg-field-component: rgba(4, 10, 30, 0.6);
+  --bg-field-component-hover: rgba(4, 10, 30, 0.75);
+  --bg-highlight: rgba(61, 123, 255, 0.2);
+  --bg-highlight-hover: rgba(61, 123, 255, 0.28);
+  --bg-interactive: #3d7bff;
+  --bg-switch-off: rgba(255, 255, 255, 0.14);
+  --bg-switch-off-hover: rgba(255, 255, 255, 0.2);
+  --fg-base: #eef3ff;
+  --fg-subtle: #a9b8de;
+  --fg-muted: #7d8fbf;
+  --fg-interactive: #8db4ff;
+  --fg-interactive-hover: #b5ceff;
+  --border-base: rgba(140, 175, 255, 0.16);
+  --border-strong: rgba(140, 175, 255, 0.28);
+  --border-interactive: #5b8cff;
+  --border-menu-top: rgba(140, 175, 255, 0.16);
+  --button-inverted: #2f6bff;
+  --button-inverted-hover: #3d7bff;
+  --button-inverted-pressed: #1f55e0;
+  --button-neutral: rgba(255, 255, 255, 0.07);
+  --button-neutral-hover: rgba(255, 255, 255, 0.12);
+  --button-neutral-pressed: rgba(255, 255, 255, 0.16);
+  --contrast-bg-base: #050a1c;
+  --contrast-bg-base-hover: #0c1838;
+  --contrast-bg-subtle: #0c1838;
+  --tag-blue-bg: rgba(61, 123, 255, 0.2);
+  --tag-blue-border: rgba(61, 123, 255, 0.4);
+  --tag-blue-text: #b5ceff;
+  --tag-blue-icon: #6b9bff;
+}
+
+/* ───────────────────────── 2 · Obsidian neon ───────────────────────── */
+:root:root[data-theme="obsidian"] {
+  --ig-canvas:
+    radial-gradient(800px 520px at 88% -12%, rgba(25, 245, 163, 0.14), transparent 60%),
+    radial-gradient(700px 600px at -5% 105%, rgba(0, 200, 140, 0.09), transparent 60%),
+    linear-gradient(180deg, #060809 0%, #0a0d10 50%, #07090a 100%);
+  --ig-paper: #0e1215;
+  --ig-paper-2: #13181c;
+  --ig-surface: #161c21;
+  --ig-on-accent: #02140c;
+  --ig-ink: #eaf2ef;
+  --ig-ink-soft: #9aa8a3;
+  --ig-blue: #19f5a3;
+  --ig-blue-ink: #5dffc2;
+  --ig-blue-wash: rgba(25, 245, 163, 0.12);
+  --ig-slate: #050607;
+  --ig-slate-2: #12171b;
+  --ig-on-slate: #eaf2ef;
+  --ig-on-slate-soft: #8c9a95;
+  --ig-glow: rgba(25, 245, 163, 0.4);
+  --ig-edge: #222b31;
+
+  --ig-grade-1: #2dffb3; --ig-grade-2: #22eaa3; --ig-grade-3: #1cd394; --ig-grade-4: #18bb84;
+  --ig-grade-5: #15a374; --ig-grade-6: #138b64; --ig-grade-7: #117455; --ig-grade-8: #0f5e46;
+  --ig-grade-9: #0d4a38; --ig-grade-10: #0b382b;
+
+  --bg-base: #0e1215;
+  --bg-base-hover: #151b20;
+  --bg-base-pressed: #1b2329;
+  --bg-subtle: #13181c;
+  --bg-subtle-hover: #192026;
+  --bg-subtle-pressed: #1f282e;
+  --bg-component: #161c21;
+  --bg-component-hover: #1c242a;
+  --bg-component-pressed: #222b32;
+  --bg-field: #0a0d10;
+  --bg-field-hover: #0f1418;
+  --bg-field-component: #0c1013;
+  --bg-field-component-hover: #11171b;
+  --bg-highlight: rgba(25, 245, 163, 0.1);
+  --bg-highlight-hover: rgba(25, 245, 163, 0.16);
+  --bg-interactive: #19f5a3;
+  --bg-switch-off: #222b31;
+  --bg-switch-off-hover: #2c373e;
+  --fg-base: #eaf2ef;
+  --fg-subtle: #9aa8a3;
+  --fg-muted: #6c7975;
+  --fg-interactive: #2dffb3;
+  --fg-interactive-hover: #8cffd6;
+  --border-base: #1f272d;
+  --border-strong: #2c373e;
+  --border-interactive: #19f5a3;
+  --border-menu-top: #1f272d;
+  --button-inverted: #19f5a3;
+  --button-inverted-hover: #3dffb8;
+  --button-inverted-pressed: #12d18a;
+  --button-neutral: #151b20;
+  --button-neutral-hover: #1b2329;
+  --button-neutral-pressed: #222b32;
+  --contrast-bg-base: #040506;
+  --contrast-bg-base-hover: #0e1215;
+  --contrast-bg-subtle: #0e1215;
+  --tag-blue-bg: rgba(25, 245, 163, 0.12);
+  --tag-blue-border: rgba(25, 245, 163, 0.35);
+  --tag-blue-text: #8cffd6;
+  --tag-blue-icon: #19f5a3;
+}
+
+/* ───────────────────────── 3 · Luxe amber ───────────────────────── */
+:root:root[data-theme="amber"] {
+  --ig-canvas:
+    radial-gradient(900px 620px at 82% -12%, rgba(224, 150, 72, 0.22), transparent 60%),
+    radial-gradient(800px 700px at -5% 110%, rgba(184, 112, 52, 0.16), transparent 60%),
+    linear-gradient(180deg, #0b181d 0%, #10232a 50%, #0a161b 100%);
+  --ig-paper: #122630;
+  --ig-paper-2: #173039;
+  --ig-surface: #1a343d;
+  --ig-on-accent: #1d1206;
+  --ig-ink: #f4ebe0;
+  --ig-ink-soft: #c2b4a3;
+  --ig-blue: #e0a15a;
+  --ig-blue-ink: #f0bb7a;
+  --ig-blue-wash: rgba(224, 161, 90, 0.14);
+  --ig-slate: #081216;
+  --ig-slate-2: #13262d;
+  --ig-on-slate: #f4ebe0;
+  --ig-on-slate-soft: #a99c8c;
+  --ig-glow: rgba(224, 161, 90, 0.45);
+  --ig-edge: rgba(240, 200, 150, 0.14);
+
+  --ig-grade-1: #f2c48a; --ig-grade-2: #e8b273; --ig-grade-3: #de9f5e; --ig-grade-4: #d18c4c;
+  --ig-grade-5: #c27a3f; --ig-grade-6: #ad6a37; --ig-grade-7: #955b31; --ig-grade-8: #7c4c2b;
+  --ig-grade-9: #643f26; --ig-grade-10: #4e3221;
+
+  --bg-base: #142a32;
+  --bg-base-hover: #1a343d;
+  --bg-base-pressed: #203d47;
+  --bg-subtle: #10232a;
+  --bg-subtle-hover: #163039;
+  --bg-subtle-pressed: #1b3842;
+  --bg-component: #1a343d;
+  --bg-component-hover: #203d47;
+  --bg-component-pressed: #264651;
+  --bg-field: #0d1d23;
+  --bg-field-hover: #11252c;
+  --bg-field-component: #0f2128;
+  --bg-field-component-hover: #13282f;
+  --bg-highlight: rgba(224, 161, 90, 0.13);
+  --bg-highlight-hover: rgba(224, 161, 90, 0.2);
+  --bg-interactive: #e0a15a;
+  --bg-switch-off: #24414b;
+  --bg-switch-off-hover: #2c4d58;
+  --fg-base: #f4ebe0;
+  --fg-subtle: #c2b4a3;
+  --fg-muted: #8f8577;
+  --fg-interactive: #f0bb7a;
+  --fg-interactive-hover: #f7d3a6;
+  --border-base: rgba(240, 200, 150, 0.12);
+  --border-strong: rgba(240, 200, 150, 0.22);
+  --border-interactive: #e0a15a;
+  --border-menu-top: rgba(240, 200, 150, 0.12);
+  --button-inverted: #d18c4c;
+  --button-inverted-hover: #e0a15a;
+  --button-inverted-pressed: #b8763b;
+  --button-neutral: #18313a;
+  --button-neutral-hover: #1e3b45;
+  --button-neutral-pressed: #24454f;
+  --contrast-bg-base: #071014;
+  --contrast-bg-base-hover: #10232a;
+  --contrast-bg-subtle: #10232a;
+  --tag-blue-bg: rgba(224, 161, 90, 0.14);
+  --tag-blue-border: rgba(224, 161, 90, 0.35);
+  --tag-blue-text: #f7d3a6;
+  --tag-blue-icon: #e0a15a;
+}
+
+/* ───────────────────────── Shared effects layer ───────────────────────── */
+
+/* Page canvas: the gradient sits behind everything, fixed while scrolling */
+[data-theme] body {
+  background: var(--ig-canvas);
+  background-attachment: fixed;
+  color: var(--ig-ink);
+}
+
+/* Primary buttons: Medusa primary + the marketing accent pill */
+[data-theme] .bg-ui-button-inverted,
+[data-theme] .ig-btn-primary {
+  color: var(--ig-on-accent);
+  transition: transform 120ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+[data-theme] .bg-ui-button-inverted svg { color: inherit; }
+[data-theme] .bg-ui-button-inverted:hover,
+[data-theme] .ig-btn-primary:hover { filter: brightness(1.08); }
+[data-theme] .bg-ui-button-inverted:active,
+[data-theme] .ig-btn-primary:active { transform: translateY(1px); }
+
+/* Secondary buttons: Medusa secondary + the marketing quiet pills */
+[data-theme] .bg-ui-button-neutral,
+[data-theme] .ig-btn-secondary {
+  transition: transform 120ms ease, box-shadow 160ms ease;
+}
+[data-theme] .bg-ui-button-neutral:active,
+[data-theme] .ig-btn-secondary:active { transform: translateY(1px); }
+
+/* 1 · Cobalt glass: multi-stop blue, top bevel, layered ambient shadow */
+[data-theme="cobalt"] .bg-ui-button-inverted,
+[data-theme="cobalt"] .ig-btn-primary {
+  background-image: linear-gradient(180deg, #6a9dff 0%, #3a76ff 42%, #2a62f0 70%, #1c4fd2 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 10px 28px -8px var(--ig-glow);
+}
+[data-theme="cobalt"] .bg-ui-button-inverted:active,
+[data-theme="cobalt"] .ig-btn-primary:active {
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 2px 8px -2px var(--ig-glow);
+}
+[data-theme="cobalt"] .bg-ui-button-neutral,
+[data-theme="cobalt"] .ig-btn-secondary {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 1px var(--ig-edge), 0 8px 20px -10px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+}
+[data-theme="cobalt"] .bg-ui-button-neutral:active,
+[data-theme="cobalt"] .ig-btn-secondary:active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--ig-edge);
+}
+/* Frosted panels with a luminous edge */
+[data-theme="cobalt"] .shadow-elevation-card-rest,
+[data-theme="cobalt"] .bg-ig-surface,
+[data-theme="cobalt"] .bg-ig-paper,
+[data-theme="cobalt"] .bg-ig-paper-2,
+[data-theme="cobalt"] header {
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+[data-theme="cobalt"] .shadow-elevation-card-rest,
+[data-theme="cobalt"] .rounded-panel.bg-ig-surface {
+  box-shadow: 0 0 0 1px var(--ig-edge), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 24px 48px -24px rgba(0, 0, 0, 0.7);
+}
+[data-theme="cobalt"] .bg-ui-bg-field {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--ig-edge);
+}
+
+/* 2 · Obsidian neon: glossy face, crisp edge, luminous glow ring */
+[data-theme="obsidian"] .bg-ui-button-inverted,
+[data-theme="obsidian"] .ig-btn-primary {
+  background-image: linear-gradient(180deg, #7affd0 0%, #19f5a3 48%, #10d58c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 0 0 1px rgba(25, 245, 163, 0.7),
+    0 0 0 4px rgba(25, 245, 163, 0.12),
+    0 0 26px rgba(25, 245, 163, 0.35);
+}
+[data-theme="obsidian"] .bg-ui-button-inverted:active,
+[data-theme="obsidian"] .ig-btn-primary:active {
+  box-shadow: inset 0 2px 4px rgba(0, 60, 35, 0.45), 0 0 0 1px rgba(25, 245, 163, 0.7), 0 0 14px rgba(25, 245, 163, 0.3);
+}
+[data-theme="obsidian"] .bg-ui-button-neutral,
+[data-theme="obsidian"] .ig-btn-secondary {
+  background-image: linear-gradient(180deg, #1c242a 0%, #11161a 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 0 1px var(--ig-edge);
+}
+[data-theme="obsidian"] .bg-ui-button-neutral:hover,
+[data-theme="obsidian"] .ig-btn-secondary:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(25, 245, 163, 0.55), 0 0 18px rgba(25, 245, 163, 0.18);
+}
+[data-theme="obsidian"] .shadow-elevation-card-rest,
+[data-theme="obsidian"] .rounded-panel.bg-ig-surface {
+  box-shadow: 0 0 0 1px var(--ig-edge), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 20px 40px -24px rgba(0, 0, 0, 0.8);
+}
+[data-theme="obsidian"] .bg-ui-bg-field:focus-within,
+[data-theme="obsidian"] .bg-ui-bg-field:focus {
+  box-shadow: 0 0 0 1px #19f5a3, 0 0 0 4px rgba(25, 245, 163, 0.15);
+}
+
+/* 3 · Luxe amber: embossed metal face, warm specular, soft outer glow */
+[data-theme="amber"] .bg-ui-button-inverted,
+[data-theme="amber"] .ig-btn-primary {
+  background-image: linear-gradient(180deg, #f6cf9b 0%, #e2a462 40%, #cf8a4a 70%, #b06f36 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 222, 0.7),
+    inset 0 -2px 0 rgba(90, 45, 12, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.45),
+    0 12px 30px -10px var(--ig-glow);
+}
+[data-theme="amber"] .bg-ui-button-inverted:active,
+[data-theme="amber"] .ig-btn-primary:active {
+  box-shadow: inset 0 2px 5px rgba(90, 45, 12, 0.45), 0 2px 10px -4px var(--ig-glow);
+}
+[data-theme="amber"] .bg-ui-button-neutral,
+[data-theme="amber"] .ig-btn-secondary {
+  background-image: linear-gradient(180deg, #23434d 0%, #152c34 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 230, 200, 0.14), 0 0 0 1px var(--ig-edge), 0 8px 18px -10px rgba(0, 0, 0, 0.7);
+}
+[data-theme="amber"] .shadow-elevation-card-rest,
+[data-theme="amber"] .rounded-panel.bg-ig-surface {
+  background-image: linear-gradient(180deg, rgba(255, 240, 220, 0.045), rgba(255, 240, 220, 0));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 230, 200, 0.09),
+    0 0 0 1px var(--ig-edge),
+    0 26px 50px -26px rgba(0, 0, 0, 0.75),
+    0 0 44px -22px var(--ig-glow);
+}
+[data-theme="amber"] .bg-ui-bg-field {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--ig-edge);
+}

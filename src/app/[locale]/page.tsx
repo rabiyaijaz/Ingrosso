@@ -100,7 +100,7 @@ export default async function HomePage() {
     <main className="bg-ig-paper text-ig-ink">
       {/* Split stage: reading column left, fixed crystal right */}
       <section className="mx-auto grid max-w-page gap-3 p-3 lg:grid-cols-2">
-        <div className="order-2 flex flex-col rounded-panel bg-white px-[clamp(20px,4vw,72px)] lg:order-1">
+        <div className="order-2 flex flex-col rounded-panel bg-ig-surface px-[clamp(20px,4vw,72px)] lg:order-1">
           <div className="flex min-h-[calc(100svh-176px)] flex-col justify-center gap-8 py-14" data-stage="0">
             <h1 className={clx(display, "max-w-[12ch]")}>The right part, in every grade</h1>
             <p className={clx(body, "max-w-[46ch] text-ig-ink-soft")}>
@@ -163,7 +163,7 @@ export default async function HomePage() {
               <Link href={example} className="flex h-[72px] items-center rounded-[16px] bg-ig-ink px-5 text-[17px] font-medium text-ig-paper transition-colors hover:bg-ig-slate-2">
                 Compare grades on a part
               </Link>
-              <Link href={routes.grades()} className="flex h-[72px] items-center rounded-[16px] bg-ig-paper-2 px-5 text-[17px] font-medium text-ig-ink transition-colors hover:bg-white">
+              <Link href={routes.grades()} className="flex h-[72px] items-center rounded-[16px] bg-ig-paper-2 px-5 text-[17px] font-medium text-ig-ink transition-colors hover:bg-ig-surface">
                 Read the grade guide
               </Link>
             </div>

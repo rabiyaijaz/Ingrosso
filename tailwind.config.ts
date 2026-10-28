@@ -22,6 +22,8 @@ const config: Config = {
       colors: {
         ig: {
           paper: "var(--ig-paper)",
+          surface: "var(--ig-surface)",
+          "on-accent": "var(--ig-on-accent)",
           "paper-2": "var(--ig-paper-2)",
           ink: "var(--ig-ink)",
           "ink-soft": "var(--ig-ink-soft)",

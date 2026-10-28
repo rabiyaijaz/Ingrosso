@@ -12,6 +12,8 @@
   /* Brand: cool silver paper, slate ink, crystal blue accent */
   --ig-paper: #f1f3f6;
   --ig-paper-2: #e6eaf0;
+  --ig-surface: #ffffff; /* raised panels and tiles on the paper */
+  --ig-on-accent: #ffffff; /* text on the accent colour */
   --ig-ink: #0f1620;
   --ig-ink-soft: #4a5463;
   --ig-blue: #1f5bff;
