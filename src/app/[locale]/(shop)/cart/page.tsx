@@ -82,6 +82,9 @@ export default async function CartPage() {
             <Text size="small" className="text-ui-fg-subtle">
               VAT is applied at checkout from your registered tax number: domestic rate, EU reverse charge, or zero-rated export.
             </Text>
+            <Button asChild size="large" className="w-full">
+              <Link href={routes.checkout()}>Continue to checkout</Link>
+            </Button>
           </Container>
         </div>
       )}

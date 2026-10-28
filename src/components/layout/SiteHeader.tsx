@@ -10,7 +10,6 @@ import { routes } from "@/lib/routes"
 import { getViewer } from "@/lib/viewer"
 import { CutoffCountdown } from "./CutoffCountdown"
 import { DeviceMenu } from "./DeviceMenu"
-import { PreviewAs } from "./PreviewAs"
 import { SearchBox } from "./SearchBox"
 
 export async function SiteHeader() {
@@ -26,12 +25,9 @@ export async function SiteHeader() {
       <div className="bg-ig-slate text-ig-on-slate">
         <div className="mx-auto flex h-9 max-w-page items-center justify-between gap-4 px-[var(--ig-gutter)] txt-compact-small">
           <span className="truncate"><CutoffCountdown /></span>
-          <div className="flex shrink-0 items-center gap-5">
-            <span className="hidden text-ig-on-slate-soft md:inline">
-              {canOrder ? viewer.company : "Trade accounts only. Prices after approval."}
-            </span>
-            <PreviewAs state={viewer.state} />
-          </div>
+          <span className="hidden shrink-0 text-ig-on-slate-soft md:inline">
+            {canOrder ? viewer.company : "Trade accounts only. Prices after approval."}
+          </span>
         </div>
       </div>
 

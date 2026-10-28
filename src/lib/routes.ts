@@ -23,6 +23,8 @@ export const routes = {
   apply: (l: string = "en") => `/${l}/apply`,
   signIn: (l: string = "en") => `/${l}/sign-in`,
   cart: (l: string = "en") => `/${l}/cart`,
+  checkout: (l: string = "en") => `/${l}/checkout`,
+  order: (ref: string, l: string = "en") => `/${l}/orders/${ref}`,
   account: (l: string = "en") => `/${l}/account`,
   system: (l: string = "en") => `/${l}/system`,
 }

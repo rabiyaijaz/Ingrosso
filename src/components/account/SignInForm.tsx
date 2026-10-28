@@ -5,6 +5,7 @@ import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Button, Hint, Input, Label } from "@medusajs/ui"
 import { setViewerState } from "@/app/actions"
+import { LAB } from "@/lib/lab"
 import { routes } from "@/lib/routes"
 
 // Prototype sign-in: signs in as the sample approved account. Real
@@ -21,7 +22,7 @@ export function SignInForm() {
       className="flex flex-col gap-5"
       onSubmit={(e) => {
         e.preventDefault()
-        if (!email || !password) return setError("Enter your email and password")
+        if (!LAB && (!email || !password)) return setError("Enter your email and password")
         start(async () => {
           await setViewerState("approved")
           router.push(routes.account())

@@ -4,6 +4,22 @@ Medusa UI is the base. Ingrosso's look lives in one stylesheet, and every screen
 
 Live catalogue of every component and state: `/en/system`.
 
+## Design lab
+
+Design changes are made and reviewed in the lab first, then confirmed into the main app.
+
+| | Main app | Design lab |
+| --- | --- | --- |
+| Folder | `E:\Miqdad\wholesale-platform` | `E:\Miqdad\wholesale-platform-lab` (git worktree) |
+| Branch | `main` (deploys to ingrosso.vercel.app) | `lab` (local) |
+| Local URL | http://localhost:3310 | http://localhost:3311 |
+| Forms | Validated | Skip validation, so every flow can be clicked through |
+| Toolbar | None | Preview as, next step, jump to any flow, reset |
+
+The lab is switched on by `NEXT_PUBLIC_LAB=1` in the lab folder's `.env.local`, which git ignores, so it can never reach `main` or Vercel. The lab also uses its own cookie names, so its sign-in and order don't mix with the main app's.
+
+**On confirm:** merge `lab` into `main`, push `main` to GitHub, and Vercel deploys it.
+
 ## Where things live
 
 | What | File |

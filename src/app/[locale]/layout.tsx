@@ -10,6 +10,7 @@ import "@fontsource/roboto-mono/500.css"
 import "../globals.css"
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Reveal } from "@/components/layout/Reveal"
+import { Lab } from "@/components/lab/Lab"
 import { LOCALES } from "@/lib/routes"
 
 export const metadata: Metadata = {
@@ -34,6 +35,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         {children}
         <Toaster />
         <Reveal />
+        <Lab />
       </body>
     </html>
   )

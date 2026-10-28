@@ -1,8 +1,11 @@
 import Link from "next/link"
 import { Button, Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
 import { MaskToggle } from "@/components/account/MaskToggle"
+import { SignOutButton } from "@/components/account/SignOutButton"
 import { Figure } from "@/components/commerce/Figure"
 import { PageContainer, PageHeading } from "@/components/layout/Page"
+import { formatMoney } from "@/lib/money"
+import { readOrders } from "@/lib/orders"
 import { routes } from "@/lib/routes"
 import { getViewer } from "@/lib/viewer"
 
@@ -15,10 +18,19 @@ const SAMPLE_ORDERS = [
   { ref: "IG-2026-004390", date: "12 Oct 2026", lines: 11, total: "€2,940.15", status: "Shipped" as const },
 ]
 
-const STATUS_COLOR = { Shipped: "green", Packed: "blue" } as const
+const STATUS_COLOR = { Received: "orange", Shipped: "green", Packed: "blue" } as const
 
 export default async function AccountPage() {
   const viewer = await getViewer()
+  const placed = (await readOrders()).map((o) => ({
+    ref: o.ref,
+    href: routes.order(o.ref),
+    date: new Date(o.placedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Amsterdam" }),
+    lines: o.lines.length,
+    total: formatMoney(o.total),
+    status: "Received" as const,
+  }))
+  const orders = [...placed, ...SAMPLE_ORDERS.map((o) => ({ ...o, href: null as string | null }))]
 
   if (viewer.state === "visitor") {
     return (
@@ -36,7 +48,9 @@ export default async function AccountPage() {
     const pending = viewer.state === "pending"
     return (
       <PageContainer className="flex max-w-[760px] flex-col gap-8 pt-10">
-        <PageHeading title={viewer.company ?? "Your account"} />
+        <PageHeading title={viewer.company ?? "Your account"}>
+          <SignOutButton />
+        </PageHeading>
         <Container className="flex flex-col gap-4 p-6">
           <StatusBadge color={pending ? "orange" : "red"} className="w-fit">{pending ? "Application under review" : "Account suspended"}</StatusBadge>
           <Heading level="h2" className="txt-xlarge-plus">
@@ -61,7 +75,10 @@ export default async function AccountPage() {
   return (
     <PageContainer className="flex flex-col gap-8 pt-10">
       <PageHeading title={viewer.company ?? "Your account"} description="Approved trade account">
-        <StatusBadge color="green">Approved · Trade standard price list</StatusBadge>
+        <div className="flex flex-wrap items-center gap-3">
+          <StatusBadge color="green">Approved · Trade standard price list</StatusBadge>
+          <SignOutButton />
+        </div>
       </PageHeading>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
@@ -79,9 +96,15 @@ export default async function AccountPage() {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {SAMPLE_ORDERS.map((o) => (
+                {orders.map((o) => (
                   <Table.Row key={o.ref}>
-                    <Table.Cell><Figure>{o.ref}</Figure></Table.Cell>
+                    <Table.Cell>
+                      {o.href ? (
+                        <Link href={o.href} className="text-ui-fg-interactive hover:underline"><Figure>{o.ref}</Figure></Link>
+                      ) : (
+                        <Figure>{o.ref}</Figure>
+                      )}
+                    </Table.Cell>
                     <Table.Cell className="hidden sm:table-cell">{o.date}</Table.Cell>
                     <Table.Cell className="hidden sm:table-cell text-right"><Figure>{o.lines}</Figure></Table.Cell>
                     <Table.Cell className="text-right"><Figure>{viewer.state === "masked" ? "—" : o.total}</Figure></Table.Cell>

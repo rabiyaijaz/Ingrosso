@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Button, Checkbox, Heading, Hint, Input, Label, ProgressTabs, Select, Text, clx } from "@medusajs/ui"
 import { submitApplication } from "@/app/actions"
+import { LAB } from "@/lib/lab"
 import { routes } from "@/lib/routes"
 
 // Four-step trade application (BRD: credentials → company → address → review).
@@ -92,6 +93,7 @@ export function ApplicationForm() {
   }
 
   const validate = (id: StepId) => {
+    if (LAB) return true // design lab: click through without filling the form
     const next: typeof errors = {}
     for (const k of REQUIRED[id]) if (!draft[k]) next[k] = "Required"
     if (id === "login" && draft.email && !/^\S+@\S+\.\S+$/.test(draft.email)) next.email = "Enter an email address like name@shop.nl"

@@ -1,7 +1,8 @@
 import { cookies } from "next/headers"
 import { productBySlug, type Product } from "./catalog"
+import { LAB } from "./lab"
 
-export const CART_COOKIE = "ig_cart"
+export const CART_COOKIE = LAB ? "ig_lab_cart" : "ig_cart"
 
 export type CartLine = { slug: string; qty: number }
 
