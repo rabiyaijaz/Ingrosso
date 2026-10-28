@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { clx } from "@medusajs/ui"
 import { GRADES } from "@/lib/catalog"
-import { gradeColour } from "@/components/catalog/Grade"
+import { GradeIcon } from "@/components/catalog/Grade"
 
 const FAMILIES = ["Genuine", "Aftermarket", "Third-party"] as const
 
@@ -33,7 +33,7 @@ export function GradeTabs() {
       <ul id="grade-panel" role="tabpanel" className="flex flex-col gap-5">
         {GRADES.filter((g) => g.family === family).map((g) => (
           <li key={g.id} className="grid grid-cols-[28px_1fr] gap-x-4">
-            <span aria-hidden className="mt-1 size-5 rounded-full" style={{ background: gradeColour(g.rank) }} />
+            <GradeIcon grade={g.id} size="md" className="mt-0.5" />
             <span>
               <span className="block text-[18px] font-medium leading-7 text-ig-ink">{g.label}</span>
               <span className="block max-w-[44ch] text-[15px] leading-6 text-ig-ink-soft">{g.summary}</span>

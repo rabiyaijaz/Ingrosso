@@ -3,7 +3,7 @@ import { clx } from "@medusajs/ui"
 import { CheckMini, XMark } from "@medusajs/icons"
 import { GRADES, findModel, type GradeId, type Product } from "@/lib/catalog"
 import { Figure } from "@/components/commerce/Figure"
-import { gradeColour } from "./Grade"
+import { FAMILIES, GradeIcon } from "./Grade"
 
 // Filters live in the URL so a filtered view can be shared and bookmarked (BRD 3.2).
 export type FacetParams = Record<string, string | undefined>
@@ -17,8 +17,8 @@ const toggle = (params: FacetParams, key: string, value: string) => {
 
 export const selected = (params: FacetParams, key: string) => new Set((params[key] ?? "").split(",").filter(Boolean))
 
-// Grade is the primary filter on every listing (CAT-03): a full-width row of
-// grade chips above the results, ordered genuine to third-party.
+// Grade is the primary filter on every listing (CAT-03): grade chips above
+// the results, grouped Genuine / Aftermarket / Third-party, each with its icon.
 export function GradeFilterBar({
   products,
   params,
@@ -32,29 +32,40 @@ export function GradeFilterBar({
   const present = GRADES.filter((g) => products.some((p) => p.grade === g.id))
   if (!present.length) return null
   return (
-    <div role="group" aria-label="Filter by grade" className="flex flex-wrap items-center gap-2">
-      {present.map((g) => {
-        const on = active.has(g.id)
-        const count = products.filter((p) => p.grade === g.id).length
+    <div role="group" aria-label="Filter by grade" className="flex flex-wrap items-start gap-x-6 gap-y-3">
+      {FAMILIES.map((family) => {
+        const grades = present.filter((g) => g.family === family)
+        if (!grades.length) return null
         return (
-          <Link
-            key={g.id}
-            href={hrefFor(toggle(params, "grade", g.id))}
-            aria-pressed={on}
-            scroll={false}
-            className={clx(
-              "inline-flex h-9 items-center gap-2 rounded-full pl-2 pr-3.5 txt-compact-small-plus transition-colors outline-none focus-visible:shadow-borders-focus",
-              on ? "bg-ig-ink text-ig-paper" : "bg-ui-bg-subtle text-ui-fg-base hover:bg-ui-bg-subtle-hover"
-            )}
-          >
-            <span aria-hidden className="size-5 rounded-full" style={{ background: gradeColour(g.rank), boxShadow: on ? "0 0 0 2px var(--ig-ink)" : undefined }} />
-            {g.label}
-            <Figure className={clx("txt-compact-xsmall", on ? "text-ig-paper/70" : "text-ui-fg-muted")}>{count}</Figure>
-          </Link>
+          <div key={family} role="group" aria-label={family} className="flex flex-col gap-1.5">
+            <span className="txt-compact-xsmall-plus text-ui-fg-muted">{family}</span>
+            <div className="flex flex-wrap gap-2">
+              {grades.map((g) => {
+                const on = active.has(g.id)
+                const count = products.filter((p) => p.grade === g.id).length
+                return (
+                  <Link
+                    key={g.id}
+                    href={hrefFor(toggle(params, "grade", g.id))}
+                    aria-pressed={on}
+                    scroll={false}
+                    className={clx(
+                      "inline-flex h-9 items-center gap-2 rounded-full pl-1.5 pr-3.5 txt-compact-small-plus transition-colors outline-none focus-visible:shadow-borders-focus",
+                      on ? "bg-ig-ink text-ig-on-ink" : "bg-ui-bg-subtle text-ui-fg-base hover:bg-ui-bg-subtle-hover"
+                    )}
+                  >
+                    <GradeIcon grade={g.id} size="md" className="rounded-full" />
+                    {g.label}
+                    <Figure className={clx("txt-compact-xsmall", on ? "opacity-70" : "text-ui-fg-muted")}>{count}</Figure>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
         )
       })}
       {active.size > 0 && (
-        <Link href={hrefFor({ ...params, grade: undefined })} scroll={false} className="inline-flex h-9 items-center gap-1 rounded-full px-3 txt-compact-small text-ui-fg-interactive hover:bg-ui-bg-highlight">
+        <Link href={hrefFor({ ...params, grade: undefined })} scroll={false} className="inline-flex h-9 items-center gap-1 self-end rounded-full px-3 txt-compact-small text-ui-fg-interactive hover:bg-ui-bg-highlight">
           <XMark /> All grades
         </Link>
       )}

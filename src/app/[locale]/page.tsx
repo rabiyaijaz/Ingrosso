@@ -7,7 +7,8 @@ import { GradeTabs } from "@/components/marketing/GradeTabs"
 import { HeroStage } from "@/components/marketing/HeroStage"
 import { FitFragment, GradeFragment, PriceFragment, ShipFragment } from "@/components/marketing/QuestionFragments"
 import { PillLink, body, display, sectionTitle, small, statement } from "@/components/marketing/Primitives"
-import { BRANDS, partCount } from "@/lib/catalog"
+import { BRANDS, GRADES, partCount } from "@/lib/catalog"
+import { GradeIcon } from "@/components/catalog/Grade"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 
@@ -145,9 +146,9 @@ export default async function HomePage() {
       <section className="mx-auto grid max-w-page items-center gap-10 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-2">
         <div className="relative mx-auto aspect-square w-full max-w-[640px] overflow-hidden" data-reveal>
           <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
-          <div aria-hidden className="absolute inset-x-[10%] bottom-[7%] flex gap-[4px]">
-            {Array.from({ length: 10 }, (_, i) => (
-              <span key={i} className="h-3 flex-1 rounded-[2px]" style={{ background: `var(--ig-grade-${i + 1})` }} />
+          <div aria-hidden className="absolute inset-x-[6%] bottom-[6%] flex justify-between gap-1">
+            {GRADES.map((g) => (
+              <GradeIcon key={g.id} grade={g.id} size="lg" />
             ))}
           </div>
         </div>
@@ -160,7 +161,7 @@ export default async function HomePage() {
               compatible one sit side by side and you can tell your customer exactly what each is.
             </p>
             <div className="grid grid-cols-2 gap-2">
-              <Link href={example} className="flex h-[72px] items-center rounded-[16px] bg-ig-ink px-5 text-[17px] font-medium text-ig-paper transition-colors hover:bg-ig-slate-2">
+              <Link href={example} className="flex h-[72px] items-center rounded-[16px] bg-ig-ink px-5 text-[17px] font-medium text-ig-on-ink transition-opacity hover:opacity-90">
                 Compare grades on a part
               </Link>
               <Link href={routes.grades()} className="flex h-[72px] items-center rounded-[16px] bg-ig-paper-2 px-5 text-[17px] font-medium text-ig-ink transition-colors hover:bg-ig-surface">
@@ -200,7 +201,7 @@ export default async function HomePage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-7 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-ig-ink px-7 py-2.5 text-[16px] text-ig-paper">
+              <div className="mt-7 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-ig-ink px-7 py-2.5 text-[16px] text-ig-on-ink">
                 <span>Your trade prices, live</span>
                 <span className="tabular-nums">about 5 min to apply</span>
               </div>

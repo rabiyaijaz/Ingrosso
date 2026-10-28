@@ -13,7 +13,7 @@ export function CategoryNav({ categories }: { categories: { slug: string; plural
     clx(
       "flex h-8 items-center whitespace-nowrap rounded-full px-3 transition-colors outline-none focus-visible:shadow-borders-focus",
       active
-        ? "bg-ig-ink font-medium text-ig-paper"
+        ? "bg-ig-ink font-medium text-ig-on-ink"
         : accent
           ? "text-ui-fg-interactive hover:bg-ui-bg-base"
           : "text-ui-fg-subtle hover:bg-ui-bg-base hover:text-ui-fg-base"

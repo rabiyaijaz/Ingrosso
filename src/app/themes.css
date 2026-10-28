@@ -19,6 +19,7 @@
   --ig-paper-2: rgba(24, 46, 108, 0.5);
   --ig-surface: rgba(255, 255, 255, 0.07);
   --ig-on-accent: #ffffff;
+  --ig-on-ink: #071233;
   --ig-ink: #eef3ff;
   --ig-ink-soft: #a9b8de;
   --ig-blue: #3d7bff;
@@ -87,6 +88,7 @@
   --ig-paper-2: #13181c;
   --ig-surface: #161c21;
   --ig-on-accent: #02140c;
+  --ig-on-ink: #0e1215;
   --ig-ink: #eaf2ef;
   --ig-ink-soft: #9aa8a3;
   --ig-blue: #19f5a3;
@@ -155,6 +157,7 @@
   --ig-paper-2: #173039;
   --ig-surface: #1a343d;
   --ig-on-accent: #1d1206;
+  --ig-on-ink: #122630;
   --ig-ink: #f4ebe0;
   --ig-ink-soft: #c2b4a3;
   --ig-blue: #e0a15a;

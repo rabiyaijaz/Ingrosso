@@ -9,7 +9,7 @@ type Tone = "accent" | "ink" | "paper" | "quiet"
 const TONES: Record<Tone, string> = {
   // ig-btn-* are hooks the colour themes (src/app/themes.css) style.
   accent: "ig-btn-primary bg-ig-blue text-ig-on-accent hover:bg-ig-blue-ink",
-  ink: "ig-btn-secondary bg-ig-ink text-ig-paper hover:bg-ig-slate-2",
+  ink: "ig-btn-secondary bg-ig-ink text-ig-on-ink hover:opacity-90",
   paper: "ig-btn-secondary bg-ig-paper text-ig-ink hover:bg-ig-surface",
   quiet: "ig-btn-secondary bg-ig-paper-2 text-ig-ink hover:bg-ig-paper",
 }
