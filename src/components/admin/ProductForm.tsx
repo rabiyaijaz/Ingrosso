@@ -78,6 +78,11 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
       className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]"
       noValidate
     >
+      {/* The main action at the top, in view without scrolling */}
+      <div className="flex justify-end gap-2 xl:col-span-2">
+        <Button type="button" variant="secondary" onClick={() => router.push(routes.admin.products())}>Cancel</Button>
+        <Button type="submit" isLoading={pending}>Add product</Button>
+      </div>
       <div className="flex min-w-0 flex-col gap-4">
         <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
           <h2 className="txt-compact-medium-plus">The part</h2>
@@ -218,11 +223,6 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
             <p className="txt-small text-ui-fg-subtle">Enter a list price to see what every tier will pay, including category and grade rules.</p>
           )}
         </section>
-
-        <div className="flex gap-2">
-          <Button type="submit" size="lg" isLoading={pending} className="flex-1">Add product</Button>
-          <Button type="button" size="lg" variant="secondary" onClick={() => router.push(routes.admin.products())}>Cancel</Button>
-        </div>
       </div>
     </form>
   )

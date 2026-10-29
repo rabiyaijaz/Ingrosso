@@ -55,6 +55,11 @@ export function TierEditor({
 
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+      {/* The main action at the top, in view without scrolling */}
+      <div className="flex justify-end gap-2 xl:col-span-2">
+        <Button type="button" variant="secondary" onClick={() => router.push(routes.admin.pricing())}>Cancel</Button>
+        <Button type="button" isLoading={pending} onClick={save}>{isNew ? "Create tier" : "Save tier"}</Button>
+      </div>
       <div className="flex min-w-0 flex-col gap-4">
         <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
           <h2 className="txt-compact-medium-plus">Name and who it is for</h2>
@@ -180,10 +185,6 @@ export function TierEditor({
             </tbody>
           </table>
         </section>
-        <div className="flex gap-2">
-          <Button type="button" size="lg" className="flex-1" isLoading={pending} onClick={save}>{isNew ? "Create tier" : "Save tier"}</Button>
-          <Button type="button" size="lg" variant="secondary" onClick={() => router.push(routes.admin.pricing())}>Cancel</Button>
-        </div>
         {!isNew && (
           <form action={deleteTier} className="flex flex-col gap-2 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest">
             <input type="hidden" name="id" value={tier.id} />

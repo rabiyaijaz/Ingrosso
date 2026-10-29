@@ -37,7 +37,12 @@ export default async function CartPage() {
 
   return (
     <PageContainer className="flex flex-col gap-8 pt-10">
-      <PageHeading title="Your order" description="Prices update to the right quantity break as you change amounts." />
+      <PageHeading title="Your order" description="Prices update to the right quantity break as you change amounts.">
+        {/* The next step in view without scrolling; on wide screens the summary beside the table carries it */}
+        {lines.length > 0 && (
+          <Button asChild className="lg:hidden"><Link href={routes.checkout()}>Continue to checkout</Link></Button>
+        )}
+      </PageHeading>
       {lines.length === 0 ? (
         <Container className="flex flex-col items-start gap-3 p-6">
           <Text>Nothing in this order yet.</Text>

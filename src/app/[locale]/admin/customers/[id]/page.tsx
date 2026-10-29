@@ -77,7 +77,8 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
           </Panel>
         </div>
 
-        <div className="flex flex-col gap-4">
+        {/* The decision comes first on small screens, so it is in view without scrolling */}
+        <div className="order-first flex flex-col gap-4 xl:order-none">
           {c.status === "pending" ? (
             <Panel title="Review the application">
               <ol className="mb-4 flex flex-col gap-2 txt-compact-small">

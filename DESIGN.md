@@ -51,6 +51,8 @@ Light, glassy and minimal, in the Apple style: very light blue gradients, froste
 
 One component: `components/ui/Button`. Nothing else is styled as a button.
 
+**The next step is always in view.** In every flow and form, the main button for the next step (Continue, Send application, Place order, Save, Add) sits at the top: beside the step tabs, or in the page header, so it shows on the first screen without scrolling. On small screens, decision panels (such as approving an application) come first.
+
 | | |
 | --- | --- |
 | Variants | `primary` (blue) and `secondary` (white) for every action; `ghost` for icon-only and toolbar buttons; `danger` for destructive actions. No black buttons. |

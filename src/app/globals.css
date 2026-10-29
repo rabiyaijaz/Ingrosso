@@ -571,7 +571,7 @@ body {
 */
 .ig-icon-bare { display: inline-flex; flex-shrink: 0; color: var(--ig-blue); }
 .ig-icon-bare svg { width: 18px; height: 18px; }
-.ig-icon-bare[data-family="Third-party"] { color: var(--ig-ink-soft); }
+.ig-icon-bare[data-family="Third-party"] { color: color-mix(in srgb, var(--ig-blue) 55%, var(--ig-ink-soft)); }
 [aria-pressed="true"] > .ig-icon-bare,
 [aria-current="page"] > .ig-icon-bare { color: currentColor; }
 
@@ -579,7 +579,7 @@ body {
   Glass grade icon: a frosted tile with a top sheen and an inner edge, in the
   brand's glass style. data-family sets the tint: Genuine is a solid glass of
   the accent, Aftermarket a clear glass with an accent glyph, Third-party a
-  clear glass with a muted glyph. Colours come from tokens, so every theme
+  clear glass with a softer accent glyph. Colours come from tokens, so every theme
   re-tints it.
 */
 .ig-glass-icon {
@@ -622,10 +622,11 @@ body {
   --glass-ink: var(--ig-on-accent);
 }
 .ig-glass-icon[data-family="Third-party"] {
-  --glass-lo: color-mix(in srgb, var(--ig-ink) 7%, white);
-  --glass-ring: color-mix(in srgb, var(--ig-ink) 12%, transparent);
-  --glass-shadow: color-mix(in srgb, var(--ig-ink) 18%, transparent);
-  --glass-ink: var(--ig-ink-soft);
+  /* A softer shade of the accent (not grey), so it follows every theme */
+  --glass-lo: color-mix(in srgb, var(--ig-blue) 6%, white);
+  --glass-ring: color-mix(in srgb, var(--ig-blue) 16%, transparent);
+  --glass-shadow: color-mix(in srgb, var(--ig-blue) 18%, transparent);
+  --glass-ink: color-mix(in srgb, var(--ig-blue) 55%, var(--ig-ink-soft));
 }
 /* Device-brand logos: clear glass, ink logo, brand colour on hover */
 .ig-glass-icon[data-family="Brand"] {

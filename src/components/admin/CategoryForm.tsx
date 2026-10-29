@@ -30,7 +30,11 @@ export function CategoryForm({ category, error, canDelete, deleteReason }: { cat
 
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
-      <form action={saveCategory} className="flex flex-col gap-4">
+      {/* The main action at the top, in view without scrolling */}
+      <div className="flex justify-end gap-2 xl:col-span-2">
+        <Button type="submit" form="category-form">{isNew ? "Add category" : "Save category"}</Button>
+      </div>
+      <form id="category-form" action={saveCategory} className="flex flex-col gap-4">
         <input type="hidden" name="slug" value={category.slug} />
         <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
           <h2 className="txt-compact-medium-plus">Names</h2>
@@ -79,9 +83,6 @@ export function CategoryForm({ category, error, canDelete, deleteReason }: { cat
           </label>
         </section>
 
-        <div className="flex gap-2">
-          <Button type="submit" size="lg">{isNew ? "Add category" : "Save category"}</Button>
-        </div>
       </form>
 
       <aside className="flex flex-col gap-4 xl:sticky xl:top-6 xl:self-start">

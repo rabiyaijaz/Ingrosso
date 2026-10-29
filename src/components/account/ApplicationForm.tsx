@@ -155,28 +155,40 @@ export function ApplicationForm() {
 
   return (
     <ProgressTabs value={step} onValueChange={(v) => setStep(v as StepId)} className="flex flex-col gap-8">
-      <ProgressTabs.List className="ig-steps">
-        {STEPS.map((s, i) => (
-          <ProgressTabs.Trigger
-            key={s.id}
-            value={s.id}
-            disabled={i > draft.reached}
-            status={i < index || i < draft.reached ? "completed" : i === index ? "in-progress" : "not-started"}
-            className="ig-steps__tab"
-          >
+      {/* Steps and the next action in one row at the top: the next step is always in view without scrolling */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <ProgressTabs.List className="ig-steps">
+          {STEPS.map((s, i) => (
+            <ProgressTabs.Trigger
+              key={s.id}
+              value={s.id}
+              disabled={i > draft.reached}
+              status={i < index || i < draft.reached ? "completed" : i === index ? "in-progress" : "not-started"}
+              className="ig-steps__tab"
+            >
               {s.label}
-          </ProgressTabs.Trigger>
-        ))}
-      </ProgressTabs.List>
+            </ProgressTabs.Trigger>
+          ))}
+        </ProgressTabs.List>
+        <div className="flex items-center gap-2">
+          {index > 0 && <Button variant="secondary" onClick={() => setStep(STEPS[index - 1].id)}>Back</Button>}
+          {step === "review" ? (
+            <Button onClick={submit} isLoading={pending}>Send application</Button>
+          ) : (
+            <Button onClick={next}>Continue</Button>
+          )}
+        </div>
+      </div>
 
-      <ProgressTabs.Content value="login" className="flex flex-col gap-5">
-        <StepHead title="Create your sign-in" body="Use the email address your shop already uses for orders and invoices." />
+      {/* Fields sit two to a row (three for the address), so none stretches wider than what goes in it */}
+      <ProgressTabs.Content value="login" className="grid gap-5 sm:grid-cols-2">
+        <div className="sm:col-span-2"><StepHead title="Create your sign-in" body="Use the email address your shop already uses for orders and invoices." /></div>
         {field("email", "Work email", { type: "email", autoComplete: "email", placeholder: "orders@yourshop.nl" })}
         {field("password", "Password", { type: "password", autoComplete: "new-password" }, "At least 10 characters")}
       </ProgressTabs.Content>
 
-      <ProgressTabs.Content value="company" className="flex flex-col gap-5">
-        <StepHead title="Tell us about the business" body="We approve repair shops and resellers. Your tax number decides how VAT is applied to each invoice." />
+      <ProgressTabs.Content value="company" className="grid gap-5 sm:grid-cols-2">
+        <div className="sm:col-span-2"><StepHead title="Tell us about the business" body="We approve repair shops and resellers. Your tax number decides how VAT is applied to each invoice." /></div>
         {field("company", "Registered company name", { autoComplete: "organization" })}
         <div className="flex flex-col gap-1.5">
           <Label size="small" weight="plus" id="trade-label">Type of business</Label>
@@ -189,29 +201,25 @@ export function ApplicationForm() {
             </Select.Content>
           </Select>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
-            <Label size="small" weight="plus" id="country-label">Country of registration</Label>
-            <Select value={draft.country} onValueChange={(v) => set("country", v)}>
-              <Select.Trigger aria-labelledby="country-label"><Select.Value /></Select.Trigger>
-              <Select.Content>
-                {COUNTRIES.map((c) => <Select.Item key={c.code} value={c.code}>{c.name}</Select.Item>)}
-              </Select.Content>
-            </Select>
-          </div>
-          {field("taxId", country.tax, { placeholder: country.example, className: "ig-figure" })}
+        <div className="flex flex-col gap-1.5">
+          <Label size="small" weight="plus" id="country-label">Country of registration</Label>
+          <Select value={draft.country} onValueChange={(v) => set("country", v)}>
+            <Select.Trigger aria-labelledby="country-label"><Select.Value /></Select.Trigger>
+            <Select.Content>
+              {COUNTRIES.map((c) => <Select.Item key={c.code} value={c.code}>{c.name}</Select.Item>)}
+            </Select.Content>
+          </Select>
         </div>
+        {field("taxId", country.tax, { placeholder: country.example, className: "ig-figure" })}
         {field("phone", "Phone", { type: "tel", autoComplete: "tel" }, "Our trade desk calls this number if anything needs checking")}
       </ProgressTabs.Content>
 
-      <ProgressTabs.Content value="address" className="flex flex-col gap-5">
-        <StepHead title="Where should orders go?" body="This becomes your first delivery and invoice address. You can add more after approval." />
+      <ProgressTabs.Content value="address" className="grid gap-5 sm:grid-cols-[1.6fr_1.2fr_0.8fr]">
+        <div className="sm:col-span-3"><StepHead title="Where should orders go?" body="This becomes your first delivery and invoice address. You can add more after approval." /></div>
         {field("street", "Street and number", { autoComplete: "street-address" })}
-        <div className="grid gap-5 sm:grid-cols-[1fr_180px]">
-          {field("city", "City", { autoComplete: "address-level2" })}
-          {field("postcode", "Postcode", { autoComplete: "postal-code" })}
-        </div>
-        <Text size="small" className="text-ui-fg-subtle">Country: {country.name}</Text>
+        {field("city", "City", { autoComplete: "address-level2" })}
+        {field("postcode", "Postcode", { autoComplete: "postal-code" })}
+        <Text size="small" className="text-ui-fg-subtle sm:col-span-3">Country: {country.name}</Text>
       </ProgressTabs.Content>
 
       <ProgressTabs.Content value="review" className="flex flex-col gap-5">
@@ -239,17 +247,6 @@ export function ApplicationForm() {
           </div>
         </div>
       </ProgressTabs.Content>
-
-      <div className={clx("flex items-center gap-3", index > 0 ? "justify-between" : "justify-end")}>
-        {index > 0 && (
-          <Button variant="secondary" size="large" onClick={() => setStep(STEPS[index - 1].id)}>Back</Button>
-        )}
-        {step === "review" ? (
-          <Button size="large" onClick={submit} isLoading={pending}>Send application</Button>
-        ) : (
-          <Button size="large" onClick={next}>Continue</Button>
-        )}
-      </div>
     </ProgressTabs>
   )
 }
