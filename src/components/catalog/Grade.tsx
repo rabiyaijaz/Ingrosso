@@ -9,7 +9,7 @@ import {
   Sparkles,
   StackPerspective,
   Sun,
-  VerifiedBadge,
+  BadgeCheck,
 } from "@medusajs/icons"
 import { GRADES, gradeById, type Grade, type GradeId } from "@/lib/catalog"
 
@@ -20,7 +20,7 @@ import { GRADES, gradeById, type Grade, type GradeId } from "@/lib/catalog"
 const ICONS: Record<GradeId, React.ComponentType<{ className?: string }>> = {
   service_pack: ArchiveBox, // sealed service packaging
   service_pack_preassembled: StackPerspective, // frame and adhesive fitted
-  original: VerifiedBadge, // genuine manufacturer part
+  original: BadgeCheck, // genuine manufacturer part
   pulled: ArrowUturnLeft, // taken from a device
   oem: Buildings, // made by the manufacturer's own supplier
   soft_oled: Sparkles, // closest aftermarket match
