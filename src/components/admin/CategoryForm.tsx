@@ -80,7 +80,7 @@ export function CategoryForm({ category, error, canDelete, deleteReason }: { cat
             <input type="checkbox" name="visible" checked={visible} onChange={(e) => setVisible(e.target.checked)} className="peer sr-only" />
             <span className="h-6 w-11 rounded-full bg-ui-bg-switch-off transition-colors peer-checked:bg-ig-blue peer-focus-visible:shadow-borders-focus" />
             <span className="absolute left-0.5 top-0.5 size-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
-            <span className="sr-only">Show in the store's top bar</span>
+            <span className="sr-only">Show in the store&apos;s top bar</span>
           </label>
         </section>
 
