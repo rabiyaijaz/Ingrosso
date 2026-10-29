@@ -13,7 +13,7 @@ import { PartImage } from "./PartImage"
 export function GradeCompare({ current, siblings, viewer }: { current: Product; siblings: Product[]; viewer: Viewer }) {
   const rows = [...siblings].filter((p) => p.grade).sort((a, b) => gradeById(a.grade!).rank - gradeById(b.grade!).rank)
   return (
-    <div className="overflow-hidden rounded-xl shadow-elevation-card-rest">
+    <div className="ig-card overflow-hidden">
       <Table>
         <Table.Header>
           <Table.Row>

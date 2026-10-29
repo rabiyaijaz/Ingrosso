@@ -34,7 +34,7 @@ export default async function PricingPage() {
         {tiers.map((t, i) => {
           const n = customers.filter((c) => c.tierId === t.id && c.status === "approved").length
           return (
-            <Link key={t.id} href={routes.admin.tier(t.id)} className="group flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest outline-none transition-shadow hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus">
+            <Link key={t.id} href={routes.admin.tier(t.id)} className="ig-card group flex flex-col gap-4 p-5 outline-none transition-shadow hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="txt-compact-xsmall-plus uppercase tracking-[0.06em] text-ui-fg-muted">Tier {i + 1}</p>

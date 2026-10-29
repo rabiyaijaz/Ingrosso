@@ -15,7 +15,7 @@ export function ModelGrid({ brand, series }: { brand: Brand; series: Series }) {
           <li key={m.slug}>
             <Link
               href={routes.model(brand.slug, series.slug, m.slug)}
-              className="group flex h-full items-center gap-4 rounded-xl bg-ui-bg-base p-4 shadow-elevation-card-rest transition-shadow hover:shadow-elevation-card-hover outline-none focus-visible:shadow-borders-focus"
+              className="ig-card group flex h-full items-center gap-4 p-4 transition-shadow hover:shadow-elevation-card-hover outline-none focus-visible:shadow-borders-focus"
             >
               <BrandMark brand={brand.slug} size="lg" />
               <span className="min-w-0 flex-1">

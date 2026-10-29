@@ -224,7 +224,7 @@ export function ApplicationForm() {
 
       <ProgressTabs.Content value="review" className="flex flex-col gap-5">
         <StepHead title="Check and send" body="A person on our trade desk reviews every application. You can sign in and see its status at any time." />
-        <dl className="grid gap-x-6 gap-y-3 rounded-xl bg-ui-bg-subtle p-5 txt-compact-small sm:grid-cols-[180px_1fr]">
+        <dl className="ig-inset grid gap-x-6 gap-y-3 p-5 txt-compact-small sm:grid-cols-[180px_1fr]">
           {[
             ["Email", draft.email],
             ["Company", draft.company],

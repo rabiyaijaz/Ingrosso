@@ -1,13 +1,13 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { StatusBadge } from "@medusajs/ui"
-import { ChatBubble, CheckCircleSolid, ExclamationCircleSolid } from "@medusajs/icons"
+import { ArrowRight, ChatBubble, CheckCircleSolid, ExclamationCircleSolid } from "@medusajs/icons"
 import { WithIcon } from "@/components/ui/WithIcon"
 import { decideApplication, setCustomerAccount } from "@/app/admin-actions"
 import { Field, NativeSelect, fieldClass } from "@/components/admin/Fields"
 import { AdminHeader, Panel, ago, shortDate } from "@/components/admin/Kit"
 import { Figure } from "@/components/commerce/Figure"
-import { Button } from "@/components/ui/Button"
+import { SubmitButton } from "@/components/ui/SubmitButton"
 import { CUSTOMER_STATUS, ORDER_STATUS, TERMS_SHORT, getCustomers, getOrders, getTiers } from "@/lib/admin/data"
 import { euroWhole } from "@/lib/admin/stats"
 import { formatMoney } from "@/lib/money"
@@ -22,6 +22,8 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
   const spend = theirs.filter((o) => o.status !== "cancelled").reduce((t, o) => t + o.total, 0)
   const tier = tiers.find((t) => t.id === c.tierId)
   const status = CUSTOMER_STATUS[c.status]
+  // Reviewers work through the queue: the oldest other application is one click away
+  const nextPending = customers.filter((x) => x.status === "pending" && x.id !== c.id).sort((a, b) => a.appliedAt.localeCompare(b.appliedAt))[0]
 
   return (
     <>
@@ -29,7 +31,13 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
         crumbs={[{ label: "Customers", href: routes.admin.customers() }]}
         title={c.company}
         description={<span className="flex flex-wrap items-center gap-2"><StatusBadge color={status.color}>{status.label}</StatusBadge>{c.type} · {c.city}, {c.country}</span>}
-      />
+      >
+        {nextPending && (
+          <Link href={routes.admin.customer(nextPending.id)} className="flex items-center gap-1 txt-compact-small-plus text-ui-fg-interactive hover:underline">
+            Next application: {nextPending.company} <ArrowRight />
+          </Link>
+        )}
+      </AdminHeader>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex min-w-0 flex-col gap-4">
@@ -54,7 +62,7 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
               <Fact label="Location" value={`${c.city}, ${c.country}`} />
               <Fact label="Applied" value={`${shortDate(c.appliedAt)} (${ago(c.appliedAt)})`} />
             </dl>
-            {c.note && <p className="mt-4 rounded-xl bg-ui-bg-subtle px-4 py-3 txt-small text-ui-fg-subtle">{c.note}</p>}
+            {c.note && <p className="ig-inset mt-4 px-4 py-3 txt-small text-ui-fg-subtle">{c.note}</p>}
           </Panel>
 
           <Panel title="Orders" action={<span className="txt-compact-small text-ui-fg-subtle">{theirs.length} orders · <Figure>{euroWhole(spend)}</Figure> in 30 days</span>} bodyClassName="px-0 pb-2">
@@ -93,9 +101,9 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                     {tiers.map((t) => <option key={t.id} value={t.id}>{t.name} · {t.discount}% off list</option>)}
                   </NativeSelect>
                 </Field>
-                <Button type="submit" size="lg">Approve and show prices</Button>
+                <SubmitButton size="lg" done="Application approved" doneDescription={`${c.company} can now see prices and order`}>Approve and show prices</SubmitButton>
               </form>
-              <details className="mt-4 rounded-xl bg-ui-bg-subtle p-3">
+              <details className="ig-inset mt-4 p-3">
                 <summary className="cursor-pointer txt-compact-small-plus text-ui-fg-subtle">Decline instead</summary>
                 <form action={decideApplication} className="mt-3 flex flex-col gap-3">
                   <input type="hidden" name="id" value={c.id} />
@@ -103,7 +111,7 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                   <Field label="Reason, sent to the applicant" htmlFor="note">
                     <textarea id="note" name="note" rows={3} required className={`${fieldClass} h-auto py-2`} defaultValue={c.vatChecked ? "" : "We could not confirm your VAT number. Reply with a current registration extract and we will review again."} />
                   </Field>
-                  <Button type="submit" variant="danger">Decline application</Button>
+                  <SubmitButton variant="danger" done="Application declined" confirm={{ title: `Decline ${c.company}?`, description: "The reason is sent to the applicant. They can apply again later.", confirmText: "Decline" }}>Decline application</SubmitButton>
                 </form>
               </details>
             </Panel>
@@ -124,7 +132,7 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                       <Link href={routes.admin.tier(tier.id)} className="text-ui-fg-interactive hover:underline">see the tier</Link>
                     </p>
                   )}
-                  <Button type="submit" variant="secondary">Save tier</Button>
+                  <SubmitButton variant="secondary" done="Tier saved">Save tier</SubmitButton>
                 </form>
               ) : (
                 <p className="txt-small text-ui-fg-subtle">This application was declined. The applicant can apply again.</p>
@@ -138,12 +146,12 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                       <Field label="Pause ordering" hint="Prices are hidden until you reinstate the account." htmlFor="reason">
                         <WithIcon icon={<ChatBubble />}><input id="reason" name="note" placeholder="Reason shown to the customer" className={fieldClass} /></WithIcon>
                       </Field>
-                      <Button type="submit" variant="danger">Suspend account</Button>
+                      <SubmitButton variant="danger" done="Account suspended" confirm={{ title: `Suspend ${c.company}?`, description: "Their prices are hidden and they can't order until you reinstate the account.", confirmText: "Suspend" }}>Suspend account</SubmitButton>
                     </>
                   ) : (
                     <>
                       <input type="hidden" name="action" value="reinstate" />
-                      <Button type="submit">Reinstate account</Button>
+                      <SubmitButton done="Account reinstated">Reinstate account</SubmitButton>
                     </>
                   )}
                 </form>

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Container, Text } from "@medusajs/ui"
+import { Text } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { CheckoutForm } from "@/components/commerce/CheckoutForm"
 import { GateCallout } from "@/components/commerce/GateCallout"
@@ -30,10 +30,10 @@ export default async function CheckoutPage() {
     return (
       <PageContainer className="flex max-w-[640px] flex-col gap-6 pt-12">
         <PageHeading title="Checkout" />
-        <Container className="flex flex-col items-start gap-3 p-6">
+        <div className="ig-card flex flex-col items-start gap-3 p-6">
           <Text>Your order is empty.</Text>
           <Button asChild variant="secondary"><Link href={routes.devices()}>Find parts by device</Link></Button>
-        </Container>
+        </div>
       </PageContainer>
     )
   }

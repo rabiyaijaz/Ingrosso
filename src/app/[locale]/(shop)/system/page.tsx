@@ -165,7 +165,7 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
 
 function State({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-2 rounded-xl bg-ui-bg-base p-4 shadow-elevation-card-rest">
+    <div className="ig-card flex flex-col gap-2 p-4">
       <span className="txt-compact-xsmall text-ui-fg-muted">{label}</span>
       {children}
     </div>

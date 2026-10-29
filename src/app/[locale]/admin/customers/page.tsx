@@ -2,6 +2,8 @@ import Link from "next/link"
 import { StatusBadge } from "@medusajs/ui"
 import { AdminHeader, Empty, Panel, Tabs, ago } from "@/components/admin/Kit"
 import { Figure } from "@/components/commerce/Figure"
+import { Chip } from "@/components/ui/Chip"
+import { SearchField } from "@/components/ui/SearchField"
 import { CUSTOMER_STATUS, getCustomers, getOrders, getTiers, type CustomerStatus } from "@/lib/admin/data"
 import { euroShort } from "@/lib/admin/stats"
 import { routes } from "@/lib/routes"
@@ -24,7 +26,8 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
     .filter((c) => status === "all" || c.status === status)
     .filter((c) => !tier || c.tierId === tier)
     .filter((c) => !q || `${c.company} ${c.contact} ${c.email} ${c.vatId} ${c.city}`.toLowerCase().includes(q))
-    .sort((a, b) => (a.status === "pending" ? -1 : 0) - (b.status === "pending" ? -1 : 0) || b.appliedAt.localeCompare(a.appliedAt))
+    // Applications first, oldest first (waiting longest); everyone else newest first
+    .sort((a, b) => (a.status === "pending" ? -1 : 0) - (b.status === "pending" ? -1 : 0) || (a.status === "pending" && b.status === "pending" ? a.appliedAt.localeCompare(b.appliedAt) : b.appliedAt.localeCompare(a.appliedAt)))
 
   const count = (s: CustomerStatus | "all") => (s === "all" ? customers.length : customers.filter((c) => c.status === s).length)
   const tab = (id: CustomerStatus | "all", label: string) => ({ id, label, count: count(id), href: routes.admin.customers({ status: id === "all" ? undefined : id, tier, q: sp.q }) })
@@ -39,24 +42,12 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
       <Panel bodyClassName="p-0">
         <form className="flex flex-wrap items-center gap-2 border-b border-ui-border-base p-3" method="get">
           {status !== "all" && <input type="hidden" name="status" value={status} />}
-          <input
-            name="q"
-            type="search"
-            defaultValue={sp.q}
-            placeholder="Company, contact, email or VAT number"
-            aria-label="Search customers"
-            className="h-9 w-full min-w-0 rounded-full sm:w-auto sm:flex-1 bg-ui-bg-field px-4 txt-compact-small shadow-borders-base outline-none placeholder:text-ui-fg-muted focus:shadow-borders-interactive-with-active sm:max-w-[360px]"
-          />
+          <SearchField name="q" defaultValue={sp.q} placeholder="Company, contact, email or VAT number" aria-label="Search customers" className="w-full min-w-0 sm:w-auto sm:max-w-[360px] sm:flex-1" />
           <div className="flex flex-wrap gap-1">
             {tiers.map((t) => (
-              <Link
-                key={t.id}
-                href={routes.admin.customers({ status: status === "all" ? undefined : status, tier: tier === t.id ? undefined : t.id, q: sp.q })}
-                aria-pressed={tier === t.id}
-                className={tier === t.id ? "rounded-full bg-ui-bg-highlight px-3 py-1.5 txt-compact-small-plus text-ui-fg-interactive shadow-borders-interactive-with-active" : "rounded-full px-3 py-1.5 txt-compact-small text-ui-fg-subtle shadow-borders-base hover:text-ui-fg-base"}
-              >
-                {t.name}
-              </Link>
+              <Chip key={t.id} asChild selected={tier === t.id}>
+                <Link href={routes.admin.customers({ status: status === "all" ? undefined : status, tier: tier === t.id ? undefined : t.id, q: sp.q })}>{t.name}</Link>
+              </Chip>
             ))}
           </div>
         </form>
@@ -65,7 +56,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
             {status === "pending" ? "New applications appear here with their tax number already checked." : "Clear the search or the tier filter to see more."}
           </Empty>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="ig-no-scrollbar overflow-x-auto">
             <table className="w-full txt-compact-small">
               <thead>
                 <tr className="text-left text-ui-fg-subtle">

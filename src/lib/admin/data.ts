@@ -5,7 +5,7 @@ import { listPrice } from "../commerce"
 import { LAB } from "../lab"
 import { readOrders } from "../orders"
 import { tierUnit } from "./pricing"
-import type { AdminOrder, Customer, NewProduct, OrderStatus, PaymentState, Tier } from "./types"
+import type { AdminOrder, Customer, NewProduct, OrderChange, OrderStatus, PaymentState, Tier } from "./types"
 
 export * from "./types"
 
@@ -19,6 +19,7 @@ export const ADMIN_COOKIES = {
   orders: `${PREFIX}orders`,
   tiers: `${PREFIX}tiers`,
   products: `${PREFIX}products`,
+  stock: `${PREFIX}stock`,
 } as const
 
 // ─── Price tiers ────────────────────────────────────────────────────────────
@@ -164,7 +165,7 @@ export async function getCustomers(): Promise<Customer[]> {
 export async function getOrders(): Promise<AdminOrder[]> {
   const [tiers, statuses, placed] = await Promise.all([
     getTiers(),
-    readJson<Record<string, OrderStatus>>(ADMIN_COOKIES.orders, {}),
+    getOrderChanges(),
     readOrders(),
   ])
   // Orders placed in the storefront prototype show up as new orders from the sample shop
@@ -177,7 +178,13 @@ export async function getOrders(): Promise<AdminOrder[]> {
     status: "new",
     payment: o.payment === "invoice" ? "invoiced" : "paid",
   }))
-  return [...fromStore, ...sampleOrders(tiers)].map((o) => ({ ...o, status: statuses[o.ref] ?? o.status }))
+  return [...fromStore, ...sampleOrders(tiers)].map((o) => ({ ...o, ...statuses[o.ref], status: statuses[o.ref]?.status ?? o.status }))
+}
+
+// Per order: its status, tracking and history. Older cookies kept the status alone.
+export async function getOrderChanges(): Promise<Record<string, OrderChange>> {
+  const raw = await readJson<Record<string, OrderStatus | OrderChange>>(ADMIN_COOKIES.orders, {})
+  return Object.fromEntries(Object.entries(raw).map(([ref, v]) => [ref, typeof v === "string" ? { status: v } : v]))
 }
 
 export async function getAddedProducts(): Promise<NewProduct[]> {
@@ -185,8 +192,14 @@ export async function getAddedProducts(): Promise<NewProduct[]> {
 }
 
 // Every product the admin manages: the catalogue plus parts added here
+// Stock the desk booked in (received deliveries, counts), per product slug
+export async function getStockChanges(): Promise<Record<string, number>> {
+  return readJson(ADMIN_COOKIES.stock, {})
+}
+
 export async function getAdminProducts(): Promise<(Product & { added?: boolean })[]> {
-  const added = await getAddedProducts()
+  const [added, booked] = await Promise.all([getAddedProducts(), getStockChanges()])
+  const withStock = (p: Product): Product => (booked[p.slug] ? { ...p, commercial: { ...p.commercial, onHand: p.commercial.onHand + booked[p.slug] } } : p)
   return [
     ...added.map((a) => ({
       slug: a.slug,
@@ -201,5 +214,5 @@ export async function getAdminProducts(): Promise<(Product & { added?: boolean }
       added: true,
     })),
     ...PRODUCTS,
-  ]
+  ].map(withStock)
 }

@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
+import { Heading, StatusBadge, Table, Text } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { CheckCircleSolid } from "@medusajs/icons"
 import { Figure } from "@/components/commerce/Figure"
@@ -43,14 +43,14 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
         <Image src="/states/order-confirmed.webp" alt="" width={168} height={168} priority className="ig-float size-[140px] shrink-0 object-contain sm:size-[168px]" />
       </div>
 
-      <Container className="grid gap-4 p-5 sm:grid-cols-4">
+      <div className="ig-card grid gap-4 p-5 sm:grid-cols-4">
         <Fact label="Placed" value={placed} />
         <Fact label="Status" value={<StatusBadge color="blue">Received</StatusBadge>} />
         <Fact label="Shipping" value={CARRIERS.find((c) => c.id === order.carrier)?.name ?? ""} />
         <Fact label="Payment" value={PAYMENTS.find((p) => p.id === order.payment)?.name ?? ""} />
-      </Container>
+      </div>
 
-      <div className="overflow-hidden rounded-xl shadow-elevation-card-rest">
+      <div className="ig-card overflow-hidden">
         <Table>
           <Table.Header>
             <Table.Row>

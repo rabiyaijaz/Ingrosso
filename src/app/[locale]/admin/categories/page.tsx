@@ -6,6 +6,7 @@ import { AdminHeader, Panel } from "@/components/admin/Kit"
 import { PartIcon } from "@/components/catalog/PartIcon"
 import { Figure } from "@/components/commerce/Figure"
 import { Button } from "@/components/ui/Button"
+import { SubmitButton } from "@/components/ui/SubmitButton"
 import { getAdminProducts, getOrders } from "@/lib/admin/data"
 import { euroShort } from "@/lib/admin/stats"
 import { GRADES } from "@/lib/catalog"
@@ -57,7 +58,7 @@ export default async function CategoriesPage() {
                   <MoveButton slug={c.slug} dir="down" disabled={i === categories.length - 1} />
                 </div>
               </div>
-              <dl className="grid grid-cols-3 gap-2 rounded-xl bg-ui-bg-subtle p-3">
+              <dl className="ig-inset grid grid-cols-3 gap-2 p-3">
                 <Stat label="Parts" value={String(items.length)} />
                 <Stat label="Out of stock" value={String(out)} />
                 <Stat label="30-day sales" value={euroShort(revenue.get(c.slug) ?? 0)} />
@@ -68,9 +69,9 @@ export default async function CategoriesPage() {
                 {c.visible && <Link href={routes.category(c.slug)} className="text-ui-fg-interactive hover:underline">View in store</Link>}
                 <form action={toggleCategory} className="ml-auto">
                   <input type="hidden" name="slug" value={c.slug} />
-                  <button type="submit" className="flex items-center gap-1 text-ui-fg-subtle hover:text-ui-fg-base">
-                    {c.visible ? <><EyeSlashMini /> Hide</> : <><EyeMini /> Show</>}
-                  </button>
+                  <SubmitButton variant="ghost" size="sm" iconLeft={c.visible ? <EyeSlashMini /> : <EyeMini />} done={c.visible ? `${c.plural} hidden from the store` : `${c.plural} shown in the store`}>
+                    {c.visible ? "Hide" : "Show"}
+                  </SubmitButton>
                 </form>
               </div>
             </Panel>
@@ -93,14 +94,9 @@ function MoveButton({ slug, dir, disabled }: { slug: string; dir: "up" | "down";
     <form action={moveCategory}>
       <input type="hidden" name="slug" value={slug} />
       <input type="hidden" name="dir" value={dir} />
-      <button
-        type="submit"
-        disabled={disabled}
-        aria-label={dir === "up" ? "Move earlier in the top bar" : "Move later in the top bar"}
-        className="grid size-6 place-items-center rounded-md text-ui-fg-muted hover:bg-ui-bg-base-hover hover:text-ui-fg-base disabled:pointer-events-none disabled:opacity-30"
-      >
+      <SubmitButton variant="ghost" size="sm" iconOnly disabled={disabled} aria-label={dir === "up" ? "Move earlier in the top bar" : "Move later in the top bar"} className="disabled:opacity-30">
         {dir === "up" ? <ArrowUpMini /> : <ArrowDownMini />}
-      </button>
+      </SubmitButton>
     </form>
   )
 }

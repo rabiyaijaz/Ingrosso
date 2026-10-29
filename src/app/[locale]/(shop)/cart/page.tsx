@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Container, Heading, Table, Text } from "@medusajs/ui"
+import { Heading, Table, Text } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { GradeBadge } from "@/components/catalog/Grade"
 import { PartImage } from "@/components/catalog/PartImage"
@@ -44,13 +44,13 @@ export default async function CartPage() {
         )}
       </PageHeading>
       {lines.length === 0 ? (
-        <Container className="flex flex-col items-start gap-3 p-6">
+        <div className="ig-card flex flex-col items-start gap-3 p-6">
           <Text>Nothing in this order yet.</Text>
           <Button asChild variant="secondary"><Link href={routes.devices()}>Find parts by device</Link></Button>
-        </Container>
+        </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-          <div className="overflow-hidden rounded-xl shadow-elevation-card-rest">
+          <div className="ig-card overflow-hidden">
             <Table>
               <Table.Header>
                 <Table.Row>
@@ -85,7 +85,7 @@ export default async function CartPage() {
               </Table.Body>
             </Table>
           </div>
-          <Container className="flex h-fit flex-col gap-4 p-5">
+          <div className="ig-card flex h-fit flex-col gap-4 p-5">
             <Heading level="h2" className="txt-large-plus">Summary</Heading>
             <div className="flex justify-between txt-compact-small">
               <span className="text-ui-fg-subtle">Subtotal, excl. VAT</span>
@@ -97,7 +97,7 @@ export default async function CartPage() {
             <Button asChild size="large" className="w-full">
               <Link href={routes.checkout()}>Continue to checkout</Link>
             </Button>
-          </Container>
+          </div>
         </div>
       )}
     </PageContainer>

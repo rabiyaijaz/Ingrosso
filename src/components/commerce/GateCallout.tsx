@@ -25,7 +25,7 @@ export function GateCallout({ state }: { state: ViewerState }) {
   if (state !== "visitor" && state !== "pending" && state !== "suspended") return null
   const copy = COPY[state]
   return (
-    <div className="flex flex-col gap-4 rounded-xl bg-ui-bg-subtle p-5">
+    <div className="ig-inset flex flex-col gap-4 p-5">
       <div className="flex gap-3">
         <LockClosedSolid className="mt-0.5 shrink-0 text-ui-fg-interactive" />
         <div>

@@ -22,7 +22,7 @@ export function ProductTable({ products, viewer, groupByCategory = false, classN
 
   if (!products.length) {
     return (
-      <div className="rounded-xl bg-ui-bg-subtle px-6 py-12 text-center">
+      <div className="ig-inset px-6 py-12 text-center">
         <p className="txt-medium-plus">No parts match these filters</p>
         <p className="mt-1 txt-small text-ui-fg-subtle">Clear a grade or category to see more.</p>
       </div>
@@ -41,7 +41,7 @@ export function ProductTable({ products, viewer, groupByCategory = false, classN
               <Figure className="txt-compact-small text-ui-fg-muted">{g.items.length}</Figure>
             </Heading>
           )}
-          <div className="overflow-hidden rounded-xl shadow-elevation-card-rest">
+          <div className="ig-card overflow-hidden">
             <Table>
               <Table.Header>
                 <Table.Row>

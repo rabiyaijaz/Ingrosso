@@ -67,7 +67,7 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
           </div>
 
           {grade && (
-            <div className="flex flex-col gap-3 rounded-xl bg-ui-bg-subtle p-5">
+            <div className="ig-inset flex flex-col gap-3 p-5">
               <GradeScale grade={grade.id} size="lg" />
               <Text size="small" className="text-ui-fg-subtle">
                 <span className="text-ui-fg-base">{grade.label}.</span> {grade.summary}{" "}
@@ -79,7 +79,7 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
           {view.price.kind === "gated" ? (
             <GateCallout state={viewer.state} />
           ) : (
-            <div className="flex flex-col gap-5 rounded-xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+            <div className="ig-card flex flex-col gap-5 p-5">
               <PriceTag view={view.price} size="lg" />
               {view.stock.kind === "out" ? (
                 <Text size="small" className="text-ui-fg-subtle">Out of stock. Compare the other grades below for one that ships today.</Text>

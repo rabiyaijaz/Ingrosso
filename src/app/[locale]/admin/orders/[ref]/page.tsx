@@ -1,11 +1,13 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { StatusBadge, clx } from "@medusajs/ui"
-import { CheckMini } from "@medusajs/icons"
-import { setOrderStatus } from "@/app/admin-actions"
-import { AdminHeader, Panel, shortDate } from "@/components/admin/Kit"
+import { Hashtag, ChatBubble, CheckMini, TruckFast } from "@medusajs/icons"
+import { addOrderNote, setOrderStatus } from "@/app/admin-actions"
+import { Field, NativeSelect, fieldClass } from "@/components/admin/Fields"
+import { AdminHeader, Panel, ago, shortDate } from "@/components/admin/Kit"
 import { Figure } from "@/components/commerce/Figure"
-import { Button } from "@/components/ui/Button"
+import { SubmitButton } from "@/components/ui/SubmitButton"
+import { WithIcon } from "@/components/ui/WithIcon"
 import { ORDER_STATUS, PAYMENT_STATE, TERMS_SHORT, getCustomers, getOrders, getTiers, type OrderStatus } from "@/lib/admin/data"
 import { productBySlug } from "@/lib/catalog"
 import { formatMoney } from "@/lib/money"
@@ -13,6 +15,8 @@ import { routes } from "@/lib/routes"
 
 const FLOW: OrderStatus[] = ["new", "picking", "packed", "shipped", "delivered"]
 const NEXT_LABEL: Partial<Record<OrderStatus, string>> = { new: "Start picking", picking: "Mark as packed", packed: "Mark as shipped", shipped: "Mark as delivered" }
+const DONE_LABEL: Partial<Record<OrderStatus, string>> = { picking: "Picking started", packed: "Marked as packed", shipped: "Marked as shipped", delivered: "Marked as delivered" }
+const CARRIERS = ["PostNL", "DHL", "DPD", "UPS"]
 
 export default async function AdminOrderPage({ params }: { params: Promise<{ ref: string }> }) {
   const { ref } = await params
@@ -40,13 +44,15 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ref
 
       {/* Progress through the warehouse, with the next step right beside it */}
       {o.status !== "cancelled" && (
-        <div className="mb-6 flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest sm:flex-row sm:items-center">
+        <div className="ig-card mb-6 flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
           <ol className="grid flex-1 grid-cols-5 gap-2" aria-label="Progress">
             {FLOW.map((s, i) => {
               const done = i <= at
               return (
                 <li key={s} className="flex flex-col gap-2">
-                  <span className={clx("h-1.5 rounded-full", done ? "bg-ig-blue" : "bg-ui-bg-component")} />
+                  <span className="h-1.5 overflow-hidden rounded-full bg-ui-bg-component">
+                    {done && <span className="ig-progress-fill block h-full rounded-full bg-ig-blue" style={{ animationDelay: `${i * 90}ms` }} />}
+                  </span>
                   <span className={clx("flex items-center gap-1 txt-compact-small", done ? "text-ui-fg-base" : "text-ui-fg-muted")}>
                     {done && <CheckMini className="text-ui-fg-interactive" />}
                     {ORDER_STATUS[s].label}
@@ -56,10 +62,21 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ref
             })}
           </ol>
           {next && (
-            <form action={setOrderStatus} className="shrink-0">
+            <form action={setOrderStatus} className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
               <input type="hidden" name="ref" value={o.ref} />
               <input type="hidden" name="status" value={next} />
-              <Button type="submit" className="w-full sm:w-auto">{NEXT_LABEL[o.status]}</Button>
+              {/* Shipping needs the parcel's tracking, asked for in the same step */}
+              {next === "shipped" && (
+                <>
+                  <NativeSelect name="carrier" aria-label="Carrier" defaultValue="PostNL" className="sm:w-28">
+                    {CARRIERS.map((c) => <option key={c}>{c}</option>)}
+                  </NativeSelect>
+                  <WithIcon icon={<Hashtag />}>
+                    <input name="tracking" required aria-label="Tracking number" placeholder="Tracking number" className={`${fieldClass} sm:w-44`} />
+                  </WithIcon>
+                </>
+              )}
+              <SubmitButton className="w-full sm:w-auto" done={DONE_LABEL[next]} doneDescription={o.ref}>{NEXT_LABEL[o.status]}</SubmitButton>
             </form>
           )}
         </div>
@@ -108,13 +125,46 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ref
               </div>
             )}
           </Panel>
+          {o.tracking && (
+            <Panel title="Shipment">
+              <p className="flex items-center gap-2 txt-compact-small">
+                <TruckFast className="text-ui-fg-interactive" />
+                {o.carrier} · <Figure>{o.tracking}</Figure>
+              </p>
+            </Panel>
+          )}
+          <Panel title="History">
+            <ol className="flex flex-col gap-3">
+              {[...(o.history ?? [])].reverse().map((h, i) => (
+                <li key={i} className="ig-row-in flex gap-2 txt-compact-small" style={{ animationDelay: `${i * 40}ms` }}>
+                  <span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-[2px] bg-ig-blue" />
+                  <span className="flex min-w-0 flex-col">
+                    <span className="text-ui-fg-base">{h.status ? ORDER_STATUS[h.status].label : h.note}</span>
+                    {h.status && h.note && <span className="text-ui-fg-subtle">{h.note}</span>}
+                    <span className="txt-compact-xsmall text-ui-fg-muted">{ago(h.at)}</span>
+                  </span>
+                </li>
+              ))}
+              <li className="flex gap-2 txt-compact-small">
+                <span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-[2px] bg-ui-fg-muted" />
+                <span className="flex flex-col"><span>Placed by {c?.company}</span><span className="txt-compact-xsmall text-ui-fg-muted">{shortDate(o.placedAt)}</span></span>
+              </li>
+            </ol>
+            <form action={addOrderNote} className="mt-4 flex flex-col gap-2 border-t border-ui-border-base pt-4">
+              <input type="hidden" name="ref" value={o.ref} />
+              <Field label="Add a note" hint="Only the trade desk sees notes." htmlFor="note">
+                <WithIcon icon={<ChatBubble />}><input id="note" name="note" required maxLength={120} placeholder="For example: customer will collect" className={fieldClass} /></WithIcon>
+              </Field>
+              <SubmitButton variant="secondary" size="sm" done="Note added" className="self-start">Add note</SubmitButton>
+            </form>
+          </Panel>
           {o.status !== "cancelled" && o.status !== "shipped" && o.status !== "delivered" && (
             <Panel title="Cancel">
               <form action={setOrderStatus} className="flex flex-col gap-3">
                 <input type="hidden" name="ref" value={o.ref} />
                 <input type="hidden" name="status" value="cancelled" />
                 <p className="txt-small text-ui-fg-subtle">Releases the reserved stock back to the shelf.</p>
-                <Button type="submit" variant="danger">Cancel order</Button>
+                <SubmitButton variant="danger" done="Order cancelled" confirm={{ title: `Cancel ${o.ref}?`, description: "The reserved stock goes back to the shelf. This can't be undone.", confirmText: "Cancel order" }}>Cancel order</SubmitButton>
               </form>
             </Panel>
           )}

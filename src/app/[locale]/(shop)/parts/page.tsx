@@ -35,7 +35,7 @@ export default async function PartsPage() {
       </PageHeading>
 
       {/* Start from the handset: plain brand pills in one quiet card, above the part tiles */}
-      <section aria-labelledby="by-device" className="flex flex-col gap-3 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+      <section aria-labelledby="by-device" className="ig-card flex flex-col gap-3 p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="by-device" className="txt-compact-medium-plus">Start from the handset</h2>
           <Link href={routes.devices()} className="flex items-center gap-1 txt-compact-small-plus text-ui-fg-interactive hover:underline">

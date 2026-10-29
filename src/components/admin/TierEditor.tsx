@@ -61,7 +61,7 @@ export function TierEditor({
         <Button type="button" isLoading={pending} onClick={save}>{isNew ? "Create tier" : "Save tier"}</Button>
       </div>
       <div className="flex min-w-0 flex-col gap-4">
-        <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-4 p-5">
           <h2 className="txt-compact-medium-plus">Name and who it is for</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" htmlFor="tname">
@@ -76,7 +76,7 @@ export function TierEditor({
           </Field>
         </section>
 
-        <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-4 p-5">
           <h2 className="txt-compact-medium-plus">Discount and terms</h2>
           <div className="grid gap-4 sm:grid-cols-3">
             <Field label="Off the list price" htmlFor="disc">
@@ -99,7 +99,7 @@ export function TierEditor({
           </div>
         </section>
 
-        <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-4 p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="txt-compact-medium-plus">Quantity breaks</h2>
             <span className="txt-compact-small text-ui-fg-subtle">Extra off per line, on top of the discount</span>
@@ -121,15 +121,15 @@ export function TierEditor({
           </Button>
         </section>
 
-        <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-4 p-5">
           <div className="flex flex-col gap-1">
             <h2 className="txt-compact-medium-plus">Custom rules</h2>
             <p className="txt-compact-small text-ui-fg-subtle">Change the price for one category, grade family or grade. Use a minus to charge more, for example to protect margin on genuine parts.</p>
           </div>
-          {t.rules.length === 0 && <p className="rounded-xl bg-ui-bg-subtle px-4 py-3 txt-small text-ui-fg-subtle">No rules: the discount and breaks apply to every part.</p>}
+          {t.rules.length === 0 && <p className="ig-inset px-4 py-3 txt-small text-ui-fg-subtle">No rules: the discount and breaks apply to every part.</p>}
           <ul className="flex flex-col gap-2">
             {t.rules.map((r, i) => (
-              <li key={r.id} className="flex flex-wrap items-center gap-2 rounded-xl bg-ui-bg-subtle p-2 txt-compact-small">
+              <li key={r.id} className="ig-inset flex flex-wrap items-center gap-2 p-2 txt-compact-small">
                 <NativeSelect aria-label="Applies to" value={r.scope} className="w-36" onChange={(e) => {
                   const scope = e.target.value as TierRule["scope"]
                   set("rules", t.rules.map((x, j) => (j === i ? { ...x, scope, target: targets(scope)[0].value } : x)))
@@ -156,7 +156,7 @@ export function TierEditor({
       </div>
 
       <div className="flex flex-col gap-4 xl:sticky xl:top-6 xl:self-start">
-        <section className="flex flex-col gap-3 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-3 p-5">
           <div className="flex items-baseline justify-between">
             <h2 className="txt-compact-medium-plus">Preview</h2>
             <span className="txt-compact-small text-ui-fg-subtle">Updates as you type</span>
@@ -186,7 +186,7 @@ export function TierEditor({
           </table>
         </section>
         {!isNew && (
-          <form action={deleteTier} className="flex flex-col gap-2 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest">
+          <form action={deleteTier} className="ig-card flex flex-col gap-2 p-4">
             <input type="hidden" name="id" value={tier.id} />
             <Button type="submit" variant="danger" size="sm" disabled={!canDelete} className="w-fit">Delete tier</Button>
             {!canDelete && <p className="txt-compact-small text-ui-fg-subtle">{deleteReason}</p>}

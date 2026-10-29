@@ -25,7 +25,7 @@ export default function ApplyPage() {
         <ApplicationForm />
       </div>
       <aside className="hidden lg:block">
-        <div className="sticky top-6 flex flex-col overflow-hidden rounded-panel bg-ui-bg-base shadow-elevation-card-rest">
+        <div className="ig-card sticky top-6 flex flex-col overflow-hidden">
           <LogoStage className="h-[200px] rounded-none shadow-none" />
           <div className="flex flex-col gap-5 p-6">
             <div className="flex flex-col gap-1.5">

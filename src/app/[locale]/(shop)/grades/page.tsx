@@ -18,7 +18,7 @@ export default function GradesPage() {
           <Heading level="h2" className="txt-xlarge-plus">{f}</Heading>
           <ul className="flex flex-col gap-3">
             {GRADES.filter((g) => g.family === f).map((g) => (
-              <li key={g.id} className="grid gap-3 rounded-xl bg-ui-bg-subtle p-5 md:grid-cols-[260px_1fr] md:items-center">
+              <li key={g.id} className="ig-inset grid gap-3 p-5 md:grid-cols-[260px_1fr] md:items-center">
                 <div className="flex flex-col gap-3">
                   <GradeBadge grade={g.id} className="w-fit" />
                   <GradeScale grade={g.id} />

@@ -54,7 +54,7 @@ export function Panel({
   bodyClassName?: string
 }) {
   return (
-    <section className={clx("flex min-w-0 flex-col rounded-2xl bg-ui-bg-base shadow-elevation-card-rest", className)}>
+    <section className={clx("ig-card flex min-w-0 flex-col", className)}>
       {(title || action) && (
         <div className="flex min-h-12 items-center justify-between gap-3 px-5 pt-4">
           {title && <Heading level="h2" className="txt-compact-medium-plus">{title}</Heading>}

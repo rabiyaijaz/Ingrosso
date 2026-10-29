@@ -4,8 +4,8 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { GRADES, PRODUCTS, type GradeId } from "@/lib/catalog"
-import { ADMIN_COOKIES, DEFAULT_TIERS, getAddedProducts, getCustomers, getTiers } from "@/lib/admin/data"
-import type { AdminCategory, Customer, NewProduct, OrderStatus, Tier } from "@/lib/admin/types"
+import { ADMIN_COOKIES, DEFAULT_TIERS, getAddedProducts, getCustomers, getOrderChanges, getStockChanges, getTiers } from "@/lib/admin/data"
+import type { AdminCategory, Customer, NewProduct, OrderChange, OrderStatus, Tier } from "@/lib/admin/types"
 import { CATEGORIES_COOKIE, getCategories } from "@/lib/categories"
 import { routes } from "@/lib/routes"
 
@@ -48,16 +48,47 @@ export async function setCustomerAccount(form: FormData) {
 
 const FLOW: OrderStatus[] = ["new", "picking", "packed", "shipped", "delivered"]
 
+// One order's changes: status, tracking and a short history (kept small, cookies are)
+async function patchOrder(ref: string, patch: (o: OrderChange) => OrderChange) {
+  const all = await getOrderChanges()
+  all[ref] = patch(all[ref] ?? {})
+  if (all[ref].history) all[ref].history = all[ref].history!.slice(-8)
+  ;(await cookies()).set(ADMIN_COOKIES.orders, JSON.stringify(all), OPTS)
+  revalidatePath("/", "layout")
+}
+
 export async function setOrderStatus(form: FormData) {
   const ref = String(form.get("ref"))
   const status = String(form.get("status")) as OrderStatus
   if (![...FLOW, "cancelled"].includes(status)) return
-  const store = await cookies()
-  const raw = store.get(ADMIN_COOKIES.orders)?.value
-  const all: Record<string, OrderStatus> = raw ? JSON.parse(raw) : {}
-  all[ref] = status
-  store.set(ADMIN_COOKIES.orders, JSON.stringify(all), OPTS)
+  const carrier = String(form.get("carrier") ?? "").trim().slice(0, 24)
+  const tracking = String(form.get("tracking") ?? "").trim().slice(0, 40)
+  const note = String(form.get("note") ?? "").trim().slice(0, 120)
+  await patchOrder(ref, (o) => ({
+    ...o,
+    status,
+    ...(carrier && { carrier }),
+    ...(tracking && { tracking }),
+    history: [...(o.history ?? []), { at: new Date().toISOString(), status, ...(note && { note }) }],
+  }))
+}
+
+// Several orders one step on at once (from the orders list)
+export async function bulkOrderStatus(form: FormData) {
+  const status = String(form.get("status")) as OrderStatus
+  if (!FLOW.includes(status)) return
+  const refs = form.getAll("ref").map(String).slice(0, 40)
+  const all = await getOrderChanges()
+  const at = new Date().toISOString()
+  for (const ref of refs) all[ref] = { ...all[ref], status, history: [...(all[ref]?.history ?? []), { at, status }].slice(-8) }
+  ;(await cookies()).set(ADMIN_COOKIES.orders, JSON.stringify(all), OPTS)
   revalidatePath("/", "layout")
+}
+
+export async function addOrderNote(form: FormData) {
+  const note = String(form.get("note") ?? "").trim().slice(0, 120)
+  if (!note) return
+  await patchOrder(String(form.get("ref")), (o) => ({ ...o, history: [...(o.history ?? []), { at: new Date().toISOString(), note }] }))
 }
 
 // ─── Price tiers ────────────────────────────────────────────────────────────
@@ -164,6 +195,17 @@ export async function deleteCategory(form: FormData) {
 }
 
 // ─── Products ───────────────────────────────────────────────────────────────
+// Book stock in (a delivery) or out (a count correction), per part
+export async function adjustStock(form: FormData) {
+  const slug = String(form.get("slug"))
+  const qty = Math.round(Number(form.get("qty")))
+  if (!slug || !Number.isFinite(qty) || qty === 0 || Math.abs(qty) > 9999) return
+  const all = await getStockChanges()
+  all[slug] = (all[slug] ?? 0) + qty
+  ;(await cookies()).set(ADMIN_COOKIES.stock, JSON.stringify(all), OPTS)
+  revalidatePath("/", "layout")
+}
+
 export async function addProduct(json: string) {
   const p = JSON.parse(json) as Omit<NewProduct, "slug">
   const errors: Record<string, string> = {}

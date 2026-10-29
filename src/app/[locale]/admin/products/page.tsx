@@ -5,7 +5,12 @@ import { AdminHeader, Empty, Panel, Tabs } from "@/components/admin/Kit"
 import { PartIcon } from "@/components/catalog/PartIcon"
 import { GradeBadge } from "@/components/catalog/Grade"
 import { Figure } from "@/components/commerce/Figure"
+import { adjustStock } from "@/app/admin-actions"
+import { fieldClass } from "@/components/admin/Fields"
 import { Button } from "@/components/ui/Button"
+import { Chip } from "@/components/ui/Chip"
+import { SearchField } from "@/components/ui/SearchField"
+import { SubmitButton } from "@/components/ui/SubmitButton"
 import { getAdminProducts, getTiers } from "@/lib/admin/data"
 import { tierUnit } from "@/lib/admin/pricing"
 import { getCategories } from "@/lib/categories"
@@ -35,7 +40,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 
   return (
     <>
-      <AdminHeader title="Products" description={`${all.length} parts. List price is what the first tier pays for one; every other tier is calculated from it.`}>
+      <AdminHeader title="Products" description={`${all.length} parts. List price is what the first tier pays for one; every other tier is calculated from it. Book deliveries in from Running low or Out of stock.`}>
         <Button asChild iconLeft={<Plus />}><Link href={routes.admin.newProduct()}>Add product</Link></Button>
       </AdminHeader>
       <Tabs
@@ -50,25 +55,22 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
         <form method="get" className="flex flex-wrap items-center gap-2 border-b border-ui-border-base p-3">
           {stock && <input type="hidden" name="stock" value={stock} />}
           {cat && <input type="hidden" name="cat" value={cat} />}
-          <input name="q" type="search" defaultValue={sp.q} placeholder="Name or SKU" aria-label="Search products" className="h-9 w-full min-w-0 rounded-full sm:w-auto sm:flex-1 bg-ui-bg-field px-4 txt-compact-small shadow-borders-base outline-none placeholder:text-ui-fg-muted focus:shadow-borders-interactive-with-active sm:max-w-[300px]" />
+          <SearchField name="q" defaultValue={sp.q} placeholder="Name or SKU" aria-label="Search products" className="w-full min-w-0 sm:w-auto sm:max-w-[300px] sm:flex-1" />
           <div className="flex flex-wrap gap-1">
             {CATEGORIES.map((c) => (
-              <Link
-                key={c.slug}
-                href={href({ cat: cat === c.slug ? undefined : c.slug })}
-                aria-pressed={cat === c.slug}
-                className={cat === c.slug ? "flex items-center gap-1.5 rounded-full bg-ui-bg-highlight px-3 py-1.5 txt-compact-small-plus text-ui-fg-interactive shadow-borders-interactive-with-active" : "flex items-center gap-1.5 rounded-full px-3 py-1.5 txt-compact-small text-ui-fg-subtle shadow-borders-base hover:text-ui-fg-base"}
-              >
-                <PartIcon category={c.icon} bare className="size-4" />
-                {c.plural}
-              </Link>
+              <Chip key={c.slug} asChild selected={cat === c.slug}>
+                <Link href={href({ cat: cat === c.slug ? undefined : c.slug })}>
+                  <PartIcon category={c.icon} bare className="size-4" />
+                  {c.plural}
+                </Link>
+              </Chip>
             ))}
           </div>
         </form>
         {list.length === 0 ? (
           <Empty title="No products match">Clear the search or a filter.</Empty>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="ig-no-scrollbar overflow-x-auto">
             <table className="w-full txt-compact-small">
               <thead>
                 <tr className="text-left text-ui-fg-subtle">
@@ -77,6 +79,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                   <th className="px-3 py-2.5 text-right font-normal">List price</th>
                   <th className="hidden px-3 py-2.5 text-right font-normal lg:table-cell">{top.name} price</th>
                   <th className="px-5 py-2.5 text-right font-normal">Available</th>
+                  {stock && <th className="px-5 py-2.5 text-right font-normal">Book in</th>}
                 </tr>
               </thead>
               <tbody>
@@ -102,6 +105,16 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                       <td className="px-5 py-2.5 text-right">
                         {a === 0 ? <StatusBadge color="red">Out</StatusBadge> : a <= 12 ? <StatusBadge color="orange"><Figure>{a}</Figure> left</StatusBadge> : <Figure>{a}</Figure>}
                       </td>
+                      {/* On the low and out views: book a delivery in without leaving the list */}
+                      {stock && (
+                        <td className="px-5 py-1.5">
+                          <form action={adjustStock} className="flex items-center justify-end gap-1.5">
+                            <input type="hidden" name="slug" value={p.slug} />
+                            <input name="qty" type="number" min={1} max={9999} required defaultValue={25} aria-label={`Units received for ${p.sku}`} className={`${fieldClass} ig-figure w-20 text-right`} />
+                            <SubmitButton size="sm" variant="secondary" done="Stock booked in" doneDescription={p.sku}>Receive</SubmitButton>
+                          </form>
+                        </td>
+                      )}
                     </tr>
                   )
                 })}

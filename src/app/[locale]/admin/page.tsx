@@ -8,6 +8,7 @@ import { AdminHeader, Panel, PanelLink, ago, shortDate } from "@/components/admi
 import { Figure } from "@/components/commerce/Figure"
 import { CutoffCountdown } from "@/components/layout/CutoffCountdown"
 import { Button } from "@/components/ui/Button"
+import { SubmitButton } from "@/components/ui/SubmitButton"
 import { ORDER_STATUS, getCustomers, getOrders, getTiers } from "@/lib/admin/data"
 import { dashboardStats, euroShort, euroWhole, niceMax } from "@/lib/admin/stats"
 import { formatMoney } from "@/lib/money"
@@ -108,7 +109,7 @@ export default async function AdminHome() {
         <Panel title="Applications" action={<PanelLink href={routes.admin.customers({ status: "pending" })}>All</PanelLink>} bodyClassName="flex flex-col gap-3">
           {s.pending.length === 0 && <p className="txt-small text-ui-fg-subtle">No applications waiting.</p>}
           {s.pending.slice(0, 3).map((c) => (
-            <div key={c.id} className="rounded-xl bg-ui-bg-subtle p-3">
+            <div key={c.id} className="ig-inset p-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <Link href={routes.admin.customer(c.id)} className="block truncate txt-compact-small-plus hover:underline">{c.company}</Link>
@@ -120,16 +121,24 @@ export default async function AdminHome() {
                   <StatusBadge color="red" className="shrink-0">VAT not found</StatusBadge>
                 )}
               </div>
-              <form action={decideApplication} className="mt-3 flex items-center gap-2">
-                <input type="hidden" name="id" value={c.id} />
-                <input type="hidden" name="next" value={routes.admin.home()} />
-                <input type="hidden" name="decision" value="approve" />
-                <NativeSelect name="tierId" defaultValue={tiers[0].id} aria-label={`Price tier for ${c.company}`} className="flex-1">
-                  {tiers.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-                </NativeSelect>
-                <Button type="submit" size="sm">Approve</Button>
-                <Button asChild size="sm" variant="secondary"><Link href={routes.admin.customer(c.id)}>Review</Link></Button>
-              </form>
+              {/* A failed tax check needs a person to look, so only Review is offered */}
+              {c.vatChecked ? (
+                <form action={decideApplication} className="mt-3 flex items-center gap-2">
+                  <input type="hidden" name="id" value={c.id} />
+                  <input type="hidden" name="next" value={routes.admin.home()} />
+                  <input type="hidden" name="decision" value="approve" />
+                  <NativeSelect name="tierId" defaultValue={tiers[0].id} aria-label={`Price tier for ${c.company}`} className="flex-1">
+                    {tiers.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                  </NativeSelect>
+                  <SubmitButton size="sm" done="Application approved" doneDescription={c.company}>Approve</SubmitButton>
+                  <Button asChild size="sm" variant="secondary"><Link href={routes.admin.customer(c.id)}>Review</Link></Button>
+                </form>
+              ) : (
+                <div className="mt-3 flex items-center justify-between gap-2">
+                  <p className="txt-compact-xsmall text-ui-fg-subtle">Check the tax number before approving.</p>
+                  <Button asChild size="sm" variant="secondary"><Link href={routes.admin.customer(c.id)}>Review</Link></Button>
+                </div>
+              )}
             </div>
           ))}
         </Panel>
@@ -214,7 +223,7 @@ export default async function AdminHome() {
 function AttentionCard({ href, icon, tone, count, title, detail }: { href: string; icon: React.ReactNode; tone: "ok" | "info" | "warn" | "bad"; count: number; title: string; detail: string }) {
   const toneClass = { ok: "text-ui-tag-green-icon", info: "text-ui-tag-blue-icon", warn: "text-ui-tag-orange-icon", bad: "text-ui-tag-red-icon" }[tone]
   return (
-    <Link href={href} className="group flex items-center gap-4 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest outline-none transition-shadow hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus">
+    <Link href={href} className="ig-card group flex items-center gap-4 p-4 outline-none transition-shadow hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus">
       <span className={clx("ig-icon-frame ig-glass-icon", toneClass)} data-size="lg">{icon}</span>
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-baseline gap-x-2">
@@ -230,7 +239,7 @@ function AttentionCard({ href, icon, tone, count, title, detail }: { href: strin
 function Kpi({ label, value, delta, spark, note }: { label: string; value: string; delta?: number; spark?: number[]; note?: string }) {
   const up = (delta ?? 0) >= 0
   return (
-    <div className="flex flex-col gap-2 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest">
+    <div className="ig-card flex flex-col gap-2 p-4">
       <p className="txt-compact-small text-ui-fg-subtle">{label}</p>
       <div className="flex items-end justify-between gap-3">
         <Figure className="text-[28px] font-medium leading-8 tracking-[-0.02em] text-ui-fg-base">{value}</Figure>

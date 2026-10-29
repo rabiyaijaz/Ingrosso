@@ -84,7 +84,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
         <Button type="submit" isLoading={pending}>Add product</Button>
       </div>
       <div className="flex min-w-0 flex-col gap-4">
-        <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-4 p-5">
           <h2 className="txt-compact-medium-plus">The part</h2>
           <Field label="Name" hint="Model, part and grade, as buyers search for it." error={errors.name} htmlFor="name">
             <WithIcon icon={<Tag />}><input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="iPhone 16 Pro screen assembly, Soft OLED" className={fieldClass} aria-invalid={!!errors.name} /></WithIcon>
@@ -130,7 +130,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
           </div>
         </section>
 
-        <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-4 p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="txt-compact-medium-plus">Fits these models</h2>
             <span className="txt-compact-small text-ui-fg-subtle">{models.length} selected</span>
@@ -180,7 +180,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
       </div>
 
       <div className="flex flex-col gap-4">
-        <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-4 p-5">
           <h2 className="txt-compact-medium-plus">Price and stock</h2>
           <Field label="List price, one unit, before VAT" hint="Every price tier is calculated from this." error={errors.list} htmlFor="price">
             <div className="relative">
@@ -198,7 +198,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
           </div>
         </section>
 
-        <section className="flex flex-col gap-3 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <section className="ig-card flex flex-col gap-3 p-5">
           <h2 className="txt-compact-medium-plus">What each tier pays</h2>
           {list > 0 ? (
             <table className="w-full txt-compact-small">

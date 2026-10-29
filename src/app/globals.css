@@ -1201,3 +1201,41 @@ body {
   .js [data-reveal].is-in > *:nth-child(4) { transition-delay: 240ms; }
   .js [data-reveal].is-in > *:nth-child(5) { transition-delay: 320ms; }
 }
+
+/*
+  Shared micro-motion (every flow uses these, nothing hand-rolled per page):
+  .ig-progress-fill  a progress segment fills from the left (order steps)
+  .ig-row-in         a new list row or history item fades up
+  .ig-panel-in       a step panel slides in when its tab opens (checkout, application)
+  .ig-flash          a value that just changed glows once (totals, counts, saved rows)
+  .ig-check-draw     an SVG tick draws itself once (order placed, application sent)
+  .ig-skeleton       loading placeholder shimmer
+*/
+.ig-progress-fill { transform-origin: left center; animation: ig-fill 520ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ig-fill { from { transform: scaleX(0); } }
+.ig-row-in { animation: ig-row-in 360ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ig-row-in { from { opacity: 0; transform: translateY(6px); } }
+.ig-panel-in[data-state="active"], .ig-panel-in:not([hidden]):not([data-state]) { animation: ig-panel-in 320ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ig-panel-in { from { opacity: 0; transform: translateX(10px); } }
+.ig-flash { animation: ig-flash 1.1s ease-out both; border-radius: 6px; }
+@keyframes ig-flash { 0% { background-color: color-mix(in srgb, var(--ig-blue) 18%, transparent); } 100% { background-color: transparent; } }
+.ig-check-draw path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: ig-check-draw 600ms 200ms cubic-bezier(.65,0,.35,1) forwards; }
+.ig-check-draw circle { transform-origin: center; animation: ig-check-ring 500ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ig-check-draw { to { stroke-dashoffset: 0; } }
+@keyframes ig-check-ring { from { transform: scale(0.6); opacity: 0; } }
+.ig-skeleton { background: linear-gradient(90deg, var(--bg-component) 0%, color-mix(in srgb, var(--bg-component) 50%, var(--bg-base)) 50%, var(--bg-component) 100%) 0 0 / 200% 100%; animation: ig-skeleton 1.3s linear infinite; border-radius: 8px; }
+@keyframes ig-skeleton { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .ig-progress-fill, .ig-row-in, .ig-panel-in, .ig-flash, .ig-check-draw path, .ig-check-draw circle, .ig-skeleton { animation: none !important; }
+  .ig-check-draw path { stroke-dashoffset: 0; }
+}
+/*
+  Cards. One surface for every card, panel and summary in the store and the
+  trade desk: .ig-card (16px corners, base surface, the glass card shadow).
+  Links and choices that lift on hover add .ig-card-hover. Insets inside a
+  card (facts, notes, quiet sub-panels) are .ig-inset. Change them here and
+  every card follows.
+*/
+.ig-card { @apply rounded-2xl bg-ui-bg-base shadow-elevation-card-rest; }
+.ig-card-hover { @apply transition-shadow hover:shadow-elevation-card-hover; }
+.ig-inset { @apply rounded-xl bg-ui-bg-subtle; }

@@ -32,7 +32,16 @@ export type AdminOrder = {
   total: Money // before VAT
   status: OrderStatus
   payment: PaymentState
+  carrier?: string
+  tracking?: string
+  // What the trade desk did, newest last: status steps and notes
+  history?: OrderEvent[]
 }
+
+export type OrderEvent = { at: string; status?: OrderStatus; note?: string }
+
+// What the trade desk changed on one order (kept per order ref)
+export type OrderChange = { status?: OrderStatus; carrier?: string; tracking?: string; history?: OrderEvent[] }
 
 // A price tier is a named set of rules applied to the list price.
 //   discount     off the list price, everywhere

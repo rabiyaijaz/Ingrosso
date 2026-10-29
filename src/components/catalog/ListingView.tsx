@@ -57,7 +57,7 @@ function TopbarLayout({ products, viewer, params, hrefFor, facets }: Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* z-20: the dropdown panels must open above the result cards */}
-      <div className="relative z-20 flex flex-wrap items-center gap-2.5 rounded-2xl bg-ui-bg-base p-3 shadow-elevation-card-rest">
+      <div className="ig-card relative z-20 flex flex-wrap items-center gap-2.5 p-3">
         <FindInList params={params} hrefFor={hrefFor} options={f.findOptions} className="w-full sm:w-[220px]" />
         <span className="px-2 txt-compact-small-plus text-ui-fg-subtle">Filter by</span>
         {/* Same order as the filter panel: availability, brand, grade, part */}

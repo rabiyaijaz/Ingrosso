@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
+import { Heading, StatusBadge, Table, Text } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { MaskToggle } from "@/components/account/MaskToggle"
 import { SignOutButton } from "@/components/account/SignOutButton"
@@ -54,7 +54,7 @@ export default async function AccountPage() {
         <PageHeading title={viewer.company ?? "Your account"}>
           <SignOutButton />
         </PageHeading>
-        <Container className="flex flex-col gap-4 p-6">
+        <div className="ig-card flex flex-col gap-4 p-6">
           <StatusBadge color={pending ? "orange" : "red"} className="w-fit">{pending ? "Application under review" : "Account suspended"}</StatusBadge>
           <Heading level="h2" className="txt-xlarge-plus">
             {pending ? "We are reviewing your application" : "Ordering is paused on this account"}
@@ -69,7 +69,7 @@ export default async function AccountPage() {
             <Step done={!pending} label={pending ? "Review by the trade desk" : "Reviewed by the trade desk"} />
             <Step done={false} label={pending ? "Price list assigned, prices visible" : "Suspension lifted"} />
           </ol>
-        </Container>
+        </div>
         <Button asChild variant="secondary" className="w-fit"><Link href={routes.devices()}>Browse the catalogue</Link></Button>
       </PageContainer>
     )
@@ -87,7 +87,7 @@ export default async function AccountPage() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <section className="flex flex-col gap-3">
           <Heading level="h2" className="txt-large-plus">Recent orders</Heading>
-          <div className="overflow-hidden rounded-xl shadow-elevation-card-rest">
+          <div className="ig-card overflow-hidden">
             <Table>
               <Table.Header>
                 <Table.Row>
@@ -120,10 +120,10 @@ export default async function AccountPage() {
         </section>
 
         <aside className="flex flex-col gap-6">
-          <Container className="p-5">
+          <div className="ig-card p-5">
             <MaskToggle masked={viewer.state === "masked"} />
-          </Container>
-          <Container className="flex items-start gap-4 p-5">
+          </div>
+          <div className="ig-card flex items-start gap-4 p-5">
             <CardIcon><MapPin /></CardIcon>
             <div className="flex flex-col gap-3">
               <Heading level="h2" className="txt-compact-medium-plus">Delivery address</Heading>
@@ -131,7 +131,7 @@ export default async function AccountPage() {
                 Fix Point Repairs B.V.<br />Sample street 12<br />3011 AA Rotterdam<br />Netherlands
               </Text>
             </div>
-          </Container>
+          </div>
         </aside>
       </div>
     </PageContainer>

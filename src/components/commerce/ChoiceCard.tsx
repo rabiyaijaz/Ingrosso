@@ -21,7 +21,7 @@ export function ChoiceCard({ value, icon, label, detail, aside }: { value: strin
     <label
       htmlFor={id}
       className={clx(
-        "flex cursor-pointer items-center gap-4 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest outline-none transition-shadow",
+        "ig-card flex cursor-pointer items-center gap-4 p-4 outline-none transition-shadow",
         "hover:shadow-elevation-card-hover has-[[data-state=checked]]:shadow-borders-interactive-with-active has-[:focus-visible]:shadow-borders-focus"
       )}
     >

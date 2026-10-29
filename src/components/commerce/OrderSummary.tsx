@@ -33,7 +33,7 @@ export function OrderSummary({
 
   return (
     <div className="flex h-fit flex-col gap-3 lg:sticky lg:top-6">
-      <aside aria-label="Order summary" className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+      <aside aria-label="Order summary" className="ig-card flex flex-col gap-4 p-5">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="flex items-center gap-2 txt-large-plus">
             <CardIcon size="sm"><ShoppingBag /></CardIcon>

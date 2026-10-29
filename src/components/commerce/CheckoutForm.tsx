@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Checkbox, Container, Heading, Hint, Input, Label, ProgressTabs, RadioGroup, Text, clx, toast } from "@medusajs/ui"
+import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, RadioGroup, Text, clx, toast } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { placeOrder } from "@/app/actions"
 import type { Money } from "@/lib/catalog"
@@ -104,13 +104,13 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
 
         <ProgressTabs.Content value="delivery" className="flex flex-col gap-5">
           <StepHead title="Where should it go?" body="Your saved delivery address. Add more addresses from your account." />
-          <Container className="flex items-start gap-4 p-5">
+          <div className="ig-card flex items-start gap-4 p-5">
             <CardIcon><MapPin /></CardIcon>
             <div className="flex flex-col gap-1">
               <Text weight="plus">{company}</Text>
               {address.map((l) => <Text key={l} size="small" className="text-ui-fg-subtle">{l}</Text>)}
             </div>
-          </Container>
+          </div>
           <label className="flex items-center gap-3 txt-compact-small">
             <Checkbox checked={sameInvoice} onCheckedChange={(v) => setSameInvoice(v === true)} />
             Invoice to the same address
@@ -152,7 +152,7 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
               ["Payment", PAYMENTS.find((p) => p.id === payment)!.name, PAYMENT_ICON[payment]],
               ["Your reference", reference || "None", <DocumentText key="i" />],
             ] as [string, string, React.ReactNode][]).map(([k, v, icon]) => (
-              <div key={k} className="flex items-start gap-3 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest">
+              <div key={k} className="ig-card flex items-start gap-3 p-4">
                 <CardIcon size="sm">{icon}</CardIcon>
                 <div className="flex min-w-0 flex-col gap-0.5 txt-compact-small">
                   <dt className="text-ui-fg-subtle">{k}</dt>

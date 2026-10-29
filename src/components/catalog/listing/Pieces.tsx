@@ -178,7 +178,7 @@ export function FilterPanel({
   )
   return (
     <aside aria-label="Filters" className="lg:sticky lg:top-4 lg:self-start">
-      <details className="group/m rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest lg:hidden">
+      <details className="ig-card group/m p-4 lg:hidden">
         <summary className="flex cursor-pointer list-none items-center justify-between txt-compact-medium-plus [&::-webkit-details-marker]:hidden">
           Filters{active ? ` (${active})` : ""}
           <ChevronDown className="transition-transform group-open/m:rotate-180" />
@@ -190,7 +190,7 @@ export function FilterPanel({
       </details>
       {/* Never taller than the screen while sticky. The heading and search stay
           put; only the filter groups below them scroll, with no scrollbar. */}
-      <div className="hidden max-h-[calc(100svh-2rem)] flex-col rounded-2xl bg-ui-bg-base shadow-elevation-card-rest lg:flex">
+      <div className="ig-card hidden max-h-[calc(100svh-2rem)] flex-col lg:flex">
         <div className="flex flex-col gap-3 border-b border-ui-border-base p-4 pb-3">
           <div className="flex items-center justify-between px-2">
             <Heading level="h2" className="txt-compact-medium-plus">Filters</Heading>
@@ -291,7 +291,7 @@ export function FamilyTabs({ products, params, hrefFor }: { products: Product[];
 export function ProductCards({ products, viewer }: { products: Product[]; viewer: Viewer }) {
   if (!products.length) {
     return (
-      <div className="rounded-2xl bg-ui-bg-subtle px-6 py-12 text-center">
+      <div className="ig-inset px-6 py-12 text-center">
         <p className="txt-medium-plus">No parts match these filters</p>
         <p className="mt-1 txt-small text-ui-fg-subtle">Remove a filter to see more.</p>
       </div>
@@ -304,7 +304,7 @@ export function ProductCards({ products, viewer }: { products: Product[]; viewer
         const view = commercialView(p, viewer)
         const cat = CATEGORIES.find((c) => c.slug === p.category)
         return (
-          <li key={p.slug} className="flex flex-col overflow-hidden rounded-2xl bg-ui-bg-base shadow-elevation-card-rest transition-shadow hover:shadow-elevation-card-hover">
+          <li key={p.slug} className="ig-card flex flex-col overflow-hidden transition-shadow hover:shadow-elevation-card-hover">
             <Link href={routes.product(p.slug)} className="group flex flex-1 flex-col outline-none focus-visible:shadow-borders-focus">
               <span className="relative grid aspect-[16/10] place-items-center bg-ui-bg-subtle">
                 <PartImage product={p} size={128} className="size-32 transition-transform duration-300 group-hover:scale-105" />
