@@ -6,7 +6,8 @@ import { useCutoffText } from "./CutoffCountdown"
 // The blue top strip: one centred line at a time, each with its own small
 // animation, sliding into the next. Pauses while hovered. Only facts the shop
 // already states elsewhere (dispatch, delivery threshold, grading, approval).
-const HOLD_MS = 4800
+// Long enough for each animation to play through a few times before moving on
+const HOLD_MS = 9000
 
 export function StripTicker({ canOrder }: { canOrder: boolean }) {
   const cutoff = useCutoffText()
