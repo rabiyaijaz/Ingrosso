@@ -34,33 +34,24 @@ export default async function PartsPage() {
         </form>
       </PageHeading>
 
-      {/* Start from the handset: one slim row per brand, quiet so the part tiles lead */}
-      <section aria-labelledby="by-device" className="flex flex-col gap-3">
+      {/* Start from the handset: plain brand pills in one quiet card, above the part tiles */}
+      <section aria-labelledby="by-device" className="flex flex-col gap-3 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="by-device" className="txt-large-plus">Start from the handset</h2>
+          <h2 id="by-device" className="txt-compact-medium-plus">Start from the handset</h2>
           <Link href={routes.devices()} className="flex items-center gap-1 txt-compact-small-plus text-ui-fg-interactive hover:underline">
             All devices <ArrowRight />
           </Link>
         </div>
-        <ul className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-          {BRANDS.map((b) => {
-            const models = b.series.reduce((n, s) => n + s.models.length, 0)
-            return (
-              <li key={b.slug}>
-                <Link href={routes.brand(b.slug)} className="ig-brand-card group">
-                  <BrandMark brand={b.slug} size="sm" />
-                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate txt-compact-small-plus text-ui-fg-base">{b.name}</span>
-                    <span className="ig-brand-card__meta">
-                      <span className="ig-brand-card__dot" aria-hidden />
-                      {models} models
-                    </span>
-                  </span>
-                  <span className="ig-brand-card__go" aria-hidden><ArrowRight /></span>
-                </Link>
-              </li>
-            )
-          })}
+        <ul className="flex flex-wrap gap-2">
+          {BRANDS.map((b) => (
+            <li key={b.slug}>
+              <Link href={routes.brand(b.slug)} className="flex h-10 items-center gap-2 rounded-full px-4 txt-compact-small-plus text-ui-fg-base shadow-borders-base transition-colors hover:bg-ui-bg-base-hover">
+                <BrandMark brand={b.slug} variant="plain" />
+                {b.name}
+                <span className="txt-compact-xsmall text-ui-fg-muted">{b.series.reduce((n, s) => n + s.models.length, 0)} models</span>
+              </Link>
+            </li>
+          ))}
         </ul>
       </section>
 
