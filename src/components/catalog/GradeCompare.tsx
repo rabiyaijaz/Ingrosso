@@ -7,6 +7,7 @@ import { commercialView } from "@/lib/commerce"
 import { routes } from "@/lib/routes"
 import type { Viewer } from "@/lib/viewer"
 import { GradeBadge, GradeScale } from "./Grade"
+import { PartImage } from "./PartImage"
 
 // Every grade of the same part for the same model, side by side (CAT-04).
 export function GradeCompare({ current, siblings, viewer }: { current: Product; siblings: Product[]; viewer: Viewer }) {
@@ -29,7 +30,9 @@ export function GradeCompare({ current, siblings, viewer }: { current: Product; 
             const isCurrent = p.slug === current.slug
             return (
               <Table.Row key={p.slug} className={clx("[&_td]:h-auto [&_td]:py-3", isCurrent && "bg-ui-bg-highlight hover:bg-ui-bg-highlight")}>
-                <Table.Cell className="w-[220px]">
+                <Table.Cell className="w-[280px]">
+                  <div className="flex items-center gap-3">
+                  <PartImage product={p} size={48} className="size-12 shrink-0" />
                   <div className="flex flex-col gap-2">
                     {isCurrent ? (
                       <span className="flex items-center gap-2"><GradeBadge grade={g.id} /><span className="txt-compact-xsmall text-ui-fg-interactive">Viewing</span></span>
@@ -39,6 +42,7 @@ export function GradeCompare({ current, siblings, viewer }: { current: Product; 
                       </Link>
                     )}
                     <GradeScale grade={g.id} className="w-[140px]" />
+                  </div>
                   </div>
                 </Table.Cell>
                 <Table.Cell className="hidden whitespace-normal md:table-cell">

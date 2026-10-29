@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { Heading, Table, Text } from "@medusajs/ui"
 import { GradeBadge, GradeScale } from "@/components/catalog/Grade"
 import { GradeCompare } from "@/components/catalog/GradeCompare"
-import { PartGlyph } from "@/components/catalog/PartGlyph"
+import { PartImage } from "@/components/catalog/PartImage"
 import { AddToOrder } from "@/components/commerce/AddToOrder"
 import { Figure } from "@/components/commerce/Figure"
 import { GateCallout } from "@/components/commerce/GateCallout"
@@ -52,7 +52,8 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
         <div className="relative grid aspect-[16/9] max-h-[320px] place-items-center overflow-hidden rounded-panel bg-ui-bg-subtle lg:sticky lg:top-6 lg:aspect-square lg:max-h-none lg:self-start">
-          <PartGlyph category={product.category} className="size-[58%]" label={`Illustration of a ${category.name.toLowerCase()}`} />
+          <span aria-hidden className="ig-part-stage" />
+          <PartImage product={product} size={560} className="relative size-[72%]" label={`Illustration of a ${category.name.toLowerCase()}`} />
         </div>
 
         <div className="flex flex-col gap-6">

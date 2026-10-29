@@ -12,7 +12,7 @@ import { routes } from "@/lib/routes"
 import type { Viewer } from "@/lib/viewer"
 import { pruneModels, selected, toggle, type FacetParams } from "../Facets"
 import { FAMILIES, GradeBadge, GradeIcon } from "../Grade"
-import { PartGlyph } from "../PartGlyph"
+import { PartImage } from "../PartImage"
 import { SortSelect } from "./Client"
 import { SORTS, activeFilters, clearAll, type GradeOption, type Option, type buildFacets } from "./model"
 
@@ -279,7 +279,7 @@ export function ProductCards({ products, viewer }: { products: Product[]; viewer
           <li key={p.slug} className="flex flex-col overflow-hidden rounded-2xl bg-ui-bg-base shadow-elevation-card-rest transition-shadow hover:shadow-elevation-card-hover">
             <Link href={routes.product(p.slug)} className="group flex flex-1 flex-col outline-none focus-visible:shadow-borders-focus">
               <span className="relative grid aspect-[16/10] place-items-center bg-ui-bg-subtle">
-                <PartGlyph category={p.category} className="size-20 transition-transform duration-300 group-hover:scale-105" />
+                <PartImage product={p} size={128} className="size-32 transition-transform duration-300 group-hover:scale-105" />
                 {p.grade && <GradeBadge grade={p.grade} className="absolute left-3 top-3" />}
               </span>
               <span className="flex flex-1 flex-col gap-1 p-4">

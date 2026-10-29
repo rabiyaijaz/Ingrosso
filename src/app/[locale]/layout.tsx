@@ -20,7 +20,6 @@ import { DEFAULT_THEME, THEME_COOKIE, isTheme } from "@/lib/themes"
 export const metadata: Metadata = {
   title: { default: "Ingrosso — Trade repair parts", template: "%s · Ingrosso" },
   description: "Trade-only wholesale of phone and tablet repair parts, in every quality grade.",
-  icons: { icon: "/brand/logo.webp" },
   // Preview builds stay out of search results until launch (BRD gate level 6).
   robots: { index: false, follow: false },
 }

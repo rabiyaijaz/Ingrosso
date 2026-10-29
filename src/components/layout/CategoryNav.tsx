@@ -1,6 +1,8 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
+import { CATEGORY_IMAGE } from "@/lib/visuals"
 import { usePathname } from "next/navigation"
 import { clx } from "@medusajs/ui"
 import { routes } from "@/lib/routes"
@@ -29,7 +31,9 @@ export function CategoryNav({ categories }: { categories: { slug: string; plural
           const active = pathname === href || pathname.startsWith(`${href}/`)
           return (
             <li key={c.slug}>
-              <Link href={href} aria-current={active ? "page" : undefined} className={item(active)}>
+              <Link href={href} aria-current={active ? "page" : undefined} className={clx(item(active), "gap-2 pl-2")}>
+                {/* Bare render, no frame: the pill is the container */}
+                {CATEGORY_IMAGE[c.slug] && <Image src={CATEGORY_IMAGE[c.slug]} alt="" width={24} height={24} className="size-6 object-contain" />}
                 {c.plural}
               </Link>
             </li>

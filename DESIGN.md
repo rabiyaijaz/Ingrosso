@@ -92,6 +92,21 @@ Prices in lists: the unit price, then the best quantity-break price as a blue ta
 
 Filter rules in every layout: real checkboxes with counts, a chevron on anything that opens, every active filter shown as a removable chip with Clear all, filters kept in the URL, no price sort (CAT-12), and "In stock only" shown to approved accounts only. On phones the filter panel folds behind one Filters button. The main app keeps `DEFAULT_LISTING` in `lib/listing-variants.ts` until a layout is chosen.
 
+## Brand assets (3D library)
+
+Source: `E:\Miqdad\website_assets` (renders made in Antigravity), optimised to WebP in `public/`. Pictures of parts and devices are chosen in one file, `lib/visuals.ts`.
+
+| Use | Files |
+| --- | --- |
+| Logo mark | `brand/logo-light.webp` on the light canvas, `brand/logo-dark.webp` on blue bands and dark sections (`Logo tone`), `brand/logo-gold.webp` reserved for a special tier; favicon `app/icon.png`, `app/apple-icon.png` |
+| Category renders | `parts/<category>.webp`: category bar (bare, in the pill), landing tiles, product rows, cards and the product page |
+| Screen grade tiers | `parts/tier-1..4.webp`: tier 1 Service pack / Original, tier 2 Pulled / Refurbished, tier 3 Soft OLED, tier 4 In-cell / Compatible; other screen grades show the plain screen render |
+| Device families | `ecosystem/<brand>.webp`, `ecosystem/all.webp` ("Shop by device" tile) |
+| States | `states/order-confirmed.webp` (order placed), `states/rma-approved.webp` (for the returns flow) |
+| Features | `features/cargo.webp`, `features/shield.webp` |
+
+Colours from the brand guide: sapphire `#2563EB` is the primary (`--ig-blue`), cyan `#38BDF8` (`--ig-cyan`) and gold `#F59E0B` (`--ig-gold`) are light only, never text. The canvas stays light; cards are 28px frosted glass with a white rim and top catchlight.
+
 ## Brand logos
 
 `brand/BrandMark` draws the Apple, Samsung, Google and Xiaomi logos (Simple Icons) in an icon frame, or `variant="plain"` inline. They show compatibility only; both footers carry the trademark note.

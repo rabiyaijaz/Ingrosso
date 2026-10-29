@@ -9,7 +9,8 @@ import { FitFragment, GradeFragment, PriceFragment, ShipFragment } from "@/compo
 import { PillLink, body, display, sectionTitle, small, statement } from "@/components/marketing/Primitives"
 import { ArrowRight } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
-import { BRANDS, PRODUCTS, partCount } from "@/lib/catalog"
+import { BRANDS, CATEGORIES, PRODUCTS, partCount } from "@/lib/catalog"
+import { ALL_BRANDS_IMAGE, CATEGORY_IMAGE } from "@/lib/visuals"
 import { Ambient } from "@/components/marketing/Ambient"
 import { MotionScene } from "@/components/marketing/MotionScene"
 import { GlassActionTile, GlassTile } from "@/components/marketing/GlassTile"
@@ -49,8 +50,8 @@ const QUESTIONS = [
 
 const FRAGMENTS = [<FitFragment key="fit" />, <GradeFragment key="grade" />, <PriceFragment key="price" />, <ShipFragment key="ship" />]
 
-// Landing imagery is Ingrosso logo scenes only (public/brand). Part renders
-// live in public/icons and are used as icons, never as page imagery.
+// Landing imagery is Ingrosso logo scenes only (public/brand). Part and device
+// renders (lib/visuals) appear in tiles, never as page imagery.
 // One scene for the hero, then one per question, in order.
 const STAGE = [
   { src: "/brand/scene-office.webp", alt: "The Ingrosso mark on a glass plinth in a bright office" },
@@ -60,14 +61,8 @@ const STAGE = [
   { src: "/brand/scene-space-wide.webp", alt: "Glass Ingrosso tiles floating against a starfield" },
 ]
 
-// Part tiles: category icons, each linking to its category.
-const PART_TILES = [
-  { cat: "screens", label: "Screens", src: "/icons/part-screen-glass.webp" },
-  { cat: "batteries", label: "Batteries", src: "/icons/part-battery-glass.webp" },
-  { cat: "cameras", label: "Cameras", src: "/icons/part-camera-glass.webp" },
-  { cat: "back-glass", label: "Back glass", src: "/icons/part-phone-layers-glass.webp" },
-  { cat: "tools", label: "Tools", src: "/icons/part-tools-glass.webp" },
-]
+// Part tiles: one per category, each linking to its category.
+const PART_TILES = CATEGORIES.map((c) => ({ cat: c.slug, label: c.plural, src: CATEGORY_IMAGE[c.slug] }))
 
 const SLIP = [
   { when: "Today", rows: [["Create your sign-in", "1 min"], ["Company and tax number", "3 min"], ["Delivery address", "1 min"]] },
@@ -256,7 +251,7 @@ export default async function HomePage() {
               </li>
             ))}
             <li>
-              <GlassActionTile href={routes.devices()} title="Start from the handset" action="Shop by device" />
+              <GlassActionTile href={routes.devices()} title="Start from the handset" action="Shop by device" src={ALL_BRANDS_IMAGE} />
             </li>
           </ul>
         </div>
@@ -325,7 +320,7 @@ export default async function HomePage() {
         </div>
         <div className="flex flex-col justify-between gap-16 px-[var(--ig-gutter)] py-14 lg:px-[6vw] lg:pt-20">
           <div className="flex flex-col gap-10">
-            <Logo size="sm" href={null} />
+            <Logo size="sm" href={routes.home()} />
             <nav aria-label="Footer">
               <ul className="ig-menu">
                 {[

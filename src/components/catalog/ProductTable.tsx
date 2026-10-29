@@ -9,7 +9,7 @@ import { commercialView } from "@/lib/commerce"
 import { routes } from "@/lib/routes"
 import type { Viewer } from "@/lib/viewer"
 import { GradeBadge } from "./Grade"
-import { PartGlyph } from "./PartGlyph"
+import { PartImage } from "./PartImage"
 
 type Props = { products: Product[]; viewer: Viewer; groupByCategory?: boolean; className?: string }
 
@@ -60,7 +60,7 @@ export function ProductTable({ products, viewer, groupByCategory = false, classN
                       <Table.Cell>
                         <div className="flex items-center gap-3">
                           <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-ui-bg-subtle">
-                            <PartGlyph category={p.category} className="size-8" />
+                            <PartImage product={p} size={40} className="size-10" />
                           </span>
                           <div className="min-w-0">
                             <Link href={routes.product(p.slug)} className="block txt-compact-small-plus text-ui-fg-base hover:text-ui-fg-interactive">

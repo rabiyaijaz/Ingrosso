@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
@@ -31,12 +32,15 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
 
   return (
     <PageContainer className="flex max-w-[880px] flex-col gap-8 pt-10">
-      <div className="flex flex-col gap-3">
-        <span className="flex items-center gap-2 text-ui-tag-green-icon"><CheckCircleSolid /><span className="txt-compact-small-plus">Order placed</span></span>
-        <Heading level="h1" className="text-[32px] leading-[38px] font-medium tracking-[-0.02em]">
-          Thank you. Your order is <Figure>{order.ref}</Figure>
-        </Heading>
-        <Text className="max-w-[60ch] text-ui-fg-subtle">{NEXT_STEP[order.payment]}</Text>
+      <div className="flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center">
+        <div className="flex flex-1 flex-col gap-3">
+          <span className="flex items-center gap-2 text-ui-tag-green-icon"><CheckCircleSolid /><span className="txt-compact-small-plus">Order placed</span></span>
+          <Heading level="h1" className="text-[32px] leading-[38px] font-medium tracking-[-0.02em]">
+            Thank you. Your order is <Figure>{order.ref}</Figure>
+          </Heading>
+          <Text className="max-w-[60ch] text-ui-fg-subtle">{NEXT_STEP[order.payment]}</Text>
+        </div>
+        <Image src="/states/order-confirmed.webp" alt="" width={168} height={168} priority className="ig-float size-[140px] shrink-0 object-contain sm:size-[168px]" />
       </div>
 
       <Container className="grid gap-4 p-5 sm:grid-cols-4">
