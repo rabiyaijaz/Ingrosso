@@ -16,7 +16,7 @@ const BENEFITS = [
 
 export default function ApplyPage() {
   return (
-    <PageContainer className="grid gap-10 pt-10 lg:grid-cols-[minmax(0,1fr)_400px]">
+    <PageContainer className="grid gap-10 pt-10 lg:grid-cols-[minmax(0,1fr)_440px] xl:grid-cols-[minmax(0,1fr)_500px]">
       <div className="flex max-w-[680px] flex-col gap-8">
         <PageHeading
           title="Apply for a trade account"
