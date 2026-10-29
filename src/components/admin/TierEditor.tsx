@@ -3,9 +3,10 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { clx, toast } from "@medusajs/ui"
-import { Plus, Trash } from "@medusajs/icons"
+import { Plus, Tag, Trash, Users } from "@medusajs/icons"
 import { deleteTier, saveTier } from "@/app/admin-actions"
 import { Button } from "@/components/ui/Button"
+import { WithIcon } from "@/components/ui/WithIcon"
 import { Field, NativeSelect, fieldClass } from "./Fields"
 import { tierUnit } from "@/lib/admin/pricing"
 import { TERMS, type Tier, type TierRule } from "@/lib/admin/types"
@@ -59,10 +60,10 @@ export function TierEditor({
           <h2 className="txt-compact-medium-plus">Name and who it is for</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" htmlFor="tname">
-              <input id="tname" value={t.name} onChange={(e) => set("name", e.target.value)} placeholder="For example Repair Chain" className={fieldClass} />
+              <WithIcon icon={<Tag />}><input id="tname" value={t.name} onChange={(e) => set("name", e.target.value)} placeholder="For example Repair Chain" className={fieldClass} /></WithIcon>
             </Field>
             <Field label="Who qualifies" hint="Shown to the trade desk when assigning tiers." htmlFor="elig">
-              <input id="elig" value={t.eligibility} onChange={(e) => set("eligibility", e.target.value)} placeholder="Over €5,000 spent in 90 days" className={fieldClass} />
+              <WithIcon icon={<Users />}><input id="elig" value={t.eligibility} onChange={(e) => set("eligibility", e.target.value)} placeholder="Over €5,000 spent in 90 days" className={fieldClass} /></WithIcon>
             </Field>
           </div>
           <Field label="Description" htmlFor="desc">

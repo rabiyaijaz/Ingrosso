@@ -13,6 +13,7 @@ import { CARRIERS, PAYMENTS, VAT_RATE, orderTotals, type CarrierId, type Payment
 import { Figure } from "./Figure"
 import { OrderSummary, type SummaryLine } from "./OrderSummary"
 import { CardIcon, ChoiceCard } from "./ChoiceCard"
+import { WithIcon } from "@/components/ui/WithIcon"
 import { Bolt, BuildingStorefront, CreditCard, DocumentText, MapPin, Paypal, Receipt, TruckFast } from "@medusajs/icons"
 
 const CARRIER_ICON: Record<CarrierId, React.ReactNode> = { postnl: <TruckFast />, ups: <Bolt />, collect: <BuildingStorefront /> }
@@ -116,7 +117,9 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
           </label>
           <div className="flex max-w-[360px] flex-col gap-1.5">
             <Label htmlFor="reference" size="small" weight="plus">Your reference</Label>
-            <Input id="reference" value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Job or PO number" aria-describedby="reference-hint" />
+            <WithIcon icon={<DocumentText />}>
+              <Input id="reference" value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Job or PO number" aria-describedby="reference-hint" />
+            </WithIcon>
             <Hint id="reference-hint">Printed on the invoice and the packing slip. Optional.</Hint>
           </div>
         </ProgressTabs.Content>

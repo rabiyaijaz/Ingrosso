@@ -4,7 +4,9 @@ import { useState } from "react"
 import { clx } from "@medusajs/ui"
 import { deleteCategory, saveCategory } from "@/app/admin-actions"
 import { GLYPH_KEYS, PartGlassGlyph } from "@/components/catalog/PartIcon"
+import { Tag } from "@medusajs/icons"
 import { Button } from "@/components/ui/Button"
+import { WithIcon } from "@/components/ui/WithIcon"
 import type { AdminCategory } from "@/lib/admin/types"
 import { Field, fieldClass } from "./Fields"
 
@@ -34,10 +36,10 @@ export function CategoryForm({ category, error, canDelete, deleteReason }: { cat
           <h2 className="txt-compact-medium-plus">Names</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Category name" hint="In the top bar and as the page title." error={error === "name" ? "Give the category a name." : undefined} htmlFor="plural">
-              <input id="plural" name="plural" value={plural} onChange={(e) => setPlural(e.target.value)} placeholder="For example Speakers" className={fieldClass} required />
+              <WithIcon icon={<Tag />}><input id="plural" name="plural" value={plural} onChange={(e) => setPlural(e.target.value)} placeholder="For example Speakers" className={fieldClass} required /></WithIcon>
             </Field>
             <Field label="One item is called" hint="Used in part names and specs." htmlFor="name">
-              <input id="name" name="name" defaultValue={category.name} placeholder="For example Loudspeaker module" className={fieldClass} />
+              <WithIcon icon={<Tag />}><input id="name" name="name" defaultValue={category.name} placeholder="For example Loudspeaker module" className={fieldClass} /></WithIcon>
             </Field>
           </div>
         </section>

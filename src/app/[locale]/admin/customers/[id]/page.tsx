@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { StatusBadge } from "@medusajs/ui"
-import { CheckCircleSolid, ExclamationCircleSolid } from "@medusajs/icons"
+import { ChatBubble, CheckCircleSolid, ExclamationCircleSolid } from "@medusajs/icons"
+import { WithIcon } from "@/components/ui/WithIcon"
 import { decideApplication, setCustomerAccount } from "@/app/admin-actions"
 import { Field, NativeSelect, fieldClass } from "@/components/admin/Fields"
 import { AdminHeader, Panel, ago, shortDate } from "@/components/admin/Kit"
@@ -134,7 +135,7 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                     <>
                       <input type="hidden" name="action" value="suspend" />
                       <Field label="Pause ordering" hint="Prices are hidden until you reinstate the account." htmlFor="reason">
-                        <input id="reason" name="note" placeholder="Reason shown to the customer" className={fieldClass} />
+                        <WithIcon icon={<ChatBubble />}><input id="reason" name="note" placeholder="Reason shown to the customer" className={fieldClass} /></WithIcon>
                       </Field>
                       <Button type="submit" variant="danger">Suspend account</Button>
                     </>

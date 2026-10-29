@@ -3,10 +3,11 @@
 import { useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { clx, toast } from "@medusajs/ui"
-import { CheckMini } from "@medusajs/icons"
+import { ArchiveBox, CheckMini, Hashtag, Tag } from "@medusajs/icons"
 import { addProduct } from "@/app/admin-actions"
 import { PartIcon } from "@/components/catalog/PartIcon"
 import { Button } from "@/components/ui/Button"
+import { WithIcon } from "@/components/ui/WithIcon"
 import { Field, NativeSelect, fieldClass } from "./Fields"
 import { tierUnit } from "@/lib/admin/pricing"
 import type { Tier } from "@/lib/admin/types"
@@ -81,7 +82,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
         <section className="flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
           <h2 className="txt-compact-medium-plus">The part</h2>
           <Field label="Name" hint="Model, part and grade, as buyers search for it." error={errors.name} htmlFor="name">
-            <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="iPhone 16 Pro screen assembly, Soft OLED" className={fieldClass} aria-invalid={!!errors.name} />
+            <WithIcon icon={<Tag />}><input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="iPhone 16 Pro screen assembly, Soft OLED" className={fieldClass} aria-invalid={!!errors.name} /></WithIcon>
           </Field>
           <div className="flex flex-col gap-1.5">
             <span className="txt-compact-small-plus">Category</span>
@@ -119,7 +120,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
               </NativeSelect>
             </Field>
             <Field label="SKU" hint={skuEdited === null ? "Suggested from the category, first model and grade." : undefined} error={errors.sku} htmlFor="sku">
-              <input id="sku" value={sku} onChange={(e) => setSkuEdited(e.target.value.toUpperCase())} className={clx(fieldClass, "font-mono")} aria-invalid={!!errors.sku} />
+              <WithIcon icon={<Hashtag />}><input id="sku" value={sku} onChange={(e) => setSkuEdited(e.target.value.toUpperCase())} className={clx(fieldClass, "font-mono")} aria-invalid={!!errors.sku} /></WithIcon>
             </Field>
           </div>
         </section>
@@ -184,7 +185,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
           </Field>
           <div className="grid grid-cols-2 gap-3">
             <Field label="On hand" htmlFor="onhand">
-              <input id="onhand" inputMode="numeric" value={onHand} onChange={(e) => setOnHand(e.target.value.replace(/\D/g, ""))} className={clx(fieldClass, "font-mono")} />
+              <WithIcon icon={<ArchiveBox />}><input id="onhand" inputMode="numeric" value={onHand} onChange={(e) => setOnHand(e.target.value.replace(/\D/g, ""))} className={clx(fieldClass, "font-mono")} /></WithIcon>
             </Field>
             <Field label="Sold in multiples of" htmlFor="step">
               <input id="step" inputMode="numeric" value={step} onChange={(e) => setStep(e.target.value.replace(/\D/g, ""))} className={clx(fieldClass, "font-mono")} />

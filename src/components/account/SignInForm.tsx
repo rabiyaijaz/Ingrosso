@@ -4,7 +4,9 @@ import Link from "next/link"
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Hint, Input, Label } from "@medusajs/ui"
+import { Envelope, Key } from "@medusajs/icons"
 import { Button } from "@/components/ui/Button"
+import { WithIcon } from "@/components/ui/WithIcon"
 import { setViewerState } from "@/app/actions"
 import { LAB } from "@/lib/lab"
 import { routes } from "@/lib/routes"
@@ -32,11 +34,15 @@ export function SignInForm() {
     >
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="email" size="small" weight="plus">Work email</Label>
-        <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <WithIcon icon={<Envelope />}>
+          <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </WithIcon>
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="password" size="small" weight="plus">Password</Label>
-        <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <WithIcon icon={<Key />}>
+          <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </WithIcon>
       </div>
       {error && <Hint variant="error">{error}</Hint>}
       <Button size="large" type="submit" isLoading={pending}>Sign in</Button>

@@ -282,6 +282,22 @@ body {
 }
 @media (prefers-reduced-motion: reduce) { .ig-cart__badge { animation: none; } }
 
+/* Field with a leading icon (ui/WithIcon): muted icon, accent on focus */
+.ig-with-icon input:not([type="hidden"]) { padding-left: 32px !important; }
+.ig-with-icon__icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  z-index: 1;
+  display: inline-flex;
+  transform: translateY(-50%);
+  color: var(--fg-muted);
+  pointer-events: none;
+  transition: color 150ms ease;
+}
+.ig-with-icon__icon svg { width: 15px; height: 15px; }
+.ig-with-icon:focus-within .ig-with-icon__icon { color: var(--ig-blue); }
+
 /* Hidden step panels take no space (their flex class would otherwise beat [hidden] and add gaps) */
 [role="tabpanel"][hidden] { display: none !important; }
 

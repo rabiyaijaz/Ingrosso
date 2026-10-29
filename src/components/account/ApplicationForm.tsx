@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, Select, Text, clx } from "@medusajs/ui"
+import { Buildings, DocumentText, Envelope, GlobeEurope, Hashtag, Key, MapPin, Phone } from "@medusajs/icons"
 import { Button } from "@/components/ui/Button"
+import { WithIcon } from "@/components/ui/WithIcon"
 import { submitApplication } from "@/app/actions"
 import { LAB } from "@/lib/lab"
 import { routes } from "@/lib/routes"
@@ -11,6 +13,18 @@ import { routes } from "@/lib/routes"
 // Four-step trade application (BRD: credentials → company → address → review).
 // The draft is kept in the browser for this prototype; production stores it on
 // the server so it can be finished on another device (ACC-02).
+
+// A small icon at the start of each text field, so it is clear at a glance what goes where
+const FIELD_ICON: Partial<Record<string, React.ReactNode>> = {
+  email: <Envelope />,
+  password: <Key />,
+  company: <Buildings />,
+  taxId: <DocumentText />,
+  phone: <Phone />,
+  street: <MapPin />,
+  city: <GlobeEurope />,
+  postcode: <Hashtag />,
+}
 
 type StepId = "login" | "company" | "address" | "review"
 const STEPS: { id: StepId; label: string; hint: string }[] = [
@@ -123,14 +137,16 @@ export function ApplicationForm() {
   const field = (k: keyof Draft, label: string, props: React.ComponentProps<typeof Input> = {}, hint?: string) => (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={k} size="small" weight="plus">{label}</Label>
-      <Input
-        id={k}
-        value={String(draft[k])}
-        onChange={(e) => set(k, e.target.value as never)}
-        aria-invalid={!!errors[k]}
-        aria-describedby={errors[k] || hint ? `${k}-hint` : undefined}
-        {...props}
-      />
+      <WithIcon icon={FIELD_ICON[k]}>
+        <Input
+          id={k}
+          value={String(draft[k])}
+          onChange={(e) => set(k, e.target.value as never)}
+          aria-invalid={!!errors[k]}
+          aria-describedby={errors[k] || hint ? `${k}-hint` : undefined}
+          {...props}
+        />
+      </WithIcon>
       {(errors[k] || hint) && (
         <Hint id={`${k}-hint`} variant={errors[k] ? "error" : "info"}>{errors[k] ?? hint}</Hint>
       )}
