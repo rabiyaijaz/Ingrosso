@@ -8,7 +8,7 @@ import { Figure } from "@/components/commerce/Figure"
 import { Button } from "@/components/ui/Button"
 import { getAdminProducts, getTiers } from "@/lib/admin/data"
 import { tierUnit } from "@/lib/admin/pricing"
-import { CATEGORIES } from "@/lib/catalog"
+import { getCategories } from "@/lib/categories"
 import { listPrice, stockOf } from "@/lib/commerce"
 import { formatMoney } from "@/lib/money"
 import { routes } from "@/lib/routes"
@@ -17,7 +17,7 @@ export const metadata = { title: "Products" }
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const sp = await searchParams
-  const [all, tiers] = await Promise.all([getAdminProducts(), getTiers()])
+  const [all, tiers, CATEGORIES] = await Promise.all([getAdminProducts(), getTiers(), getCategories()])
   const cat = CATEGORIES.some((c) => c.slug === sp.cat) ? sp.cat : undefined
   const stock = sp.stock === "low" || sp.stock === "out" ? sp.stock : undefined
   const q = (sp.q ?? "").trim().toLowerCase()
@@ -59,7 +59,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                 aria-pressed={cat === c.slug}
                 className={cat === c.slug ? "flex items-center gap-1.5 rounded-full bg-ui-bg-highlight px-3 py-1.5 txt-compact-small-plus text-ui-fg-interactive shadow-borders-interactive-with-active" : "flex items-center gap-1.5 rounded-full px-3 py-1.5 txt-compact-small text-ui-fg-subtle shadow-borders-base hover:text-ui-fg-base"}
               >
-                <PartIcon category={c.slug} bare className="size-4" />
+                <PartIcon category={c.icon} bare className="size-4" />
                 {c.plural}
               </Link>
             ))}

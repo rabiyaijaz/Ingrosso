@@ -1,20 +1,22 @@
 import { notFound } from "next/navigation"
 import { ListingView } from "@/components/catalog/ListingView"
 import { Breadcrumbs, PageContainer, PageHeading } from "@/components/layout/Page"
-import { PRODUCTS, categoryBySlug } from "@/lib/catalog"
+import { PRODUCTS } from "@/lib/catalog"
+import { getCategory } from "@/lib/categories"
 import { routes } from "@/lib/routes"
 import { getViewer } from "@/lib/viewer"
 
 type Params = { locale: string; category: string }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }) {
-  return { title: categoryBySlug((await params).category)?.plural ?? "Parts" }
+  return { title: (await getCategory((await params).category))?.plural ?? "Parts" }
 }
 
 export default async function CategoryPage({ params, searchParams }: { params: Promise<Params>; searchParams: Promise<Record<string, string>> }) {
   const { category } = await params
   const sp = await searchParams
-  const cat = categoryBySlug(category)
+  // Names come from the trade desk's category settings
+  const cat = await getCategory(category)
   if (!cat) notFound()
   const viewer = await getViewer()
   const products = PRODUCTS.filter((p) => p.category === cat.slug)

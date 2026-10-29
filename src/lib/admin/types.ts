@@ -76,6 +76,17 @@ export const CUSTOMER_STATUS: Record<CustomerStatus, { label: string; color: "or
   suspended: { label: "Suspended", color: "red" },
 }
 
+// A part category as the trade desk manages it. `icon` picks one of the glass
+// part glyphs; `visible` puts it in the store's top bar.
+export type AdminCategory = {
+  slug: string
+  name: string // one item, e.g. "Screen assembly"
+  plural: string // the category, e.g. "Screens"
+  icon: string
+  visible: boolean
+  custom?: boolean // added by the trade desk
+}
+
 export type NewProduct = {
   slug: string
   sku: string

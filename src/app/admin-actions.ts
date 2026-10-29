@@ -3,9 +3,10 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { CATEGORIES, GRADES, PRODUCTS, type GradeId } from "@/lib/catalog"
+import { GRADES, PRODUCTS, type GradeId } from "@/lib/catalog"
 import { ADMIN_COOKIES, DEFAULT_TIERS, getAddedProducts, getCustomers, getTiers } from "@/lib/admin/data"
-import type { Customer, NewProduct, OrderStatus, Tier } from "@/lib/admin/types"
+import type { AdminCategory, Customer, NewProduct, OrderStatus, Tier } from "@/lib/admin/types"
+import { CATEGORIES_COOKIE, getCategories } from "@/lib/categories"
 import { routes } from "@/lib/routes"
 
 // Trade-desk actions for the prototype: each writes to a cookie (see
@@ -106,12 +107,68 @@ export async function resetTiers() {
   revalidatePath("/", "layout")
 }
 
+// ─── Categories ─────────────────────────────────────────────────────────────
+async function writeCategories(list: AdminCategory[]) {
+  ;(await cookies()).set(CATEGORIES_COOKIE, JSON.stringify(list), OPTS)
+  revalidatePath("/", "layout")
+}
+
+// Add (slug "new") or edit a category: names, icon, shown in the store's top bar
+export async function saveCategory(form: FormData) {
+  const list = await getCategories()
+  const slug = String(form.get("slug"))
+  const plural = String(form.get("plural") ?? "").trim().slice(0, 32)
+  const name = String(form.get("name") ?? "").trim().slice(0, 40) || plural
+  const icon = String(form.get("icon") ?? "tools")
+  const visible = form.get("visible") === "on"
+  if (plural.length < 2) redirect(`${routes.admin.category(slug)}?error=name`)
+  let target = slug
+  if (slug === "new") {
+    target = slugify(plural)
+    while (list.some((c) => c.slug === target)) target = `${target}-2`
+    list.push({ slug: target, name, plural, icon, visible, custom: true })
+  } else {
+    const i = list.findIndex((c) => c.slug === slug)
+    if (i >= 0) list[i] = { ...list[i], name, plural, icon, visible }
+  }
+  await writeCategories(list)
+  redirect(routes.admin.categories())
+}
+
+export async function moveCategory(form: FormData) {
+  const list = await getCategories()
+  const i = list.findIndex((c) => c.slug === String(form.get("slug")))
+  const j = i + (form.get("dir") === "up" ? -1 : 1)
+  if (i < 0 || j < 0 || j >= list.length) return
+  ;[list[i], list[j]] = [list[j], list[i]]
+  await writeCategories(list)
+}
+
+export async function toggleCategory(form: FormData) {
+  const list = await getCategories()
+  const c = list.find((x) => x.slug === String(form.get("slug")))
+  if (!c) return
+  c.visible = !c.visible
+  await writeCategories(list)
+}
+
+// Only categories the trade desk added, and only while they hold no parts
+export async function deleteCategory(form: FormData) {
+  const slug = String(form.get("slug"))
+  const list = await getCategories()
+  const c = list.find((x) => x.slug === slug)
+  const used = PRODUCTS.some((p) => p.category === slug) || (await getAddedProducts()).some((p) => p.category === slug)
+  if (!c?.custom || used) return
+  await writeCategories(list.filter((x) => x.slug !== slug))
+  redirect(routes.admin.categories())
+}
+
 // ─── Products ───────────────────────────────────────────────────────────────
 export async function addProduct(json: string) {
   const p = JSON.parse(json) as Omit<NewProduct, "slug">
   const errors: Record<string, string> = {}
   if (p.name.trim().length < 4) errors.name = "Give the part a name of at least 4 characters."
-  if (!CATEGORIES.some((c) => c.slug === p.category)) errors.category = "Choose a category."
+  if (!(await getCategories()).some((c) => c.slug === p.category)) errors.category = "Choose a category."
   if (p.grade && !GRADES.some((g) => g.id === p.grade)) errors.grade = "Choose a grade."
   if (!p.models.length) errors.models = "Choose at least one model the part fits."
   if (!/^[A-Z0-9-]{4,24}$/.test(p.sku)) errors.sku = "Use 4 to 24 capitals, digits or hyphens."

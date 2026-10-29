@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import { ShoppingCart, User } from "@medusajs/icons"
 import { Logo } from "@/components/brand/Logo"
 import { Figure } from "@/components/commerce/Figure"
-import { CATEGORIES } from "@/lib/catalog"
+import { getCategories } from "@/lib/categories"
 import { readCart } from "@/lib/cart"
 import { deviceTree, searchStarters } from "@/lib/public"
 import { routes } from "@/lib/routes"
@@ -21,6 +21,7 @@ export async function SiteHeader() {
   const cart = await readCart()
   const iconStyle = await getIconStyle()
   const starters = searchStarters()
+  const categories = await getCategories()
   const signedIn = viewer.state !== "visitor"
   const canOrder = viewer.state === "approved" || viewer.state === "masked"
 
@@ -82,7 +83,7 @@ export async function SiteHeader() {
         <SearchBox starters={starters} />
       </div>
 
-      <CategoryNav categories={CATEGORIES.map(({ slug, plural }) => ({ slug, plural }))} iconStyle={iconStyle} />
+      <CategoryNav categories={categories.filter((c) => c.visible).map(({ slug, plural, icon }) => ({ slug, plural, icon }))} iconStyle={iconStyle} />
     </header>
   )
 }

@@ -73,6 +73,9 @@ const GLYPHS: Record<string, React.ReactNode> = {
   ),
 }
 
+// The glyphs a category can use, for the trade desk's icon picker
+export const GLYPH_KEYS = Object.keys(GLYPHS)
+
 export function PartGlassGlyph({ category, className }: { category: string; className?: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden className={clx("shrink-0", className)}>

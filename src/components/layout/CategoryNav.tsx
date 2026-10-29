@@ -13,7 +13,7 @@ import { routes } from "@/lib/routes"
 // accent-tinted band (.ig-catbar) with stronger text; the page you are on is
 // a solid accent pill. No colour transition, so a pill never fades between
 // two categories while the page changes.
-export function CategoryNav({ categories, iconStyle }: { categories: { slug: string; plural: string }[]; iconStyle: IconStyle }) {
+export function CategoryNav({ categories, iconStyle }: { categories: { slug: string; plural: string; icon: string }[]; iconStyle: IconStyle }) {
   const pathname = usePathname()
   const item = (active: boolean, accent = false) =>
     clx(
@@ -35,10 +35,10 @@ export function CategoryNav({ categories, iconStyle }: { categories: { slug: str
             <li key={c.slug}>
               <Link href={href} aria-current={active ? "page" : undefined} className={clx(item(active), "gap-2 pl-2")}>
                 {/* Bare, no frame: the pill is the container */}
-                {iconStyle === "glass" ? (
-                  <PartGlassGlyph category={c.slug} className={clx("size-[18px]", !active && "text-ui-fg-interactive")} />
+                {iconStyle === "glass" || !CATEGORY_IMAGE[c.slug] ? (
+                  <PartGlassGlyph category={c.icon} className={clx("size-[18px]", !active && "text-ui-fg-interactive")} />
                 ) : (
-                  CATEGORY_IMAGE[c.slug] && <Image src={CATEGORY_IMAGE[c.slug]} alt="" width={24} height={24} className="size-6 object-contain" />
+                  <Image src={CATEGORY_IMAGE[c.slug]} alt="" width={24} height={24} className="size-6 object-contain" />
                 )}
                 {c.plural}
               </Link>

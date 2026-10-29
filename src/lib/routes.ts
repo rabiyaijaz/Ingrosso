@@ -36,6 +36,7 @@ export const routes = {
     products: (params?: Record<string, string | undefined>, l: string = "en") => `/${l}/admin/products${q(params)}`,
     newProduct: (l: string = "en") => `/${l}/admin/products/new`,
     categories: (l: string = "en") => `/${l}/admin/categories`,
+    category: (slug: string, l: string = "en") => `/${l}/admin/categories/${slug}`,
     pricing: (l: string = "en") => `/${l}/admin/pricing`,
     tier: (id: string, l: string = "en") => `/${l}/admin/pricing/${id}`,
   },

@@ -15,7 +15,7 @@ import type { DeviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 
 type Grade = { id: string; label: string; family: string; rank: number }
-type Cat = { slug: string; name: string; plural: string }
+type Cat = { slug: string; name: string; plural: string; icon?: string }
 
 const PREFIX: Record<string, string> = { screens: "SCR", batteries: "BAT", "charging-ports": "CHG", cameras: "CAM", "back-glass": "BKG", "small-parts": "SML", tools: "TLS" }
 
@@ -43,7 +43,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
   const allModels = useMemo(() => tree.flatMap((b) => b.series.flatMap((s) => s.models)), [tree])
   const firstCode = allModels.find((m) => m.slug === models[0])?.codes[0]
   const rank = grades.find((g) => g.id === grade)?.rank
-  const suggested = `${PREFIX[category]}-${firstCode ?? "XXXX"}${rank ? `-${String(rank).padStart(2, "0")}` : ""}`
+  const suggested = `${PREFIX[category] ?? category.slice(0, 3).toUpperCase()}-${firstCode ?? "XXXX"}${rank ? `-${String(rank).padStart(2, "0")}` : ""}`
   const sku = skuEdited ?? suggested
   const list = toMoney(price)
 
@@ -100,7 +100,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
                       on ? "bg-ui-bg-highlight shadow-borders-interactive-with-active" : "shadow-borders-base hover:bg-ui-bg-base-hover"
                     )}
                   >
-                    <PartIcon category={c.slug} size="sm" />
+                    <PartIcon category={c.icon ?? c.slug} size="sm" />
                     {c.plural}
                   </button>
                 )
