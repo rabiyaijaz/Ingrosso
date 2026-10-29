@@ -327,7 +327,7 @@ export default async function HomePage() {
           <div className="flex flex-col gap-10">
             <Logo size="sm" href={null} />
             <nav aria-label="Footer">
-              <ul className="flex flex-col gap-3 lg:gap-5 [&:hover>li>a]:text-ig-ink-soft">
+              <ul className="ig-menu">
                 {[
                   ["Shop by device", routes.devices()],
                   ["Screens", routes.category("screens")],
@@ -337,8 +337,11 @@ export default async function HomePage() {
                   ["Sign in", routes.signIn()],
                 ].map(([label, href]) => (
                   <li key={href}>
-                    <Link href={href} className="inline-block text-[clamp(28px,2.6vw,40px)] font-semibold leading-[1.1] tracking-[-0.03em] transition-[transform,color] duration-200 hover:!text-ig-ink hover:translate-x-3">
-                      {label}
+                    <Link href={href} className="ig-menu__row">
+                      <span className="ig-menu__label">{label}</span>
+                      <span aria-hidden className="ig-icon-frame ig-glass-icon ig-menu__arrow" data-size="lg">
+                        <ArrowRight />
+                      </span>
                     </Link>
                   </li>
                 ))}

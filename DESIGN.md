@@ -40,6 +40,8 @@ Light, glassy and minimal, in the Apple style: very light blue gradients, froste
 - **Light sections:** `Ambient` gives a soft gradient with drifting light and scroll parallax.
 - **Part tiles:** `GlassTile` on a deep black-to-blue, mostly blue, background with a breathing glow, cursor tilt and light sweep; label on a frosted strip below the picture.
 - **Brand pictures:** `MotionScene` (focus-in, breathing, glow pulse, light sweep, rising sparkles, scroll and cursor parallax).
+- **Top strip:** a small delivery truck drives along a moving road beside the dispatch countdown; trade promises slide in one after another on the right (`CutoffCountdown withTruck`, `StripTicker`).
+- **Big menus** (landing footer): full-width rows with hairlines, a glass arrow tile that turns solid blue on hover, and a soft blue wash (`.ig-menu`).
 - All motion stops under `prefers-reduced-motion`.
 
 ## Buttons
