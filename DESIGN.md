@@ -30,10 +30,47 @@ The lab is switched on by `NEXT_PUBLIC_LAB=1` in the lab folder's `.env.local`, 
 
 To reskin for another wholesaler, change the `:root:root` block in `globals.css` and the brand images in `public/brand/`.
 
-## Two looks, one token set
+## Look and feel
 
-- **Working screens** (catalogue, product, order, account, apply): Medusa UI components (`Button`, `Table`, `Select`, `ProgressTabs`, `StatusBadge`…).
-- **Marketing pages** (landing): flat, shadowless primitives in `src/components/marketing/Primitives.tsx`, following the taste skill's house rules. Both use the same tokens.
+Light, glassy and minimal, in the Apple style: very light blue gradients, frosted surfaces with a white top highlight, soft blue shadows, and gentle motion. Never flat grey, never black buttons.
+
+- **Page:** a very light cool gradient behind every page; the header is frosted glass.
+- **Cards:** soft white glass (`.shadow-elevation-card-rest` in the light theme).
+- **Feature bands:** glassy bright blue (`.ig-surface-blue`): blue gradient, soft white light, fine glass grain, white text. Used for the approval section, closing text, footer, top strip and apply panel. No grey or slate bands.
+- **Light sections:** `Ambient` gives a soft gradient with drifting light and scroll parallax.
+- **Part tiles:** `GlassTile` on a deep black-to-blue, mostly blue, background with a breathing glow, cursor tilt and light sweep; label on a frosted strip below the picture.
+- **Brand pictures:** `MotionScene` (focus-in, breathing, glow pulse, light sweep, rising sparkles, scroll and cursor parallax).
+- All motion stops under `prefers-reduced-motion`.
+
+## Buttons
+
+One component: `components/ui/Button`. Nothing else is styled as a button.
+
+| | |
+| --- | --- |
+| Variants | `primary` (blue) and `secondary` (white) for every action; `ghost` for icon-only and toolbar buttons; `danger` for destructive actions. No black buttons. |
+| Sizes | `sm` 32 · `md` 40 · `lg` 48 · `xl` 56 px tall |
+| Shape | Always a full pill |
+| Icons | `iconLeft`, `iconRight`, both, or `iconOnly` |
+| States | Hover lift and sheen, press squish, `isLoading` spinner, disabled |
+| Burst | Glassy ring and beads on press; on by default for `primary` at `lg`/`xl` (main calls to action) |
+| Links | `asChild` with a Next `<Link>`; on marketing pages use `PillLink` (`accent` = blue, `paper` = white) |
+
+## Icon frames
+
+Every icon that sits in a frame (grade icons, brand logos, feature icons) uses `.ig-icon-frame`:
+
+- **Shape:** always a rounded square, never a circle. Corner radius is 28% of the frame.
+- **Glyph:** 56% of the frame at every size, centred on both axes.
+- **Sizes (frame / glyph px):** `xs` 20/11 · `sm` 28/16 · `md` 36/20 · `lg` 48/27 · `xl` 56/31.
+- **Wide marks** (a wordmark such as Samsung's) use `data-wide`: twice as wide, same height and radius.
+- **Finish:** `.ig-glass-icon` with `data-family`: `Genuine` solid blue glass, `Aftermarket` clear glass with a blue glyph, `Third-party` clear glass with a grey glyph, `Brand` clear glass with an ink logo that turns the brand colour on hover.
+
+Where each size is used: `xs` in grade badges and brand rows; `sm` in filter chips and the device finder; `md` in the grade list and page headings; `lg` in feature fragments, the device tile and model tiles.
+
+## Brand logos
+
+`brand/BrandMark` draws the Apple, Samsung, Google and Xiaomi logos (Simple Icons) in an icon frame, or `variant="plain"` inline. They show compatibility only; both footers carry the trademark note.
 
 ## Shared components
 
@@ -46,13 +83,18 @@ To reskin for another wholesaler, change the `:root:root` block in `globals.css`
 | `commerce/QuantityStepper` | Every quantity input; respects order step |
 | `commerce/AddToOrder` | Add to order, in a table row or on the product page |
 | `commerce/GateCallout` | What an unapproved viewer sees instead of buy controls |
-| `catalog/Grade` | `GradeBadge` and `GradeScale` (ten-step ladder) |
+| `ui/Button` | Every button and button-styled link |
+| `brand/BrandMark` | Device-brand logos |
+| `catalog/Grade` | `GradeIcon`, `GradeBadge` and `GradeScale` (ten-step ladder) |
+| `marketing/GlassTile` | Landing part tiles and the shop-by-device tile |
+| `marketing/Ambient` | Light gradient section backgrounds with drifting light |
+| `marketing/MotionScene` | Living brand pictures (hero, closing banner) |
 | `catalog/DeviceFinder` | Brand → Series → Model, as columns or as selects |
 | `catalog/ProductTable` | Dense part listings |
 | `catalog/Facets` | Grade filter bar and URL-based facet groups |
 | `catalog/ListingView` | Full listing layout (device, category, search) |
 | `catalog/GradeCompare` | All grades of one part side by side |
-| `catalog/PartGlyph` | Drawn part stand-ins until product photography arrives |
+| `catalog/PartGlyph` | Drawn part stand-ins in product tables until product photography arrives |
 | `layout/*` | Header, footer, search, device menu, page frame |
 
 ## Rules carried from the BRD

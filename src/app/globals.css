@@ -136,6 +136,32 @@ body {
 }
 
 /*
+  Icon frame: the one shape every icon sits in (grade icons, brand logos,
+  feature icons). Always a rounded square, never a circle. The glyph is
+  56% of the frame at every size, and the corner radius 28%.
+    xs 20/11 · sm 28/16 · md 36/20 · lg 48/27 · xl 56/31  (frame/glyph px)
+*/
+.ig-icon-frame {
+  --frame: 28px;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--frame);
+  height: var(--frame);
+  border-radius: calc(var(--frame) * 0.28);
+}
+.ig-icon-frame svg { width: calc(var(--frame) * 0.56); height: calc(var(--frame) * 0.56); }
+.ig-icon-frame[data-size="xs"] { --frame: 20px; }
+.ig-icon-frame[data-size="sm"] { --frame: 28px; }
+.ig-icon-frame[data-size="md"] { --frame: 36px; }
+.ig-icon-frame[data-size="lg"] { --frame: 48px; }
+.ig-icon-frame[data-size="xl"] { --frame: 56px; }
+/* Wide marks (a wordmark such as Samsung's) keep the height and radius */
+.ig-icon-frame[data-wide] { width: calc(var(--frame) * 2); }
+.ig-icon-frame[data-wide] svg { width: calc(var(--frame) * 1.6); height: calc(var(--frame) * 0.36); }
+
+/*
   Glass grade icon: a frosted tile with a top sheen and an inner edge, in the
   brand's glass style. data-family sets the tint: Genuine is a solid glass of
   the accent, Aftermarket a clear glass with an accent glyph, Third-party a
@@ -362,17 +388,21 @@ body {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 18.5px 18.5px 0 0;
-  background: linear-gradient(160deg, color-mix(in srgb, var(--ig-blue) 14%, white) 0%, color-mix(in srgb, var(--ig-blue) 26%, #e9efff) 100%);
+  /* Deep black-and-blue, mostly blue: the keyed glass parts glow against it */
+  background:
+    radial-gradient(120% 90% at 25% 15%, color-mix(in srgb, var(--ig-blue) 70%, #0a1f6e) 0%, transparent 62%),
+    linear-gradient(160deg, color-mix(in srgb, var(--ig-blue) 45%, #071648) 0%, #071233 55%, #03061a 100%);
   isolation: isolate;
 }
-/* Breathing light behind the part: two soft blue glows that swell and drift */
+/* Breathing light behind the part: blue and cyan glows that swell and drift */
 .ig-tile__aura {
   position: absolute;
   inset: -25%;
   z-index: 0;
   background:
-    radial-gradient(40% 40% at 35% 40%, color-mix(in srgb, var(--ig-blue) 38%, transparent), transparent 70%),
-    radial-gradient(38% 38% at 68% 62%, rgba(70, 160, 255, 0.42), transparent 70%);
+    radial-gradient(40% 40% at 35% 40%, color-mix(in srgb, var(--ig-blue) 70%, transparent), transparent 70%),
+    radial-gradient(36% 36% at 68% 62%, rgba(70, 190, 255, 0.45), transparent 70%);
+  mix-blend-mode: screen;
   pointer-events: none;
 }
 .ig-tile__media img { z-index: 1; }

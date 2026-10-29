@@ -32,20 +32,13 @@ const ICONS: Record<GradeId, React.ComponentType<{ className?: string }>> = {
 
 export const FAMILIES: Grade["family"][] = ["Genuine", "Aftermarket", "Third-party"]
 
-// Box and glyph sizes, glyph about 70% of the tile and centred on both axes.
-const SIZES = {
-  xs: "size-4 rounded-[5px] [&_svg]:size-3",
-  sm: "size-5 rounded-[6px] [&_svg]:size-3.5",
-  md: "size-7 rounded-[9px] [&_svg]:size-5",
-  lg: "size-11 rounded-[13px] [&_svg]:size-7",
-}
-
-// The grade's glass icon tile (styles: .ig-glass-icon in globals.css).
-export function GradeIcon({ grade, size = "sm", className }: { grade: GradeId; size?: keyof typeof SIZES; className?: string }) {
+// The grade's glass icon, in the shared rounded-square icon frame
+// (.ig-icon-frame + .ig-glass-icon in globals.css).
+export function GradeIcon({ grade, size = "sm", className }: { grade: GradeId; size?: "xs" | "sm" | "md" | "lg" | "xl"; className?: string }) {
   const g = gradeById(grade)
   const Icon = ICONS[grade]
   return (
-    <span aria-hidden data-family={g.family} className={clx("ig-glass-icon inline-flex shrink-0 items-center justify-center", SIZES[size], className)}>
+    <span aria-hidden data-family={g.family} data-size={size} className={clx("ig-icon-frame ig-glass-icon", className)}>
       <Icon />
     </span>
   )
@@ -61,7 +54,7 @@ export function GradeBadge({ grade, className }: { grade: GradeId; className?: s
         className
       )}
     >
-      <GradeIcon grade={grade} size="sm" />
+      <GradeIcon grade={grade} size="xs" />
       {g.label}
     </span>
   )

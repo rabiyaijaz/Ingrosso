@@ -153,18 +153,19 @@ export default async function HomePage() {
         <div className="relative mx-auto aspect-square w-full max-w-[640px] overflow-hidden" data-reveal>
           <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
         </div>
-        <div className="flex min-h-[560px] flex-col justify-between gap-10" data-reveal>
-          <GradeTabs />
-          <div className="flex flex-col gap-6">
+        {/* Heading and claim first, then the grades to explore, then the actions */}
+        <div className="flex flex-col gap-9" data-reveal>
+          <div className="flex flex-col gap-5">
             <h2 className={sectionTitle}>Ten grades, named plainly</h2>
             <p className={clx(body, "max-w-[44ch] text-ig-ink-soft")}>
               Most suppliers sell “original” and “copy”. We list the real grade of every part, so a genuine screen and a
               compatible one sit side by side and you can tell your customer exactly what each is.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <PillLink href={example} iconRight={<ArrowRight />}>Compare grades on a part</PillLink>
-              <PillLink href={routes.grades()} tone="paper">Read the grade guide</PillLink>
-            </div>
+          </div>
+          <GradeTabs />
+          <div className="flex flex-wrap gap-3">
+            <PillLink href={example} iconRight={<ArrowRight />}>Compare grades on a part</PillLink>
+            <PillLink href={routes.grades()} tone="paper">Read the grade guide</PillLink>
           </div>
         </div>
       </div>

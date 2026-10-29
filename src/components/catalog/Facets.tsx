@@ -54,7 +54,7 @@ export function GradeFilterBar({
                       on ? "bg-ig-blue text-ig-on-accent" : "bg-ui-bg-subtle text-ui-fg-base hover:bg-ui-bg-subtle-hover"
                     )}
                   >
-                    <GradeIcon grade={g.id} size="md" className="rounded-full" />
+                    <GradeIcon grade={g.id} size="sm" />
                     {g.label}
                     <Figure className={clx("txt-compact-xsmall", on ? "opacity-70" : "text-ui-fg-muted")}>{count}</Figure>
                   </Link>

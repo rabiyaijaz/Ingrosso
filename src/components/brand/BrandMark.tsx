@@ -5,8 +5,9 @@ import { siApple, siGoogle, siSamsung, siXiaomi, type SimpleIcon } from "simple-
 // logo is drawn in ink and takes the brand's own colour when its row or tile
 // is hovered. Logos show compatibility only; the trademark note is in the
 // footers.
+// Glass marks use the shared rounded-square icon frame (.ig-icon-frame).
 // viewBox crops a wordmark to its height so it reads at small sizes; wide
-// marks get a wider tile.
+// marks get a frame twice as wide.
 const MARKS: Record<string, { icon: SimpleIcon; viewBox?: string; wide?: boolean }> = {
   apple: { icon: siApple },
   samsung: { icon: siSamsung, viewBox: "0 9.3 24 5.4", wide: true },
@@ -14,19 +15,7 @@ const MARKS: Record<string, { icon: SimpleIcon; viewBox?: string; wide?: boolean
   xiaomi: { icon: siXiaomi },
 }
 
-const WIDE = {
-  xs: "h-5 w-11 rounded-[6px] [&_svg]:h-[9px] [&_svg]:w-9",
-  sm: "h-7 w-14 rounded-[9px] [&_svg]:h-[10px] [&_svg]:w-11",
-  md: "h-9 w-[72px] rounded-[11px] [&_svg]:h-3 [&_svg]:w-14",
-  lg: "h-14 w-[104px] rounded-[16px] [&_svg]:h-[18px] [&_svg]:w-20",
-}
-
-const SIZES = {
-  xs: "size-5 rounded-[6px] [&_svg]:size-3",
-  sm: "size-7 rounded-[9px] [&_svg]:size-4",
-  md: "size-9 rounded-[11px] [&_svg]:size-5",
-  lg: "size-14 rounded-[16px] [&_svg]:size-7",
-}
+type Size = "xs" | "sm" | "md" | "lg" | "xl"
 
 export function BrandMark({
   brand,
@@ -35,7 +24,7 @@ export function BrandMark({
   className,
 }: {
   brand: string
-  size?: keyof typeof SIZES
+  size?: Size
   variant?: "glass" | "plain"
   className?: string
 }) {
@@ -60,7 +49,9 @@ export function BrandMark({
   return (
     <span
       data-family="Brand"
-      className={clx("ig-glass-icon inline-flex shrink-0 items-center justify-center", mark.wide ? WIDE[size] : SIZES[size], className)}
+      data-size={size}
+      data-wide={mark.wide || undefined}
+      className={clx("ig-icon-frame ig-glass-icon", className)}
       style={{ "--brand": `#${icon.hex}` } as React.CSSProperties}
     >
       {svg}

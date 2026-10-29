@@ -79,7 +79,7 @@ export function PriceFragment() {
 export function ShipFragment() {
   return (
     <div data-ui className={`${frame} flex items-center gap-4`}>
-      <span className="grid size-12 shrink-0 place-items-center rounded-full bg-ig-blue text-ig-on-accent">
+      <span aria-hidden className="ig-icon-frame ig-glass-icon" data-size="lg" data-family="Genuine">
         <Clock />
       </span>
       <span className="txt-medium-plus text-ig-ink"><CutoffCountdown /></span>

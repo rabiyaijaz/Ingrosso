@@ -64,10 +64,10 @@ export function GlassActionTile({ href, title, action, src }: { href: string; ti
             <Image src={src} alt="" fill sizes="(min-width:1024px) 22vw, 45vw" className="object-contain p-3" />
           ) : (
             <span className="relative z-[1] flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
-              <span className="ig-glass-icon inline-flex size-14 items-center justify-center rounded-[16px] [&_svg]:size-8" data-family="Aftermarket">
+              <span className="ig-icon-frame ig-glass-icon" data-size="lg" data-family="Aftermarket">
                 <LaptopMobile />
               </span>
-              <span className="text-[17px] font-medium leading-snug text-ig-ink">{title}</span>
+              <span className="text-[17px] font-medium leading-snug text-white">{title}</span>
             </span>
           )}
           <span className="ig-tile__glare" />
