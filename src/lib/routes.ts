@@ -27,4 +27,16 @@ export const routes = {
   order: (ref: string, l: string = "en") => `/${l}/orders/${ref}`,
   account: (l: string = "en") => `/${l}/account`,
   system: (l: string = "en") => `/${l}/system`,
+  admin: {
+    home: (l: string = "en") => `/${l}/admin`,
+    orders: (params?: Record<string, string | undefined>, l: string = "en") => `/${l}/admin/orders${q(params)}`,
+    order: (ref: string, l: string = "en") => `/${l}/admin/orders/${ref}`,
+    customers: (params?: Record<string, string | undefined>, l: string = "en") => `/${l}/admin/customers${q(params)}`,
+    customer: (id: string, l: string = "en") => `/${l}/admin/customers/${id}`,
+    products: (params?: Record<string, string | undefined>, l: string = "en") => `/${l}/admin/products${q(params)}`,
+    newProduct: (l: string = "en") => `/${l}/admin/products/new`,
+    categories: (l: string = "en") => `/${l}/admin/categories`,
+    pricing: (l: string = "en") => `/${l}/admin/pricing`,
+    tier: (id: string, l: string = "en") => `/${l}/admin/pricing/${id}`,
+  },
 }

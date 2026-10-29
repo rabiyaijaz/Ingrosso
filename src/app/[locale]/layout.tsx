@@ -10,7 +10,6 @@ import "@fontsource/roboto-mono/500.css"
 import "../globals.css"
 import "../themes.css"
 import { cookies } from "next/headers"
-import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Reveal } from "@/components/layout/Reveal"
 import { Lab } from "@/components/lab/Lab"
 import { LAB } from "@/lib/lab"
@@ -38,7 +37,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale} data-theme={themed ? theme : undefined} className={themed ? "dark" : undefined}>
       <body>
-        <SiteHeader />
+        {/* Each area brings its own chrome: (home) and (shop) the store header, admin its sidebar */}
         {children}
         <Toaster />
         <Reveal />

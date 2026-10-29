@@ -26,6 +26,9 @@ const JUMPS: { label: string; href: string }[] = [
   { label: "Checkout", href: routes.checkout() },
   { label: "Account", href: routes.account() },
   { label: "Design system", href: routes.system() },
+  { label: "Admin · Overview", href: routes.admin.home() },
+  { label: "Admin · Applications", href: routes.admin.customers({ status: "pending" }) },
+  { label: "Admin · Price tiers", href: routes.admin.pricing() },
 ]
 
 // Floating design-lab toolbar: switch account state, take the next step of a

@@ -52,6 +52,14 @@ export function commercialView(product: Product, viewer: Viewer): CommercialView
   return { price: { kind: "priced", unit: breaks[0]?.unit ?? 0, breaks }, stock, orderStep }
 }
 
+// Admin only: the list price (single-unit standard trade price) and stock on
+// hand, which price tiers are calculated from and the stock screens report.
+export const listPrice = (product: Product): Money => product.commercial.lists["trade-standard"]?.[0]?.unit ?? 0
+export const stockOf = (product: Product) => ({
+  onHand: product.commercial.onHand,
+  available: Math.max(0, product.commercial.onHand - product.commercial.reserved),
+})
+
 export function unitPriceAt(product: Product, viewer: Viewer, qty: number): Money | null {
   if (viewer.state !== "approved") return null
   return unitAt(product, viewer.priceLists, qty)

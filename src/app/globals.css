@@ -199,6 +199,34 @@ body {
 @keyframes ig-ring { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .ig-logo-stage__mark, .ig-logo-stage__ring { animation: none; } }
 
+/*
+  Trade desk (admin): a frosted glass sidebar on the page canvas, the active
+  item as an accent pill, and the chart marks. Same tokens as the store, so
+  every theme follows.
+*/
+.ig-admin-sidebar {
+  background: color-mix(in srgb, var(--bg-base) 72%, transparent);
+  backdrop-filter: blur(28px) saturate(1.15);
+  -webkit-backdrop-filter: blur(28px) saturate(1.15);
+  box-shadow: inset -1px 0 0 var(--border-base), inset 0 -1px 0 var(--border-base);
+}
+@media (min-width: 1024px) { .ig-admin-sidebar { box-shadow: inset -1px 0 0 var(--border-base); } }
+.ig-admin-nav__active {
+  color: var(--ig-on-accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ig-blue) 94%, white), var(--ig-blue));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 16px -8px var(--ig-blue);
+}
+/* Rows that scroll sideways on small screens, with no scrollbar showing */
+.ig-no-scrollbar { scrollbar-width: none; }
+.ig-no-scrollbar::-webkit-scrollbar { display: none; }
+/* Chart marks: one accent hue; recessive grid and axes in the border colour */
+.ig-chart-grid { stroke: var(--border-base); stroke-width: 1; }
+.ig-chart-bar { fill: var(--ig-blue); transition: opacity 120ms ease; }
+.ig-chart-bar--soft { fill: color-mix(in srgb, var(--ig-blue) 35%, var(--bg-base)); }
+.ig-chart:hover .ig-chart-bar:not(:hover):not([data-on]) { opacity: 0.55; }
+.ig-chart-line { fill: none; stroke: var(--ig-blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ig-chart-area { fill: color-mix(in srgb, var(--ig-blue) 14%, transparent); }
+
 /* Gentle float for state pictures (order placed) */
 .ig-float { animation: ig-float 5s ease-in-out infinite; }
 @keyframes ig-float { 50% { transform: translateY(-6px); } }
