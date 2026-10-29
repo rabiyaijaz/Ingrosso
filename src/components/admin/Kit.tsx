@@ -16,8 +16,10 @@ export function AdminHeader({
   crumbs?: { label: string; href: string }[]
   children?: React.ReactNode
 }) {
+  // Actions sit right under the title and description, where the eye already
+  // is, not pushed to the far edge of a wide screen.
   return (
-    <header className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <header className="mb-6 flex flex-col gap-4">
       <div className="flex min-w-0 flex-col gap-1.5">
         {crumbs && (
           <nav aria-label="Breadcrumb" className="flex items-center gap-1 txt-compact-small text-ui-fg-subtle">

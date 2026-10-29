@@ -36,32 +36,33 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ref
             Placed {shortDate(o.placedAt)} by {c?.company}
           </span>
         }
-      >
-        {next && o.status !== "cancelled" && (
-          <form action={setOrderStatus}>
-            <input type="hidden" name="ref" value={o.ref} />
-            <input type="hidden" name="status" value={next} />
-            <Button type="submit">{NEXT_LABEL[o.status]}</Button>
-          </form>
-        )}
-      </AdminHeader>
+      />
 
-      {/* Progress through the warehouse */}
+      {/* Progress through the warehouse, with the next step right beside it */}
       {o.status !== "cancelled" && (
-        <ol className="mb-6 grid grid-cols-5 gap-2" aria-label="Progress">
-          {FLOW.map((s, i) => {
-            const done = i <= at
-            return (
-              <li key={s} className="flex flex-col gap-2">
-                <span className={clx("h-1.5 rounded-full", done ? "bg-ig-blue" : "bg-ui-bg-component")} />
-                <span className={clx("flex items-center gap-1 txt-compact-small", done ? "text-ui-fg-base" : "text-ui-fg-muted")}>
-                  {done && <CheckMini className="text-ui-fg-interactive" />}
-                  {ORDER_STATUS[s].label}
-                </span>
-              </li>
-            )
-          })}
-        </ol>
+        <div className="mb-6 flex flex-col gap-4 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest sm:flex-row sm:items-center">
+          <ol className="grid flex-1 grid-cols-5 gap-2" aria-label="Progress">
+            {FLOW.map((s, i) => {
+              const done = i <= at
+              return (
+                <li key={s} className="flex flex-col gap-2">
+                  <span className={clx("h-1.5 rounded-full", done ? "bg-ig-blue" : "bg-ui-bg-component")} />
+                  <span className={clx("flex items-center gap-1 txt-compact-small", done ? "text-ui-fg-base" : "text-ui-fg-muted")}>
+                    {done && <CheckMini className="text-ui-fg-interactive" />}
+                    {ORDER_STATUS[s].label}
+                  </span>
+                </li>
+              )
+            })}
+          </ol>
+          {next && (
+            <form action={setOrderStatus} className="shrink-0">
+              <input type="hidden" name="ref" value={o.ref} />
+              <input type="hidden" name="status" value={next} />
+              <Button type="submit" className="w-full sm:w-auto">{NEXT_LABEL[o.status]}</Button>
+            </form>
+          )}
+        </div>
       )}
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
