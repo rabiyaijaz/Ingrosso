@@ -21,7 +21,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       <ListingView
         products={products}
         viewer={viewer}
-        params={{ grade: sp.grade, cat: sp.cat, brand: sp.brand }}
+        params={{ grade: sp.grade, cat: sp.cat, brand: sp.brand, fam: sp.fam, stock: sp.stock, sort: sp.sort }}
         hrefFor={(fp) => `${routes.search(q)}${Object.entries(fp).filter(([, v]) => v).map(([k, v]) => `&${k}=${encodeURIComponent(v!)}`).join("")}`}
         facets={["cat", "brand"]}
       />

@@ -8,7 +8,7 @@ import { FAMILIES, GradeIcon } from "./Grade"
 // Filters live in the URL so a filtered view can be shared and bookmarked (BRD 3.2).
 export type FacetParams = Record<string, string | undefined>
 
-const toggle = (params: FacetParams, key: string, value: string) => {
+export const toggle = (params: FacetParams, key: string, value: string) => {
   const current = new Set((params[key] ?? "").split(",").filter(Boolean))
   if (current.has(value)) current.delete(value)
   else current.add(value)
@@ -123,9 +123,11 @@ export function applyFacets(products: Product[], params: FacetParams) {
   const grades = selected(params, "grade") as Set<GradeId>
   const cats = selected(params, "cat")
   const brands = selected(params, "brand")
+  const fam = params.fam
   return products.filter(
     (p) =>
       (!grades.size || (p.grade && grades.has(p.grade))) &&
+      (!fam || (p.grade && GRADES.find((g) => g.id === p.grade)?.family === fam)) &&
       (!cats.size || cats.has(p.category)) &&
       (!brands.size || p.models.some((m) => brands.has(findModel(m)?.brand.slug ?? "")))
   )

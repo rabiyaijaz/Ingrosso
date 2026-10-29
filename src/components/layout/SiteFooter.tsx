@@ -17,7 +17,7 @@ export function SiteFooter() {
         </div>
         <FooterList
           title="Devices"
-          links={BRANDS.map((b) => ({ href: routes.brand(b.slug), label: b.name, icon: <BrandMark brand={b.slug} variant="plain" className="[&_svg]:size-3.5" /> }))}
+          links={BRANDS.map((b) => ({ href: routes.brand(b.slug), label: b.name, icon: <BrandMark brand={b.slug} variant="plain" /> }))}
         />
         <FooterList title="Parts" links={CATEGORIES.map((c) => ({ href: routes.category(c.slug), label: c.plural }))} />
         <FooterList

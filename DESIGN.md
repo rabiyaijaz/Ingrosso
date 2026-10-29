@@ -73,6 +73,19 @@ Where each size is used: `xs` in grade badges and brand rows; `sm` in the device
 - **Rounded-square containers** (tags, badges, list rows, tiles): the icon goes in a frame.
 - **Pill buttons and chips** (buttons, filter chips, anything fully rounded): the icon goes in bare, with no frame (`GradeIcon bare` / `.ig-icon-bare`, `BrandMark variant="plain"`, or a plain icon in `Button`). A bare grade icon is tinted by family and takes the chip's text colour when the chip is selected.
 
+## Part listings (layouts under review)
+
+Category, device-model and search pages share `catalog/ListingView`. The lab's **Layout** switch (or `?listing=`) previews:
+
+| Layout | Pattern |
+| --- | --- |
+| `current` | Grade chips on top, small side facets (the layout before review) |
+| `sidebar` | A · Sticky filter panel of collapsible checkbox groups, applied-filter chips, count + sort, dense table |
+| `topbar` | B · Dropdown filter buttons with chevrons, applied-filter chips, count + sort, product cards |
+| `tabs` | C · Large grade-family tabs, side panel for grade/brand/availability, table |
+
+Filter rules in every layout: real checkboxes with counts, a chevron on anything that opens, every active filter shown as a removable chip with Clear all, filters kept in the URL, no price sort (CAT-12), and "In stock only" shown to approved accounts only. On phones the filter panel folds behind one Filters button. The main app keeps `DEFAULT_LISTING` in `lib/listing-variants.ts` until a layout is chosen.
+
 ## Brand logos
 
 `brand/BrandMark` draws the Apple, Samsung, Google and Xiaomi logos (Simple Icons) in an icon frame, or `variant="plain"` inline. They show compatibility only; both footers carry the trademark note.

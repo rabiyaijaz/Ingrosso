@@ -6,7 +6,8 @@ import { useState, useTransition } from "react"
 import { DropdownMenu, Select, clx, toast } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { ArrowPath, ChevronDown, XMark } from "@medusajs/icons"
-import { resetPrototype, setCartLine, setLabTheme, setViewerState } from "@/app/actions"
+import { resetPrototype, setCartLine, setLabListing, setLabTheme, setViewerState } from "@/app/actions"
+import { LISTING_VARIANTS, type ListingVariant } from "@/lib/listing-variants"
 import { PreviewAs } from "@/components/layout/PreviewAs"
 import { routes } from "@/lib/routes"
 import { THEMES, type ThemeId } from "@/lib/themes"
@@ -28,7 +29,7 @@ const JUMPS: { label: string; href: string }[] = [
 
 // Floating design-lab toolbar: switch account state, take the next step of a
 // flow without filling forms, jump anywhere, reset. Lab builds only.
-export function LabBar({ state, cartLines, theme }: { state: ViewerState; cartLines: number; theme: ThemeId }) {
+export function LabBar({ state, cartLines, theme, listing }: { state: ViewerState; cartLines: number; theme: ThemeId; listing: ListingVariant }) {
   const router = useRouter()
   const [open, setOpen] = useState(true)
   const [pending, start] = useTransition()
@@ -101,6 +102,19 @@ export function LabBar({ state, cartLines, theme }: { state: ViewerState; cartLi
           </Select.Trigger>
           <Select.Content>
             {THEMES.map((t) => (
+              <Select.Item key={t.id} value={t.id}>{t.label}</Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      </label>
+      <label className="flex items-center gap-2">
+        <span className="whitespace-nowrap txt-compact-small text-ig-on-slate-soft">Layout</span>
+        <Select size="small" value={listing} onValueChange={(v) => run(() => setLabListing(v as ListingVariant))}>
+          <Select.Trigger aria-label="Listing layout" className="h-6 min-w-[170px] bg-ig-slate-2 text-ig-on-slate shadow-none">
+            <Select.Value />
+          </Select.Trigger>
+          <Select.Content>
+            {LISTING_VARIANTS.map((t) => (
               <Select.Item key={t.id} value={t.id}>{t.label}</Select.Item>
             ))}
           </Select.Content>

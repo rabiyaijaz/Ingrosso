@@ -39,7 +39,7 @@ export function BrandMark({
   if (variant === "plain") {
     return (
       <span
-        className={clx("inline-flex shrink-0", mark.wide ? "[&_svg]:h-2.5 [&_svg]:w-11" : "[&_svg]:size-4", className)}
+        className={clx("inline-flex shrink-0", mark.wide ? "[&_svg]:h-2 [&_svg]:w-10" : "[&_svg]:size-3.5", className)}
         style={{ "--brand": `#${icon.hex}` } as React.CSSProperties}
       >
         {svg}

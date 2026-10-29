@@ -7,6 +7,7 @@ import { CART_COOKIE, readCart } from "@/lib/cart"
 import { unitPriceAt } from "@/lib/commerce"
 import { LAB } from "@/lib/lab"
 import { THEME_COOKIE, isTheme, type ThemeId } from "@/lib/themes"
+import { LISTING_COOKIE, isListing, type ListingVariant } from "@/lib/listing-variants"
 import { ORDERS_COOKIE, readOrders, type PlacedOrder } from "@/lib/orders"
 import { orderTotals, type CarrierId, type PaymentId } from "@/lib/totals"
 import { VIEW_COOKIE, VIEWER_STATES, getViewer, type ViewerState } from "@/lib/viewer"
@@ -86,6 +87,13 @@ export async function placeOrder(input: { carrier: CarrierId; payment: PaymentId
 export async function setLabTheme(theme: ThemeId) {
   if (!LAB || !isTheme(theme)) return
   ;(await cookies()).set(THEME_COOKIE, theme, COOKIE_OPTS)
+  revalidatePath("/", "layout")
+}
+
+// Lab only: preview a listing layout on every part list.
+export async function setLabListing(variant: ListingVariant) {
+  if (!LAB || !isListing(variant)) return
+  ;(await cookies()).set(LISTING_COOKIE, variant, COOKIE_OPTS)
   revalidatePath("/", "layout")
 }
 

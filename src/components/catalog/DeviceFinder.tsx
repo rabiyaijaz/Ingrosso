@@ -48,7 +48,7 @@ export function DeviceFinder({ tree, variant = "columns", buttonVariant = "prima
               {tree.map((x) => (
                 <Select.Item key={x.slug} value={x.slug}>
                   <span className="flex items-center gap-2">
-                    <BrandMark brand={x.slug} variant="plain" className="[&_svg]:size-3.5" />
+                    <BrandMark brand={x.slug} variant="plain" />
                     {x.name}
                   </span>
                 </Select.Item>
