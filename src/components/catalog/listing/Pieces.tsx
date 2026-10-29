@@ -145,7 +145,8 @@ export function FilterPanel({
         </summary>
         <div className="mt-4">{panel}</div>
       </details>
-      <div className="hidden rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest lg:block">
+      {/* Never taller than the screen while sticky: scrolls on its own, scrollbar shows on hover */}
+      <div className="ig-scroll-hover hidden max-h-[calc(100svh-2rem)] rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest lg:block">
         <div className="mb-3 flex items-center justify-between px-2">
           <Heading level="h2" className="txt-compact-medium-plus">Filters</Heading>
           {active > 0 && (
