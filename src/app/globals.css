@@ -299,25 +299,92 @@ body {
 .ig-with-icon:focus-within .ig-with-icon__icon { color: var(--ig-blue); }
 
 /*
-  Brand row (parts overview): a slim one-line card, brand mark, name and
-  model count, with a quiet arrow. Plain surface, no render, so the part
-  tiles below stay the main thing on the page.
+  Brand row (parts overview): a slim glass module, one line high. A faint
+  dot grid on the right and an accent hairline along the top give it an
+  instrument-panel feel; the model count reads like a readout with a live
+  dot; the arrow sits in a small key that fills with the accent on hover.
+  Still one line, so the part tiles below lead.
 */
 .ig-brand-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 52px;
-  padding: 0 12px 0 8px;
-  border-radius: 14px;
-  background: var(--bg-base);
-  box-shadow: 0 0 0 1px var(--border-base), 0 1px 2px rgba(15, 22, 32, 0.04);
-  transition: box-shadow 160ms ease, background-color 160ms ease;
+  height: 56px;
+  padding: 0 10px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-base) 97%, var(--ig-blue)), color-mix(in srgb, var(--bg-base) 90%, var(--ig-blue)));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ig-blue) 16%, var(--border-base)),
+    0 8px 18px -14px color-mix(in srgb, var(--ig-blue) 55%, transparent);
+  transition: box-shadow 200ms ease, transform 200ms cubic-bezier(.2,.8,.2,1);
   outline: none;
 }
-.ig-brand-card:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--ig-blue) 35%, var(--border-base)), 0 6px 16px -10px color-mix(in srgb, var(--ig-blue) 45%, transparent); }
-.ig-brand-card:focus-visible { box-shadow: 0 0 0 2px var(--ig-blue); }
-@media (prefers-reduced-motion: reduce) { .ig-brand-card { transition: none; } }
+/* Dot grid, fading in from the right so the text side stays clean */
+.ig-brand-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(color-mix(in srgb, var(--ig-blue) 22%, transparent) 1px, transparent 1.3px) 0 0 / 8px 8px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 40%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 40%, #000 100%);
+}
+/* Accent hairline along the top edge */
+.ig-brand-card::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ig-cyan) 70%, var(--ig-blue)), transparent);
+  opacity: 0.5;
+  transition: opacity 200ms ease;
+}
+.ig-brand-card__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 10.5px;
+  line-height: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-subtle);
+}
+.ig-brand-card__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 1.5px;
+  background: var(--ig-cyan);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ig-cyan) 22%, transparent);
+}
+.ig-brand-card__go {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  color: var(--ig-blue);
+  background: color-mix(in srgb, var(--ig-blue) 8%, var(--bg-base));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ig-blue) 18%, transparent);
+  transition: background-color 200ms ease, color 200ms ease, transform 200ms cubic-bezier(.2,.8,.2,1);
+}
+.ig-brand-card:hover, .ig-brand-card:focus-visible {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ig-blue) 45%, transparent),
+    0 12px 24px -14px var(--ig-blue);
+}
+.ig-brand-card:focus-visible { box-shadow: 0 0 0 2px var(--ig-blue), 0 12px 24px -14px var(--ig-blue); }
+.ig-brand-card:hover::after { opacity: 1; }
+.ig-brand-card:hover .ig-brand-card__go { background: var(--ig-blue); color: var(--ig-on-accent); transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) { .ig-brand-card, .ig-brand-card__go { transition: none; } .ig-brand-card:hover { transform: none; } }
 
 /* Hidden step panels take no space (their flex class would otherwise beat [hidden] and add gaps) */
 [role="tabpanel"][hidden] { display: none !important; }

@@ -48,12 +48,15 @@ export default async function PartsPage() {
             return (
               <li key={b.slug}>
                 <Link href={routes.brand(b.slug)} className="ig-brand-card group">
-                  <BrandMark brand={b.slug} size="xs" />
-                  <span className="flex min-w-0 flex-1 flex-col">
+                  <BrandMark brand={b.slug} size="sm" />
+                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <span className="truncate txt-compact-small-plus text-ui-fg-base">{b.name}</span>
-                    <span className="txt-compact-xsmall text-ui-fg-subtle">{models} models</span>
+                    <span className="ig-brand-card__meta">
+                      <span className="ig-brand-card__dot" aria-hidden />
+                      {models} models
+                    </span>
                   </span>
-                  <ArrowRight className="shrink-0 text-ui-fg-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ui-fg-interactive" />
+                  <span className="ig-brand-card__go" aria-hidden><ArrowRight /></span>
                 </Link>
               </li>
             )
