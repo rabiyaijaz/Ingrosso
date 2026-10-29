@@ -10,7 +10,7 @@ import { CATEGORIES, GRADES, type Product } from "@/lib/catalog"
 import { commercialView } from "@/lib/commerce"
 import { routes } from "@/lib/routes"
 import type { Viewer } from "@/lib/viewer"
-import { selected, toggle, type FacetParams } from "../Facets"
+import { pruneModels, selected, toggle, type FacetParams } from "../Facets"
 import { FAMILIES, GradeBadge, GradeIcon } from "../Grade"
 import { PartGlyph } from "../PartGlyph"
 import { SortSelect } from "./Client"
@@ -28,12 +28,15 @@ export function CheckList({
   params,
   hrefFor,
   icon,
+  nested,
 }: {
   options: Option[]
   paramKey: string
   params: FacetParams
   hrefFor: Href
   icon?: (value: string) => React.ReactNode
+  // Shown under a ticked option: the next, narrower choice (brand → models)
+  nested?: (value: string) => React.ReactNode
 }) {
   const active = selected(params, paramKey)
   return (
@@ -64,6 +67,7 @@ export function CheckList({
               <span className={clx("flex-1", on && "font-medium")}>{o.label}</span>
               <Figure className="txt-compact-xsmall text-ui-fg-muted">{o.count}</Figure>
             </Link>
+            {on && nested?.(o.value)}
           </li>
         )
       })}
@@ -85,6 +89,34 @@ export function GradeChecks({ options, params, hrefFor }: { options: GradeOption
         )
       })}
     </div>
+  )
+}
+
+// Brands, each opening its models (grouped by series) once ticked. Unticking
+// a brand also clears its models.
+export function BrandChecks({ facets, params, hrefFor }: { facets: Facets; params: FacetParams; hrefFor: Href }) {
+  return (
+    <CheckList
+      options={facets.brands}
+      paramKey="brand"
+      params={params}
+      hrefFor={(p) => hrefFor(pruneModels(p))}
+      icon={(v) => <BrandMark brand={v} variant="plain" />}
+      nested={(brand) => {
+        const groups = facets.models[brand] ?? []
+        if (!groups.length) return null
+        return (
+          <div className="ml-[17px] mt-1 mb-2 flex flex-col gap-2 border-l border-ui-border-base pl-3">
+            {groups.map((g) => (
+              <div key={g.series} className="flex flex-col gap-0.5">
+                <span className="px-2 txt-compact-xsmall-plus text-ui-fg-muted">{g.series}</span>
+                <CheckList options={g.options} paramKey="model" params={params} hrefFor={hrefFor} />
+              </div>
+            ))}
+          </div>
+        )
+      }}
+    />
   )
 }
 
@@ -130,10 +162,7 @@ export function FilterPanel({
     <div className="flex flex-col">
       {show.includes("stock") && facets.inStock !== null && group("Availability", <StockToggle count={facets.inStock} params={params} hrefFor={hrefFor} />)}
       {show.includes("brand") && facets.brands.length > 1 &&
-        group(
-          "Brand",
-          <CheckList options={facets.brands} paramKey="brand" params={params} hrefFor={hrefFor} icon={(v) => <BrandMark brand={v} variant="plain" />} />
-        )}
+        group("Brand", <BrandChecks facets={facets} params={params} hrefFor={hrefFor} />)}
       {show.includes("grade") && facets.grades.length > 0 && group("Grade", <GradeChecks options={facets.grades} params={params} hrefFor={hrefFor} />)}
       {show.includes("cat") && facets.cats.length > 1 && group("Part", <CheckList options={facets.cats} paramKey="cat" params={params} hrefFor={hrefFor} />)}
     </div>

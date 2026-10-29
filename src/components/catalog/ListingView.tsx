@@ -9,7 +9,7 @@ import { Figure } from "@/components/commerce/Figure"
 import { FacetGroup, GradeFilterBar, applyFacets, selected, type FacetParams } from "./Facets"
 import { ProductTable } from "./ProductTable"
 import { FilterDropdown } from "./listing/Client"
-import { ActiveFilters, CheckList, FamilyTabs, FilterPanel, GradeChecks, ProductCards, ResultsBar } from "./listing/Pieces"
+import { ActiveFilters, BrandChecks, CheckList, FamilyTabs, FilterPanel, GradeChecks, ProductCards, ResultsBar } from "./listing/Pieces"
 import { buildFacets, filterProducts, sortProducts } from "./listing/model"
 
 type Props = {
@@ -77,8 +77,8 @@ function TopbarLayout({ products, viewer, params, hrefFor, facets }: Props) {
           </Link>
         )}
         {facets.includes("brand") && f.brands.length > 1 && (
-          <FilterDropdown label="Brand" count={selected(params, "brand").size}>
-            <CheckList options={f.brands} paramKey="brand" params={params} hrefFor={hrefFor} icon={(v) => <BrandMark brand={v} variant="plain" />} />
+          <FilterDropdown label="Brand" count={selected(params, "brand").size + selected(params, "model").size}>
+            <BrandChecks facets={f} params={params} hrefFor={hrefFor} />
           </FilterDropdown>
         )}
         <FilterDropdown label="Grade" count={selected(params, "grade").size}>

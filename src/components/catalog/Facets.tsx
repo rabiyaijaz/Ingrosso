@@ -17,6 +17,13 @@ export const toggle = (params: FacetParams, key: string, value: string) => {
 
 export const selected = (params: FacetParams, key: string) => new Set((params[key] ?? "").split(",").filter(Boolean))
 
+// Model filters live under their brand: when a brand is unticked, its models go too.
+export const pruneModels = (params: FacetParams): FacetParams => {
+  const brands = selected(params, "brand")
+  const kept = [...selected(params, "model")].filter((m) => brands.has(findModel(m)?.brand.slug ?? ""))
+  return { ...params, model: kept.length ? kept.join(",") : undefined }
+}
+
 // Grade is the primary filter on every listing (CAT-03): grade chips above
 // the results, grouped Genuine / Aftermarket / Third-party, each with its icon.
 export function GradeFilterBar({
@@ -123,9 +130,11 @@ export function applyFacets(products: Product[], params: FacetParams) {
   const grades = selected(params, "grade") as Set<GradeId>
   const cats = selected(params, "cat")
   const brands = selected(params, "brand")
+  const models = selected(params, "model")
   const fam = params.fam
   return products.filter(
     (p) =>
+      (!models.size || p.models.some((m) => models.has(m))) &&
       (!grades.size || (p.grade && grades.has(p.grade))) &&
       (!fam || (p.grade && GRADES.find((g) => g.id === p.grade)?.family === fam)) &&
       (!cats.size || cats.has(p.category)) &&

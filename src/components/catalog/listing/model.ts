@@ -1,7 +1,7 @@
 import { BRANDS, CATEGORIES, GRADES, findModel, type Grade, type Product } from "@/lib/catalog"
 import { commercialView } from "@/lib/commerce"
 import type { Viewer } from "@/lib/viewer"
-import { applyFacets, selected, type FacetParams } from "../Facets"
+import { applyFacets, pruneModels, selected, type FacetParams } from "../Facets"
 
 // Facet options, filtering and sorting shared by every listing layout.
 
@@ -16,7 +16,8 @@ export function buildFacets(products: Product[], params: FacetParams, viewer: Vi
   const without = (key: string) => filterProducts(products, { ...params, [key]: undefined }, viewer)
   const forGrade = without("grade")
   const forCat = without("cat")
-  const forBrand = without("brand")
+  // Brand counts ignore the model ticks too, or other brands would read 0
+  const forBrand = filterProducts(products, { ...params, brand: undefined, model: undefined }, viewer)
   const forStock = without("stock")
 
   const grades: GradeOption[] = GRADES.map((g) => ({
@@ -38,8 +39,26 @@ export function buildFacets(products: Product[], params: FacetParams, viewer: Vi
 
   const inStock = canSeeStock(viewer) ? forStock.filter((p) => commercialView(p, viewer).stock.kind === "count").length : null
 
-  return { grades, cats, brands, inStock }
+  // Progressive: each ticked brand opens its models, grouped by series
+  const forModel = without("model")
+  const models: Record<string, ModelGroup[]> = {}
+  for (const slug of selected(params, "brand")) {
+    const brand = BRANDS.find((b) => b.slug === slug)
+    if (!brand) continue
+    models[slug] = brand.series
+      .map((s) => ({
+        series: s.name,
+        options: s.models
+          .map((m) => ({ value: m.slug, label: m.name, count: forModel.filter((p) => p.models.includes(m.slug)).length }))
+          .filter((o) => o.count),
+      }))
+      .filter((g) => g.options.length)
+  }
+
+  return { grades, cats, brands, models, inStock }
 }
+
+export type ModelGroup = { series: string; options: Option[] }
 
 // Stock filtering reads stock through the price gate, and only for viewers
 // who may see stock (R2, R7).
@@ -74,7 +93,8 @@ export function activeFilters(params: FacetParams) {
   }
   if (params.fam) chips.push({ key: `fam`, label: params.fam, remove: { ...params, fam: undefined } })
   selected(params, "grade").forEach((v) => chips.push({ key: `grade-${v}`, label: GRADES.find((g) => g.id === v)?.label ?? v, remove: drop("grade", v) }))
-  selected(params, "brand").forEach((v) => chips.push({ key: `brand-${v}`, label: BRANDS.find((b) => b.slug === v)?.name ?? v, remove: drop("brand", v) }))
+  selected(params, "brand").forEach((v) => chips.push({ key: `brand-${v}`, label: BRANDS.find((b) => b.slug === v)?.name ?? v, remove: pruneModels(drop("brand", v)) }))
+  selected(params, "model").forEach((v) => chips.push({ key: `model-${v}`, label: findModel(v)?.model.name ?? v, remove: drop("model", v) }))
   selected(params, "cat").forEach((v) => chips.push({ key: `cat-${v}`, label: CATEGORIES.find((c) => c.slug === v)?.plural ?? v, remove: drop("cat", v) }))
   if (params.stock === "in") chips.push({ key: "stock", label: "In stock", remove: { ...params, stock: undefined } })
   return chips

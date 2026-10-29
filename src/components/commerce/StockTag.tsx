@@ -9,14 +9,14 @@ export function StockTag({ view, className }: { view: StockView; className?: str
 
   if (view.kind === "out")
     return (
-      <span className={clx("inline-flex items-center gap-1.5 txt-compact-small text-ui-tag-red-text", className)}>
+      <span className={clx("inline-flex items-center gap-1.5 whitespace-nowrap txt-compact-small text-ui-tag-red-text", className)}>
         <span aria-hidden className="size-1.5 rounded-full bg-ui-tag-red-icon" />
         Out of stock
       </span>
     )
 
   return (
-    <span className={clx("inline-flex items-center gap-1.5 txt-compact-small text-ui-fg-base", className)}>
+    <span className={clx("inline-flex items-center gap-1.5 whitespace-nowrap txt-compact-small text-ui-fg-base", className)}>
       <span aria-hidden className="size-1.5 rounded-full bg-ui-tag-green-icon" />
       <Figure>{view.available.toLocaleString("en")}</Figure> in stock
     </span>
