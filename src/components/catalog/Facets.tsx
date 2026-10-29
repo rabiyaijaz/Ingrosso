@@ -3,6 +3,7 @@ import { clx } from "@medusajs/ui"
 import { CheckMini, XMark } from "@medusajs/icons"
 import { GRADES, findModel, type GradeId, type Product } from "@/lib/catalog"
 import { Figure } from "@/components/commerce/Figure"
+import { searchProducts } from "@/lib/public"
 import { FAMILIES, GradeIcon } from "./Grade"
 
 // Filters live in the URL so a filtered view can be shared and bookmarked (BRD 3.2).
@@ -132,8 +133,11 @@ export function applyFacets(products: Product[], params: FacetParams) {
   const brands = selected(params, "brand")
   const models = selected(params, "model")
   const fam = params.fam
+  // Search within the list: the same matching as the header search (name, SKU, model name or code)
+  const found = params.find ? new Set(searchProducts(params.find).map((p) => p.slug)) : null
   return products.filter(
     (p) =>
+      (!found || found.has(p.slug)) &&
       (!models.size || p.models.some((m) => models.has(m))) &&
       (!grades.size || (p.grade && grades.has(p.grade))) &&
       (!fam || (p.grade && GRADES.find((g) => g.id === p.grade)?.family === fam)) &&

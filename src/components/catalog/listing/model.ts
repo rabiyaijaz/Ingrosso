@@ -91,6 +91,7 @@ export function activeFilters(params: FacetParams) {
     const rest = [...selected(params, key)].filter((v) => v !== value)
     return { ...params, [key]: rest.length ? rest.join(",") : undefined }
   }
+  if (params.find) chips.push({ key: "find", label: `“${params.find}”`, remove: { ...params, find: undefined } })
   if (params.fam) chips.push({ key: `fam`, label: params.fam, remove: { ...params, fam: undefined } })
   selected(params, "grade").forEach((v) => chips.push({ key: `grade-${v}`, label: GRADES.find((g) => g.id === v)?.label ?? v, remove: drop("grade", v) }))
   selected(params, "brand").forEach((v) => chips.push({ key: `brand-${v}`, label: BRANDS.find((b) => b.slug === v)?.name ?? v, remove: pruneModels(drop("brand", v)) }))

@@ -9,7 +9,7 @@ import { Figure } from "@/components/commerce/Figure"
 import { FacetGroup, GradeFilterBar, applyFacets, selected, type FacetParams } from "./Facets"
 import { ProductTable } from "./ProductTable"
 import { FilterDropdown } from "./listing/Client"
-import { ActiveFilters, BrandChecks, CheckList, FamilyTabs, FilterPanel, GradeChecks, ProductCards, ResultsBar } from "./listing/Pieces"
+import { ActiveFilters, BrandChecks, CheckList, FamilyTabs, FindInList, FilterPanel, GradeChecks, ProductCards, ResultsBar } from "./listing/Pieces"
 import { buildFacets, filterProducts, sortProducts } from "./listing/model"
 
 type Props = {
@@ -58,6 +58,7 @@ function TopbarLayout({ products, viewer, params, hrefFor, facets }: Props) {
     <div className="flex flex-col gap-5">
       {/* z-20: the dropdown panels must open above the result cards */}
       <div className="relative z-20 flex flex-wrap items-center gap-2.5 rounded-2xl bg-ui-bg-base p-3 shadow-elevation-card-rest">
+        <FindInList params={params} hrefFor={hrefFor} className="w-full sm:w-[220px]" />
         <span className="px-2 txt-compact-small-plus text-ui-fg-subtle">Filter by</span>
         {/* Same order as the filter panel: availability, brand, grade, part */}
         {f.inStock !== null && (

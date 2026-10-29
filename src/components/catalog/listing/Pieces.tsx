@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Heading, clx } from "@medusajs/ui"
-import { CheckMini, ChevronDown, XMark } from "@medusajs/icons"
+import { CheckMini, ChevronDown, MagnifyingGlass, XMark } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
 import { AddToOrder } from "@/components/commerce/AddToOrder"
 import { Figure } from "@/components/commerce/Figure"
@@ -92,6 +92,29 @@ export function GradeChecks({ options, params, hrefFor }: { options: GradeOption
   )
 }
 
+// ─── Search within the list ─────────────────────────────────────────────────
+// A plain GET form, so it works without JavaScript and the text stays in the
+// URL with every other filter. Matches name, SKU, model name or model code.
+export function FindInList({ params, hrefFor, className }: { params: FacetParams; hrefFor: Href; className?: string }) {
+  const target = new URL(hrefFor({ ...params, find: undefined }), "http://x")
+  return (
+    <form action={target.pathname} method="get" role="search" className={clx("relative", className)}>
+      {[...target.searchParams].map(([k, v]) => (
+        <input key={k} type="hidden" name={k} value={v} />
+      ))}
+      <MagnifyingGlass aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ui-fg-muted" />
+      <input
+        type="search"
+        name="find"
+        defaultValue={params.find ?? ""}
+        aria-label="Search within these parts"
+        placeholder="Model, code or SKU"
+        className="h-9 w-full rounded-full bg-ui-bg-field pl-9 pr-3 txt-compact-small text-ui-fg-base shadow-borders-base outline-none transition-shadow placeholder:text-ui-fg-muted hover:bg-ui-bg-field-hover focus:shadow-borders-interactive-with-active"
+      />
+    </form>
+  )
+}
+
 // Brands, each opening its models (grouped by series) once ticked. Unticking
 // a brand also clears its models.
 export function BrandChecks({ facets, params, hrefFor }: { facets: Facets; params: FacetParams; hrefFor: Href }) {
@@ -160,6 +183,7 @@ export function FilterPanel({
   // narrowing order a repairer thinks in (brand → grade → part).
   const panel = (
     <div className="flex flex-col">
+      <FindInList params={params} hrefFor={hrefFor} className="mb-3" />
       {show.includes("stock") && facets.inStock !== null && group("Availability", <StockToggle count={facets.inStock} params={params} hrefFor={hrefFor} />)}
       {show.includes("brand") && facets.brands.length > 1 &&
         group("Brand", <BrandChecks facets={facets} params={params} hrefFor={hrefFor} />)}

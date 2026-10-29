@@ -89,6 +89,8 @@ Category, device-model and search pages share `catalog/ListingView`. The lab's *
 | `topbar` | B · Dropdown filter buttons with chevrons, applied-filter chips, count + sort, product cards |
 | `tabs` | C · Large grade-family tabs, side panel for grade/brand/availability, table |
 
+Every listing has a **search within these parts** field (`FindInList`, `?find=`): at the top of the filter panel, and first in the top filter bar. It matches like the header search (name, SKU, model name or code), keeps every other filter, and shows as a removable chip.
+
 Filter order in every layout: Availability (one "In stock only" switch), Brand, Grade, Part. Ticking a brand opens its models underneath, grouped by series (`BrandChecks`, `?model=`); unticking the brand clears its models.
 
 Prices in lists: the unit price, then the best quantity-break price as a blue tag (stacked-boxes icon, `25+ · €197.10`). Stock and price never wrap. The sticky filter panel scrolls on its own with no visible scrollbar (`.ig-scroll-quiet`).
