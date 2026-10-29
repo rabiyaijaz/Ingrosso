@@ -170,15 +170,35 @@ body {
 }
 
 /*
-  Top strip: a delivery truck drives across its lane on a loop over a moving
-  road (CutoffCountdown), and the trade promises slide up one after another
-  (StripTicker).
+  Top strip (layout/StripTicker): one centred line at a time, each with its
+  own small animation; the outgoing line lifts away as the next rises in.
 */
-.ig-truck-lane {
+.ig-strip { position: relative; height: 36px; overflow: hidden; }
+.ig-strip__line {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  white-space: nowrap;
+}
+.ig-strip__line[data-state="in"] { animation: ig-line-in 620ms cubic-bezier(.2,.8,.2,1) both; }
+.ig-strip__line[data-state="out"] { animation: ig-line-out 560ms cubic-bezier(.5,0,.75,0) both; }
+@keyframes ig-line-in { from { opacity: 0; transform: translateY(80%); filter: blur(4px); } }
+@keyframes ig-line-out { to { opacity: 0; transform: translateY(-80%); filter: blur(4px); } }
+
+.ig-strip__anim {
   position: relative;
   flex-shrink: 0;
   width: 52px;
-  height: 18px;
+  height: 20px;
+  color: #fff;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+}
+
+/* 1 · Truck over a moving road */
+.ig-truck-lane {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
@@ -194,12 +214,10 @@ body {
 .ig-truck {
   position: absolute;
   left: 0;
-  bottom: 1px;
+  bottom: 2px;
   display: flex;
   align-items: flex-end;
-  color: #fff;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
-  animation: ig-drive 3.6s cubic-bezier(.45,.05,.35,1) infinite;
+  animation: ig-drive 2.4s cubic-bezier(.45,.05,.35,1) infinite;
 }
 .ig-truck svg { animation: ig-bob 0.32s ease-in-out infinite alternate; }
 .ig-truck__speed {
@@ -219,27 +237,80 @@ body {
   100% { transform: translateX(60px); }
 }
 
-.ig-ticker { display: inline-flex; overflow: hidden; height: 1.4em; align-items: center; }
-.ig-ticker__line {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-  animation: ig-ticker-in 520ms cubic-bezier(.2,.8,.2,1) both;
+/* 2 · Euro coins dropping onto a stack */
+.ig-coin {
+  position: absolute;
+  left: 18px;
+  bottom: calc(1px + var(--n) * 4px);
+  width: 16px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset 0 -1.5px 0 color-mix(in srgb, var(--ig-blue) 45%, white);
+  animation: ig-coin-drop 2.4s cubic-bezier(.5,0,.6,1.4) infinite;
+  animation-delay: calc(var(--n) * 0.22s);
 }
-.ig-ticker__spark {
-  width: 6px;
-  height: 6px;
+.ig-coin--top {
+  left: 17px;
+  bottom: 9px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  font: 700 11px/1 var(--font-sans, inherit);
+  color: var(--ig-blue);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ig-blue) 35%, white);
+  animation: ig-coin-drop 2.4s cubic-bezier(.5,0,.6,1.4) infinite 0.44s, ig-coin-spin 2.4s ease-in-out infinite 0.44s;
+}
+@keyframes ig-coin-drop {
+  0%   { transform: translateY(-22px); opacity: 0; }
+  20%  { transform: translateY(0); opacity: 1; }
+  85%  { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+@keyframes ig-coin-spin { 20% { rotate: y 0deg; } 55% { rotate: y 360deg; } 100% { rotate: y 360deg; } }
+
+/* Shared glint: a small four-point sparkle */
+.ig-glint {
+  position: absolute;
+  right: 8px;
+  top: 0;
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: ig-glint 2.4s ease-in-out infinite 0.9s;
+}
+@keyframes ig-glint { 0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); } 30% { opacity: 1; transform: scale(1) rotate(90deg); } 60% { opacity: 0; transform: scale(0.4) rotate(180deg); } }
+
+/* 3 · Grade ladder fills, then a tick draws itself */
+.ig-grades { display: flex; align-items: flex-end; justify-content: center; gap: 3px; padding-bottom: 2px; }
+.ig-grades__bar {
+  width: 5px;
+  height: calc(6px + var(--n) * 5px);
   border-radius: 2px;
   background: #fff;
-  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.6);
-  animation: ig-spark 2.1s ease-in-out infinite;
+  transform-origin: bottom;
+  animation: ig-bar 2.4s cubic-bezier(.2,.8,.2,1) infinite;
+  animation-delay: calc(var(--n) * 0.15s);
 }
-@keyframes ig-ticker-in { from { opacity: 0; transform: translateY(70%); filter: blur(3px); } }
-@keyframes ig-spark { 50% { opacity: 0.35; transform: scale(0.7) rotate(45deg); } }
+.ig-grades__tick { margin-left: 4px; align-self: center; }
+.ig-grades__tick path { stroke-dasharray: 1; animation: ig-tick 2.4s ease-out infinite; }
+@keyframes ig-bar { 0% { transform: scaleY(0); opacity: 0.4; } 25%, 85% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+@keyframes ig-tick { 0%, 30% { stroke-dashoffset: 1; } 50%, 85% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+
+/* 4 · Price tag swings in */
+.ig-tag { display: grid; place-items: center; }
+.ig-tag svg { transform-origin: 20% 20%; animation: ig-swing 2.4s cubic-bezier(.3,1.6,.5,1) infinite; }
+@keyframes ig-swing { 0% { transform: rotate(-35deg) translateY(-6px); opacity: 0; } 25% { transform: rotate(8deg); opacity: 1; } 40%, 100% { transform: rotate(0deg); } }
+
+/* 4 · Padlock: the shackle lifts and drops */
+.ig-lock { display: grid; place-items: center; }
+.ig-lock__shackle { animation: ig-shackle 2.4s cubic-bezier(.3,1.6,.5,1) infinite; }
+@keyframes ig-shackle { 0%, 20%, 70%, 100% { transform: translateY(0); } 35%, 55% { transform: translateY(-3px); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .ig-truck, .ig-truck svg, .ig-truck-lane::after, .ig-ticker__line, .ig-ticker__spark { animation: none; }
+  .ig-strip__line, .ig-strip__anim, .ig-strip__anim *, .ig-strip__anim::after { animation: none !important; }
   .ig-truck { transform: translateX(12px); }
 }
 

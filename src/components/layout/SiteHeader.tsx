@@ -10,7 +10,6 @@ import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 import { getViewer } from "@/lib/viewer"
 import { CategoryNav } from "./CategoryNav"
-import { CutoffCountdown } from "./CutoffCountdown"
 import { DeviceMenu } from "./DeviceMenu"
 import { SearchBox } from "./SearchBox"
 import { StripTicker } from "./StripTicker"
@@ -26,17 +25,8 @@ export async function SiteHeader() {
     // including the landing page, so it keeps its own field and button styles.
     <header data-ui className="relative z-30 bg-ui-bg-base">
       <div className="ig-surface-blue">
-        <div className="mx-auto flex h-9 max-w-page items-center justify-between gap-4 px-[var(--ig-gutter)] txt-compact-small">
-          <span className="min-w-0"><CutoffCountdown withTruck /></span>
-          <span className="hidden shrink-0 text-ig-on-slate-soft md:inline">
-            <StripTicker
-              lines={[
-                "Free delivery on orders over €500",
-                "Every part graded, from Genuine to Third-party",
-                canOrder ? "Your trade prices are on" : "Trade accounts only. Prices after approval.",
-              ]}
-            />
-          </span>
+        <div className="mx-auto max-w-page px-[var(--ig-gutter)] txt-compact-small">
+          <StripTicker canOrder={canOrder} />
         </div>
       </div>
 
