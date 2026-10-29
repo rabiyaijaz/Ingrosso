@@ -1,31 +1,32 @@
 import Link from "next/link"
-import { clx } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 
-// Marketing-page primitives. Working screens use Medusa's Button, Heading and
-// Text; landing pages use these so the flat, shadowless taste rules hold.
+// Marketing-page primitives. Buttons are the shared Button (components/ui),
+// so landing pages and working screens use the same button everywhere.
 
 type Tone = "accent" | "ink" | "paper" | "quiet"
 
-const TONES: Record<Tone, string> = {
-  // ig-btn-* are hooks the colour themes (src/app/themes.css) style.
-  accent: "ig-btn-primary bg-ig-blue text-ig-on-accent hover:bg-ig-blue-ink",
-  ink: "ig-btn-secondary bg-ig-ink text-ig-on-ink hover:opacity-90",
-  paper: "ig-btn-secondary bg-ig-paper text-ig-ink hover:bg-ig-surface",
-  quiet: "ig-btn-secondary bg-ig-paper-2 text-ig-ink hover:bg-ig-paper",
-}
+const VARIANT = { accent: "primary", ink: "ink", paper: "secondary", quiet: "secondary" } as const
 
-export function PillLink({ href, tone = "accent", children, className }: { href: string; tone?: Tone; children: React.ReactNode; className?: string }) {
+export function PillLink({
+  href,
+  tone = "accent",
+  iconLeft,
+  iconRight,
+  children,
+  className,
+}: {
+  href: string
+  tone?: Tone
+  iconLeft?: React.ReactNode
+  iconRight?: React.ReactNode
+  children: React.ReactNode
+  className?: string
+}) {
   return (
-    <Link
-      href={href}
-      className={clx(
-        "inline-flex h-[52px] items-center justify-center gap-2 rounded-full px-7 text-[17px] font-medium transition-[background-color,transform] duration-200 active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-ig-blue focus-visible:ring-offset-2",
-        TONES[tone],
-        className
-      )}
-    >
-      {children}
-    </Link>
+    <Button asChild size="xl" variant={VARIANT[tone]} iconLeft={iconLeft} iconRight={iconRight} className={className}>
+      <Link href={href}>{children}</Link>
+    </Button>
   )
 }
 

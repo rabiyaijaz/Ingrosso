@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Button, Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
+import { Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { CheckCircleSolid } from "@medusajs/icons"
 import { Figure } from "@/components/commerce/Figure"
 import { PageContainer } from "@/components/layout/Page"

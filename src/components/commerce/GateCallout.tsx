@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Button } from "@medusajs/ui"
+
+import { Button } from "@/components/ui/Button"
 import { LockClosedSolid } from "@medusajs/icons"
 import { routes } from "@/lib/routes"
 import type { ViewerState } from "@/lib/viewer"

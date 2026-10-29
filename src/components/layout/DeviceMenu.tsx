@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
-import { Button, clx } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { ChevronDown, LaptopMobile } from "@medusajs/icons"
 import { DeviceFinder } from "@/components/catalog/DeviceFinder"
 import type { DeviceTree } from "@/lib/public"

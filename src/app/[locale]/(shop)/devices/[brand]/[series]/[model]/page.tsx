@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { clx } from "@medusajs/ui"
 import { ListingView } from "@/components/catalog/ListingView"
 import { Breadcrumbs, PageContainer, PageHeading } from "@/components/layout/Page"
+import { BrandMark } from "@/components/brand/BrandMark"
 import { Figure } from "@/components/commerce/Figure"
 import { findModel, productsForModel } from "@/lib/catalog"
 import { routes } from "@/lib/routes"
@@ -35,6 +36,7 @@ export default async function ModelPage({ params, searchParams }: { params: Prom
         ]}
       />
       <PageHeading
+        icon={<BrandMark brand={brand.slug} size="md" />}
         title={`${model.name} parts`}
         description={
           <>

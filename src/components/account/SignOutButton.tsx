@@ -2,7 +2,8 @@
 
 import { useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@medusajs/ui"
+
+import { Button } from "@/components/ui/Button"
 import { signOut } from "@/app/actions"
 import { routes } from "@/lib/routes"
 

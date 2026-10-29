@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Button, Checkbox, Container, Heading, Hint, Input, Label, ProgressTabs, RadioGroup, Text, clx, toast } from "@medusajs/ui"
+import { Checkbox, Container, Heading, Hint, Input, Label, ProgressTabs, RadioGroup, Text, clx, toast } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { placeOrder } from "@/app/actions"
 import type { Money } from "@/lib/catalog"
 import { LAB } from "@/lib/lab"

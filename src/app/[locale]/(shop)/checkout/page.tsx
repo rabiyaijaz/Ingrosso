@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Button, Container, Text } from "@medusajs/ui"
+import { Container, Text } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { CheckoutForm } from "@/components/commerce/CheckoutForm"
 import { GateCallout } from "@/components/commerce/GateCallout"
 import { PageContainer, PageHeading } from "@/components/layout/Page"

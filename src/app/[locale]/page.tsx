@@ -7,7 +7,12 @@ import { GradeTabs } from "@/components/marketing/GradeTabs"
 import { HeroStage } from "@/components/marketing/HeroStage"
 import { FitFragment, GradeFragment, PriceFragment, ShipFragment } from "@/components/marketing/QuestionFragments"
 import { PillLink, body, display, sectionTitle, small, statement } from "@/components/marketing/Primitives"
-import { BRANDS, partCount } from "@/lib/catalog"
+import { ArrowRight } from "@medusajs/icons"
+import { BrandMark } from "@/components/brand/BrandMark"
+import { BRANDS, PRODUCTS, partCount } from "@/lib/catalog"
+import { Ambient } from "@/components/marketing/Ambient"
+import { MotionScene } from "@/components/marketing/MotionScene"
+import { GlassActionTile, GlassTile } from "@/components/marketing/GlassTile"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 
@@ -57,11 +62,11 @@ const STAGE = [
 
 // Part tiles: category icons, each linking to its category.
 const PART_TILES = [
-  { cat: "screens", label: "Screens", src: "/icons/part-screen.webp" },
-  { cat: "batteries", label: "Batteries", src: "/icons/part-battery.webp" },
-  { cat: "cameras", label: "Cameras", src: "/icons/part-camera.webp" },
-  { cat: "back-glass", label: "Back glass", src: "/icons/part-phone-layers.webp" },
-  { cat: "tools", label: "Tools", src: "/icons/part-tools.webp" },
+  { cat: "screens", label: "Screens", src: "/icons/part-screen-glass.webp" },
+  { cat: "batteries", label: "Batteries", src: "/icons/part-battery-glass.webp" },
+  { cat: "cameras", label: "Cameras", src: "/icons/part-camera-glass.webp" },
+  { cat: "back-glass", label: "Back glass", src: "/icons/part-phone-layers-glass.webp" },
+  { cat: "tools", label: "Tools", src: "/icons/part-tools-glass.webp" },
 ]
 
 const SLIP = [
@@ -142,7 +147,9 @@ export default async function HomePage() {
       </section>
 
       {/* Grades: square plate, spare text */}
-      <section className="mx-auto grid max-w-page items-center gap-10 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-2">
+      <section className="relative isolate overflow-hidden">
+      <Ambient variant="soft" />
+      <div className="relative z-[1] mx-auto grid max-w-page items-center gap-10 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-2">
         <div className="relative mx-auto aspect-square w-full max-w-[640px] overflow-hidden" data-reveal>
           <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
         </div>
@@ -154,16 +161,13 @@ export default async function HomePage() {
               Most suppliers sell “original” and “copy”. We list the real grade of every part, so a genuine screen and a
               compatible one sit side by side and you can tell your customer exactly what each is.
             </p>
-            <div className="grid grid-cols-2 gap-2">
-              <Link href={example} className="flex h-[72px] items-center rounded-[16px] bg-ig-ink px-5 text-[17px] font-medium text-ig-on-ink transition-opacity hover:opacity-90">
-                Compare grades on a part
-              </Link>
-              <Link href={routes.grades()} className="flex h-[72px] items-center rounded-[16px] bg-ig-paper-2 px-5 text-[17px] font-medium text-ig-ink transition-colors hover:bg-ig-surface">
-                Read the grade guide
-              </Link>
+            <div className="flex flex-wrap gap-3">
+              <PillLink href={example} tone="ink" iconRight={<ArrowRight />}>Compare grades on a part</PillLink>
+              <PillLink href={routes.grades()} tone="paper">Read the grade guide</PillLink>
             </div>
           </div>
         </div>
+      </div>
       </section>
 
       {/* How approval works: an itinerary slip on slate */}
@@ -205,21 +209,26 @@ export default async function HomePage() {
       </section>
 
       {/* Handsets: two-ended rows */}
-      <section className="mx-auto grid max-w-page gap-12 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-12">
-        <div className="lg:col-span-5 lg:col-start-2" data-reveal>
+      <section className="relative isolate overflow-hidden">
+      <Ambient variant="bright" />
+      <div className="relative z-[1] mx-auto grid max-w-page gap-12 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-12">
+        <div className="lg:col-span-5" data-reveal>
           <h2 className={clx(statement, "font-medium")}>Parts for every handset</h2>
           <div className="mt-8 flex flex-col gap-10">
             {BRANDS.map((b) => (
               <div key={b.slug}>
-                <p className={clx(small, "text-ig-ink-soft")}>{b.name}</p>
-                <ul className="mt-1">
+                <Link href={routes.brand(b.slug)} className="group inline-flex items-center gap-3">
+                  <BrandMark brand={b.slug} size="md" />
+                  <span className={clx(small, "font-medium text-ig-ink group-hover:text-ig-blue")}>{b.name}</span>
+                </Link>
+                <ul className="mt-2 pl-[48px]">
                   {b.series.map((s) => (
                     <li key={s.slug}>
                       <Link
                         href={routes.series(b.slug, s.slug)}
-                        className="group flex min-h-11 items-center gap-2 py-1 transition-transform hover:translate-x-1"
+                        className="group flex min-h-11 items-center gap-2.5 py-1 transition-transform hover:translate-x-1"
                       >
-                        <span aria-hidden className="size-4 shrink-0 rounded-full bg-ig-blue" />
+                        <BrandMark brand={b.slug} size="xs" />
                         <span className="text-[16px] group-hover:text-ig-blue">{s.name}</span>
                         <span className="ml-auto text-[15px] tabular-nums text-ig-ink-soft">
                           {s.models.length} models · {partCount(s)} parts
@@ -232,31 +241,30 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-        <div className="flex flex-col justify-center gap-6 lg:col-span-5 lg:col-start-8" data-reveal>
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="flex flex-col justify-center gap-6 lg:col-span-6 lg:col-start-7" data-reveal>
+          <ul className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2">
             {PART_TILES.map((t) => (
               <li key={t.cat}>
-                <Link href={routes.category(t.cat)} className="group flex flex-col gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ig-blue">
-                  <span className="relative block aspect-square overflow-hidden bg-ig-slate">
-                    <Image src={t.src} alt="" fill sizes="(min-width:1024px) 14vw, 45vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
-                  </span>
-                  <span className={clx(small, "font-medium group-hover:text-ig-blue")}>{t.label}</span>
-                </Link>
+                <GlassTile
+                  href={routes.category(t.cat)}
+                  src={t.src}
+                  label={t.label}
+                  detail={`${PRODUCTS.filter((p) => p.category === t.cat).length} parts`}
+                />
               </li>
             ))}
-            <li className="flex flex-col justify-end">
-              <p className={clx(small, "text-ig-ink-soft")}>
-                Or start from the handset on your bench.{" "}
-                <Link href={routes.devices()} className="font-medium text-ig-ink hover:text-ig-blue">Shop by device</Link>
-              </p>
+            <li>
+              <GlassActionTile href={routes.devices()} title="Start from the handset" action="Shop by device" />
             </li>
           </ul>
         </div>
+      </div>
       </section>
 
       {/* Capabilities as a printed menu */}
-      <section className="bg-ig-paper-2 py-[clamp(88px,9vw,160px)]">
-        <div className="mx-auto grid max-w-page gap-12 px-[var(--ig-gutter)] lg:grid-cols-12">
+      <section className="relative isolate overflow-hidden py-[clamp(88px,9vw,160px)]">
+        <Ambient variant="deep" />
+        <div className="relative z-[1] mx-auto grid max-w-page gap-12 px-[var(--ig-gutter)] lg:grid-cols-12">
           <div className="lg:col-span-4 lg:col-start-2" data-reveal>
             <h2 className={sectionTitle}>Built for the counter</h2>
             <p className={clx(body, "mt-6 max-w-[34ch] text-ig-ink-soft")}>
@@ -290,7 +298,9 @@ export default async function HomePage() {
       {/* Closing photograph, text beside */}
       <section className="overflow-hidden bg-ig-slate text-ig-on-slate">
         <div className="relative h-[60svh] overflow-hidden lg:h-[86svh]">
-          <Image src="/brand/scene-office-wide.webp" alt="Glass Ingrosso tiles floating through a bright office" fill sizes="100vw" className="ig-drift object-cover" />
+          <MotionScene glowX="50%" glowY="48%">
+            <Image src="/brand/scene-office-wide.webp" alt="Glass Ingrosso tiles floating through a bright office" fill sizes="100vw" className="object-cover" />
+          </MotionScene>
         </div>
         <div className="mx-auto grid max-w-page gap-8 px-[var(--ig-gutter)] py-16 lg:grid-cols-12 lg:py-24" data-reveal>
           <h2 className={clx(sectionTitle, "font-light lg:col-span-6")}>Apply once, buy at your price</h2>
@@ -341,7 +351,10 @@ export default async function HomePage() {
                 <p className="mt-1 text-ig-ink-soft">English, Nederlands and العربية. Deutsch follows.</p>
               </div>
             </div>
-            <p className="text-[13px] text-ig-ink-soft">© 2026 Ingrosso. Trade sales only.</p>
+            <p className="text-[13px] text-ig-ink-soft">
+              © 2026 Ingrosso. Trade sales only. Apple, Samsung, Google and Xiaomi names and logos belong to their owners and
+              show compatibility only.
+            </p>
           </div>
         </div>
       </footer>

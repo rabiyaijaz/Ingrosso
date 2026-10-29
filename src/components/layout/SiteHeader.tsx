@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Button } from "@medusajs/ui"
+
+import { Button } from "@/components/ui/Button"
 import { ShoppingCart, User } from "@medusajs/icons"
 import { Logo } from "@/components/brand/Logo"
 import { Figure } from "@/components/commerce/Figure"

@@ -95,6 +95,34 @@ body {
   @apply bg-ui-bg-base text-ui-fg-base font-sans antialiased;
 }
 
+/*
+  Light theme surfaces: a very light cool gradient behind every page, a
+  frosted header, and cards as soft white glass with a top highlight. The
+  dark themes in themes.css set their own.
+*/
+:root:not([data-theme]) body {
+  background:
+    radial-gradient(1200px 600px at 100% 0%, color-mix(in srgb, var(--ig-blue) 7%, transparent), transparent 60%),
+    radial-gradient(900px 600px at 0% 40%, rgba(96, 186, 255, 0.07), transparent 60%),
+    linear-gradient(180deg, #f9fbff 0%, #f3f6fc 50%, #eef2f9 100%);
+  background-attachment: fixed;
+}
+:root:not([data-theme]) header[data-ui] {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+:root:not([data-theme]) .shadow-elevation-card-rest {
+  background-color: rgba(255, 255, 255, 0.86);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 0 0 1px rgba(15, 22, 32, 0.06),
+    0 14px 32px -20px color-mix(in srgb, var(--ig-blue) 35%, transparent);
+}
+
 /* Every figure — price, SKU, stock, quantity, order ref — aligns (NFR-05) */
 .ig-figure {
   font-family: theme("fontFamily.mono");
@@ -159,6 +187,21 @@ body {
   --glass-shadow: color-mix(in srgb, var(--ig-ink) 18%, transparent);
   --glass-ink: var(--ig-ink-soft);
 }
+/* Device-brand logos: clear glass, ink logo, brand colour on hover */
+.ig-glass-icon[data-family="Brand"] {
+  --glass-lo: color-mix(in srgb, var(--ig-ink) 5%, white);
+  --glass-ring: color-mix(in srgb, var(--ig-ink) 10%, transparent);
+  --glass-shadow: color-mix(in srgb, var(--ig-ink) 16%, transparent);
+  --glass-ink: var(--ig-ink);
+  transition: color 200ms ease, transform 200ms ease;
+}
+.group:hover .ig-glass-icon[data-family="Brand"],
+.ig-glass-icon[data-family="Brand"]:hover {
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+[data-theme] .group:hover .ig-glass-icon[data-family="Brand"] { color: var(--ig-ink); }
+
 /* Dark themes: clear glass is a light film over the dark ground */
 [data-theme] .ig-glass-icon:not([data-family="Genuine"]) {
   --glass-hi: rgba(255, 255, 255, 0.16);
@@ -168,6 +211,472 @@ body {
 }
 [data-theme] .ig-glass-icon { box-shadow: inset 0 0 0 1px var(--glass-ring), inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 6px 14px -6px var(--glass-shadow); }
 [data-theme] .ig-glass-icon::before { background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 52%); }
+
+/*
+  Ambient section background (components/marketing/Ambient.tsx): a soft
+  gradient with three drifting light orbs, shifted by --ig-parallax on scroll.
+*/
+:root {
+  --ig-amb-a: #f6f8fd;
+  --ig-amb-b: #eef3fc;
+  --ig-amb-c: #e7eefb;
+  --ig-orb-1: rgba(31, 91, 255, 0.22);
+  --ig-orb-2: rgba(96, 186, 255, 0.3);
+  --ig-orb-3: rgba(70, 130, 255, 0.18);
+}
+.ig-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(160deg, var(--ig-amb-a) 0%, var(--ig-amb-b) 55%, var(--ig-amb-c) 100%);
+}
+.ig-ambient[data-variant="deep"] {
+  --ig-amb-a: #edf2fb;
+  --ig-amb-b: #e4ecfa;
+  --ig-amb-c: #dbe6fb;
+  --ig-orb-1: rgba(31, 91, 255, 0.28);
+}
+.ig-ambient[data-variant="bright"] {
+  --ig-amb-a: #fbfcff;
+  --ig-amb-b: #f3f7ff;
+  --ig-amb-c: #edf3ff;
+}
+.ig-ambient__layer {
+  position: absolute;
+  inset: -18% -8%;
+  transform: translate3d(0, var(--ig-parallax, 0px), 0);
+  will-change: transform;
+}
+.ig-orb {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+.ig-orb--1 { width: 48%; left: -8%; top: 4%; background: radial-gradient(circle at 40% 40%, var(--ig-orb-1), transparent 68%); }
+.ig-orb--2 { width: 40%; right: -6%; top: 26%; background: radial-gradient(circle, var(--ig-orb-2), transparent 68%); }
+.ig-orb--3 { width: 32%; left: 36%; bottom: -4%; background: radial-gradient(circle, var(--ig-orb-3), transparent 68%); }
+/* A slow band of light passing across the section */
+.ig-ambient::after {
+  content: "";
+  position: absolute;
+  inset: -40% -60%;
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.45) 50%, transparent 58%);
+  opacity: 0.6;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ig-orb--1 { animation: ig-orb-drift 28s ease-in-out infinite alternate; }
+  .ig-orb--2 { animation: ig-orb-drift 34s ease-in-out -8s infinite alternate-reverse; }
+  .ig-orb--3 { animation: ig-orb-drift 24s ease-in-out -14s infinite alternate; }
+  .ig-ambient::after { animation: ig-light-pass 16s ease-in-out infinite; }
+}
+@keyframes ig-orb-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(7%, -6%, 0) scale(1.08); }
+  100% { transform: translate3d(-5%, 7%, 0) scale(0.95); }
+}
+@keyframes ig-light-pass {
+  0% { transform: translateX(-30%); }
+  100% { transform: translateX(30%); }
+}
+[data-theme] .ig-ambient { background: transparent; }
+[data-theme] .ig-ambient::after { opacity: 0.12; }
+[data-theme] {
+  --ig-orb-1: color-mix(in srgb, var(--ig-blue) 30%, transparent);
+  --ig-orb-2: color-mix(in srgb, var(--ig-blue) 18%, transparent);
+  --ig-orb-3: color-mix(in srgb, var(--ig-blue) 14%, transparent);
+}
+
+/*
+  Glass tile (components/marketing/GlassTile.tsx): glossy gradient frame,
+  cursor tilt (--rx/--ry), glare at the cursor (--mx/--my), light sweep on
+  hover and a frosted label.
+*/
+.ig-tile {
+  display: block;
+  perspective: 900px;
+  outline: none;
+  border-radius: 20px;
+}
+.ig-tile:focus-visible { box-shadow: 0 0 0 3px var(--ig-blue); }
+.ig-tile__frame {
+  position: relative;
+  display: block;
+  padding: 1.5px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, color-mix(in srgb, var(--ig-blue) 30%, white) 45%, color-mix(in srgb, var(--ig-blue) 55%, transparent) 100%);
+  box-shadow:
+    0 1px 2px rgba(15, 22, 32, 0.08),
+    0 16px 32px -18px color-mix(in srgb, var(--ig-blue) 55%, transparent);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
+  transition: transform 350ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 350ms ease;
+}
+.ig-tile:hover .ig-tile__frame,
+.ig-tile:focus-visible .ig-tile__frame {
+  --lift: -5px;
+  box-shadow:
+    0 2px 4px rgba(15, 22, 32, 0.08),
+    0 28px 50px -22px color-mix(in srgb, var(--ig-blue) 70%, transparent);
+}
+.ig-tile__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 18.5px 18.5px 0 0;
+  background: linear-gradient(160deg, #f7f9ff 0%, color-mix(in srgb, var(--ig-blue) 9%, white) 100%);
+  isolation: isolate;
+}
+/* Breathing light behind the part: two soft blue glows that swell and drift */
+.ig-tile__aura {
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  background:
+    radial-gradient(40% 40% at 35% 40%, color-mix(in srgb, var(--ig-blue) 26%, transparent), transparent 70%),
+    radial-gradient(38% 38% at 68% 62%, rgba(96, 186, 255, 0.32), transparent 70%);
+  pointer-events: none;
+}
+.ig-tile__media img { z-index: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .ig-tile__aura { animation: ig-aura-breathe 7s ease-in-out infinite alternate; }
+  .ig-tile:nth-child(2n) .ig-tile__aura, li:nth-child(2n) .ig-tile__aura { animation-delay: -2.5s; }
+  li:nth-child(3n) .ig-tile__aura { animation-delay: -4.5s; }
+}
+@keyframes ig-aura-breathe {
+  0% { transform: scale(0.92) translate(-3%, 2%) rotate(0deg); opacity: 0.75; }
+  100% { transform: scale(1.12) translate(3%, -3%) rotate(12deg); opacity: 1; }
+}
+[data-theme] .ig-tile__media { background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)); }
+/* Frosted strip under the picture that carries the label */
+.ig-tile__caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 0 0 18.5px 18.5px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, color-mix(in srgb, var(--ig-blue) 5%, white) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
+  color: var(--ig-ink);
+}
+[data-theme] .ig-tile__caption { background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+.ig-tile__media img { transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ig-tile:hover .ig-tile__media img { transform: scale(1.06); }
+.ig-tile__media--accent {
+  background:
+    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--ig-blue) 55%, white) 0%, transparent 55%),
+    linear-gradient(155deg, var(--ig-blue) 0%, color-mix(in srgb, var(--ig-blue) 55%, #050a1e) 100%);
+}
+/* Gloss across the top of the glass */
+.ig-tile__media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 36%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+/* Light sweep on hover */
+.ig-tile__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.38) 50%, transparent 65%);
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+.ig-tile:hover .ig-tile__media::after { transform: translateX(130%); transition: transform 900ms ease; }
+.ig-tile__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.28), transparent 48%);
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+.ig-tile:hover .ig-tile__glare { opacity: 1; }
+.ig-tile__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+}
+.ig-tile:hover .ig-tile__label { color: var(--ig-blue); }
+.ig-tile__detail {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--ig-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ig-tile__frame, .ig-tile__media img { transition: none; }
+  .ig-tile:hover .ig-tile__media::after { transition: none; }
+}
+
+/*
+  Button (components/ui/Button.tsx). One component, five variants, four
+  sizes, always a pill. Light glass: a very light vertical gradient, a white
+  top highlight, a hairline inner edge and a soft coloured shadow. Hover lifts
+  and runs a sheen across; press squishes; main buttons burst.
+*/
+.ig-btn {
+  --btn-h: 40px;
+  --btn-px: 16px;
+  --btn-gap: 8px;
+  --btn-fs: 14px;
+  --btn-icon: 16px;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--btn-gap);
+  height: var(--btn-h);
+  padding: 0 var(--btn-px);
+  border-radius: 9999px;
+  font-size: var(--btn-fs);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: transform 180ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 220ms ease, filter 220ms ease, background-color 220ms ease;
+}
+.ig-btn svg { width: var(--btn-icon); height: var(--btn-icon); flex-shrink: 0; }
+.ig-btn[data-size="sm"] { --btn-h: 32px; --btn-px: 12px; --btn-gap: 6px; --btn-fs: 13px; --btn-icon: 15px; }
+.ig-btn[data-size="lg"] { --btn-h: 48px; --btn-px: 22px; --btn-fs: 15px; --btn-icon: 18px; }
+.ig-btn[data-size="xl"] { --btn-h: 56px; --btn-px: 28px; --btn-gap: 10px; --btn-fs: 17px; --btn-icon: 20px; }
+.ig-btn[data-icon-only] { width: var(--btn-h); padding: 0; }
+.ig-btn:hover { transform: translateY(-1px); }
+.ig-btn:active { transform: translateY(0) scale(0.96); transition-duration: 90ms; }
+.ig-btn:focus-visible { box-shadow: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--ig-blue) !important; }
+.ig-btn:disabled, .ig-btn[aria-disabled="true"] { cursor: not-allowed; opacity: 0.55; transform: none; }
+
+/* Sheen: a band of light that crosses the button on hover */
+.ig-btn__sheen {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.ig-btn__sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+}
+.ig-btn__sheen::after {
+  content: "";
+  position: absolute;
+  inset: -20% -40%;
+  background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.45) 50%, transparent 60%);
+  transform: translateX(-70%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ig-btn:hover .ig-btn__sheen::after { transform: translateX(70%); transition: transform 750ms ease; }
+}
+
+/* Variants */
+.ig-btn[data-variant="primary"] {
+  color: var(--ig-on-accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ig-blue) 78%, white) 0%, var(--ig-blue) 55%, color-mix(in srgb, var(--ig-blue) 88%, black) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(15, 22, 32, 0.12),
+    0 8px 20px -8px color-mix(in srgb, var(--ig-blue) 65%, transparent);
+  --burst: rgba(255, 255, 255, 0.95);
+}
+.ig-btn[data-variant="primary"]:hover {
+  filter: brightness(1.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.12), 0 2px 4px rgba(15, 22, 32, 0.12), 0 14px 28px -10px color-mix(in srgb, var(--ig-blue) 70%, transparent);
+}
+.ig-btn[data-variant="secondary"] {
+  color: var(--ig-ink);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, color-mix(in srgb, var(--ig-blue) 6%, rgba(255, 255, 255, 0.75)) 100%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ig-ink) 9%, transparent),
+    inset 0 1px 0 #fff,
+    0 1px 2px rgba(15, 22, 32, 0.06),
+    0 6px 16px -10px color-mix(in srgb, var(--ig-blue) 45%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  --burst: var(--ig-blue);
+}
+.ig-btn[data-variant="ink"] {
+  color: var(--ig-on-ink);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ig-ink) 82%, white) 0%, var(--ig-ink) 60%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 1px 2px rgba(15, 22, 32, 0.2), 0 10px 22px -12px rgba(15, 22, 32, 0.55);
+  --burst: rgba(255, 255, 255, 0.95);
+}
+/* Ghost takes the colour of where it sits, so it works on light and dark grounds */
+.ig-btn[data-variant="ghost"] { color: inherit; background: transparent; --burst: var(--ig-blue); }
+.ig-btn[data-variant="ghost"] .ig-btn__sheen::before { display: none; }
+.ig-btn[data-variant="ghost"]:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.ig-btn[data-variant="danger"] {
+  color: #fff;
+  background: linear-gradient(180deg, #f2667d 0%, #e11d48 60%, #be123c 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 2px rgba(15, 22, 32, 0.12), 0 8px 18px -8px rgba(225, 29, 72, 0.6);
+  --burst: rgba(255, 255, 255, 0.95);
+}
+[data-theme] .ig-btn[data-variant="secondary"] { color: var(--ig-ink); }
+
+/* Loading spinner, in place of the left icon */
+.ig-btn__spinner {
+  width: var(--btn-icon);
+  height: var(--btn-icon);
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: ig-spin 700ms linear infinite;
+}
+@keyframes ig-spin { to { transform: rotate(360deg); } }
+
+/* Burst: a glass ring and eight light beads from the press point */
+.ig-burst { position: absolute; z-index: 2; width: 0; height: 0; pointer-events: none; }
+.ig-burst__ring {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--burst);
+  box-shadow: 0 0 10px var(--burst), inset 0 0 6px rgba(255, 255, 255, 0.6);
+  animation: ig-burst-ring 600ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.ig-burst__dot {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, var(--burst) 55%, transparent 75%);
+  box-shadow: 0 0 6px var(--burst);
+  animation: ig-burst-dot 650ms cubic-bezier(0.15, 0.7, 0.2, 1) forwards;
+}
+@keyframes ig-burst-ring { to { transform: scale(7); opacity: 0; } }
+@keyframes ig-burst-dot {
+  0% { transform: rotate(var(--a)) translateX(0) scale(0.7); opacity: 1; }
+  100% { transform: rotate(var(--a)) translateX(30px) scale(0); opacity: 0; }
+}
+
+/*
+  Category bar: the main way in, so it sits on an accent-tinted band with
+  stronger text, and the current category is a solid accent pill.
+*/
+.ig-catbar {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--ig-blue) 11%, var(--ig-paper)) 0%, color-mix(in srgb, var(--ig-blue) 5%, var(--ig-paper)) 60%, color-mix(in srgb, var(--ig-blue) 9%, var(--ig-paper)) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 color-mix(in srgb, var(--ig-blue) 14%, transparent);
+}
+
+/*
+  Motion scene (components/marketing/MotionScene.tsx): the living brand
+  picture. --scene-p is scroll progress (-1..1), --scene-px/--scene-py the
+  cursor offset (-0.5..0.5).
+*/
+.ig-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+.ig-scene__picture {
+  position: absolute;
+  inset: -4%;
+  transform:
+    translate3d(calc(var(--scene-px, 0) * -18px), calc(var(--scene-p, 0) * 28px + var(--scene-py, 0) * -14px), 0)
+    scale(calc(1.04 + var(--scene-p, 0) * 0.03));
+  transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.ig-scene__picture > * { animation: none; }
+/* Light pulse behind the logo */
+.ig-scene__glow {
+  position: absolute;
+  left: calc(var(--glow-x) + var(--scene-px, 0) * 24px);
+  top: calc(var(--glow-y) + var(--scene-py, 0) * 24px);
+  width: 46%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(140, 190, 255, 0.55) 0%, rgba(255, 214, 160, 0.22) 35%, transparent 68%);
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  pointer-events: none;
+}
+/* A band of light crossing the scene */
+.ig-scene__sweep {
+  position: absolute;
+  inset: -30% -60%;
+  background: linear-gradient(105deg, transparent 44%, rgba(255, 255, 255, 0.32) 50%, transparent 56%);
+  transform: translateX(-60%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+/* Glass beads rising through the light */
+.ig-scene__sparkles { position: absolute; inset: 0; pointer-events: none; }
+.ig-scene__sparkles > span {
+  position: absolute;
+  bottom: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, rgba(160, 200, 255, 0.9) 45%, rgba(160, 200, 255, 0) 75%);
+  box-shadow: 0 0 8px rgba(160, 200, 255, 0.8);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ig-scene.is-ready .ig-scene__picture { animation: ig-scene-intro 1500ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .ig-scene.is-ready .ig-scene__picture > * { animation: ig-breathe 7s ease-in-out 1.5s infinite alternate; }
+  .ig-scene__glow { animation: ig-glow-pulse 4.2s ease-in-out infinite; }
+  .ig-scene__sweep { animation: ig-sweep 9s ease-in-out 1.2s infinite; }
+  .ig-scene__sparkles > span { animation: ig-rise linear infinite; }
+}
+@keyframes ig-scene-intro {
+  from { filter: blur(14px) saturate(0.8); opacity: 0; scale: 1.12; }
+  to { filter: blur(0) saturate(1); opacity: 1; scale: 1; }
+}
+@keyframes ig-breathe {
+  from { transform: scale(1); }
+  to { transform: scale(1.045); }
+}
+@keyframes ig-glow-pulse {
+  0%, 100% { opacity: 0.35; scale: 0.9; }
+  50% { opacity: 0.75; scale: 1.08; }
+}
+@keyframes ig-sweep {
+  0% { transform: translateX(-60%); }
+  45%, 100% { transform: translateX(60%); }
+}
+@keyframes ig-rise {
+  0% { bottom: -12px; transform: translateX(0) scale(0.6); opacity: 0; }
+  12% { opacity: 0.9; }
+  80% { opacity: 0.6; }
+  100% { bottom: 104%; transform: translateX(18px) scale(1); opacity: 0; }
+}
+
+/* Frosted caption floating over the hero picture */
+.ig-stage-caption {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.66));
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(255, 255, 255, 0.5), 0 12px 30px -16px rgba(15, 22, 32, 0.35);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+[data-theme] .ig-stage-caption { background: rgba(10, 16, 30, 0.55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); }
 
 /* One moving picture: a slow drift on the closing photograph */
 @media (prefers-reduced-motion: no-preference) {

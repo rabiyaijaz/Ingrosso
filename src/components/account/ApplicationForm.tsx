@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Button, Checkbox, Heading, Hint, Input, Label, ProgressTabs, Select, Text, clx } from "@medusajs/ui"
+import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, Select, Text, clx } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { submitApplication } from "@/app/actions"
 import { LAB } from "@/lib/lab"
 import { routes } from "@/lib/routes"

@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Button, Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
+import { Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { MaskToggle } from "@/components/account/MaskToggle"
 import { SignOutButton } from "@/components/account/SignOutButton"
 import { Figure } from "@/components/commerce/Figure"

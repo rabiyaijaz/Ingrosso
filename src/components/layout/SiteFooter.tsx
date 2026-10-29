@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { BrandMark } from "@/components/brand/BrandMark"
 import { Logo } from "@/components/brand/Logo"
 import { BRANDS, CATEGORIES } from "@/lib/catalog"
 import { routes } from "@/lib/routes"
@@ -14,7 +15,10 @@ export function SiteFooter() {
             Trade-only supplier of phone and tablet repair parts. Prices and stock are shown to approved accounts.
           </p>
         </div>
-        <FooterList title="Devices" links={BRANDS.map((b) => ({ href: routes.brand(b.slug), label: b.name }))} />
+        <FooterList
+          title="Devices"
+          links={BRANDS.map((b) => ({ href: routes.brand(b.slug), label: b.name, icon: <BrandMark brand={b.slug} variant="plain" className="[&_svg]:size-3.5" /> }))}
+        />
         <FooterList title="Parts" links={CATEGORIES.map((c) => ({ href: routes.category(c.slug), label: c.plural }))} />
         <FooterList
           title="Trade account"
@@ -26,21 +30,25 @@ export function SiteFooter() {
           ]}
         />
       </div>
-      <div className="mx-auto max-w-page px-[var(--ig-gutter)] pb-8 txt-compact-small text-ig-on-slate-soft">
-        © 2026 Ingrosso
+      <div className="mx-auto flex max-w-page flex-col gap-1 px-[var(--ig-gutter)] pb-8 txt-compact-small text-ig-on-slate-soft">
+        <span>© 2026 Ingrosso</span>
+        <span>Apple, Samsung, Google and Xiaomi names and logos belong to their owners and show compatibility only.</span>
       </div>
     </footer>
   )
 }
 
-function FooterList({ title, links }: { title: string; links: { href: string; label: string }[] }) {
+function FooterList({ title, links }: { title: string; links: { href: string; label: string; icon?: React.ReactNode }[] }) {
   return (
     <div>
       <p className="mb-3 txt-compact-small-plus">{title}</p>
       <ul className="flex flex-col gap-2 txt-compact-small text-ig-on-slate-soft">
         {links.map((l) => (
           <li key={l.href}>
-            <Link href={l.href} className="hover:text-ig-on-slate">{l.label}</Link>
+            <Link href={l.href} className="inline-flex items-center gap-2 hover:text-ig-on-slate">
+              {l.icon}
+              {l.label}
+            </Link>
           </li>
         ))}
       </ul>

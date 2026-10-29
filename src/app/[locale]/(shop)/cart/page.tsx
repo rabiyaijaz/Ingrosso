@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Button, Container, Heading, Table, Text } from "@medusajs/ui"
+import { Container, Heading, Table, Text } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { GradeBadge } from "@/components/catalog/Grade"
 import { CartLineQty } from "@/components/commerce/CartLineQty"
 import { Figure } from "@/components/commerce/Figure"

@@ -26,11 +26,14 @@ export function Breadcrumbs({ items }: { items: { label: string; href?: string }
   )
 }
 
-export function PageHeading({ title, description, children }: { title: string; description?: React.ReactNode; children?: React.ReactNode }) {
+export function PageHeading({ title, description, icon, children }: { title: string; description?: React.ReactNode; icon?: React.ReactNode; children?: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div className="flex flex-col gap-2">
-        <Heading level="h1" className="text-[32px] leading-[38px] font-medium tracking-[-0.02em]">{title}</Heading>
+        <Heading level="h1" className="flex items-center gap-3 text-[32px] leading-[38px] font-medium tracking-[-0.02em]">
+          {icon}
+          {title}
+        </Heading>
         {description && <Text className="max-w-[64ch] text-ui-fg-subtle">{description}</Text>}
       </div>
       {children}

@@ -289,6 +289,18 @@ function buildProducts(): Product[] {
         orderStep: 1,
         commercial: { lists: lists(eur(scale(74, factor))), ...stockFor(cam) },
       })
+      const glass = `${model.slug}-back-glass-oem`
+      out.push({
+        slug: glass,
+        sku: `BKG-${model.codes[0]}-05`,
+        name: `${model.name} back glass, OEM`,
+        category: "back-glass",
+        grade: "oem",
+        models: [model.slug],
+        specs: [["Includes", "Camera lens ring and adhesive"], ["Finish", "Colour matched to the original"]],
+        orderStep: 1,
+        commercial: { lists: lists(eur(scale(19, factor), 5000)), ...stockFor(glass) },
+      })
     }
   }
 

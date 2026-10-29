@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { Button, clx, toast } from "@medusajs/ui"
+import { clx, toast } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { ShoppingCart } from "@medusajs/icons"
 import { setCartLine } from "@/app/actions"
 import type { PriceBreak } from "@/lib/catalog"

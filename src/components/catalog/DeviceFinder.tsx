@@ -2,8 +2,10 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { Button, Select, clx } from "@medusajs/ui"
+import { Select, clx } from "@medusajs/ui"
+import { Button } from "@/components/ui/Button"
 import { ArrowRight, ChevronRight } from "@medusajs/icons"
+import { BrandMark } from "@/components/brand/BrandMark"
 import type { DeviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 
@@ -43,7 +45,14 @@ export function DeviceFinder({ tree, variant = "columns", buttonVariant = "prima
           <Select value={b.slug} onValueChange={pickBrand}>
             <Select.Trigger aria-label="Brand"><Select.Value /></Select.Trigger>
             <Select.Content>
-              {tree.map((x) => <Select.Item key={x.slug} value={x.slug}>{x.name}</Select.Item>)}
+              {tree.map((x) => (
+                <Select.Item key={x.slug} value={x.slug}>
+                  <span className="flex items-center gap-2">
+                    <BrandMark brand={x.slug} variant="plain" className="[&_svg]:size-3.5" />
+                    {x.name}
+                  </span>
+                </Select.Item>
+              ))}
             </Select.Content>
           </Select>
           <Select value={s?.slug} onValueChange={pickSeries}>
@@ -60,10 +69,9 @@ export function DeviceFinder({ tree, variant = "columns", buttonVariant = "prima
           </Select>
         </div>
         {m && (
-          <Button asChild size="large" variant={buttonVariant} className="w-full sm:w-auto sm:self-start">
+          <Button asChild size="large" variant={buttonVariant} iconLeft={<BrandMark brand={b.slug} variant="plain" />} iconRight={<ArrowRight />} className="w-full sm:w-auto sm:self-start">
             <Link href={routes.model(b.slug, s!.slug, m.slug)} onClick={onNavigate}>
               Show {m.parts} parts for {m.name}
-              <ArrowRight />
             </Link>
           </Button>
         )}
@@ -83,8 +91,11 @@ export function DeviceFinder({ tree, variant = "columns", buttonVariant = "prima
       <nav aria-label="Brand" className={col}>
         <p className="mb-1 px-3 txt-compact-xsmall-plus text-ui-fg-muted">Brand</p>
         {tree.map((x) => (
-          <button key={x.slug} type="button" className={item(x.slug === b.slug)} onMouseEnter={() => pickBrand(x.slug)} onFocus={() => pickBrand(x.slug)} onClick={() => pickBrand(x.slug)} aria-pressed={x.slug === b.slug}>
-            {x.name}
+          <button key={x.slug} type="button" className={clx(item(x.slug === b.slug), "group h-11 pl-1.5")} onMouseEnter={() => pickBrand(x.slug)} onFocus={() => pickBrand(x.slug)} onClick={() => pickBrand(x.slug)} aria-pressed={x.slug === b.slug}>
+            <span className="flex items-center gap-2.5">
+              <BrandMark brand={x.slug} size="sm" />
+              {x.name}
+            </span>
             <ChevronRight className="text-ui-fg-muted" />
           </button>
         ))}

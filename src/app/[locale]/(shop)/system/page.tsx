@@ -1,4 +1,7 @@
-import { Button, Heading, Text } from "@medusajs/ui"
+import { Heading, Text } from "@medusajs/ui"
+import { ArrowRight, Plus, ShoppingCart } from "@medusajs/icons"
+import { Button } from "@/components/ui/Button"
+import { BrandMark } from "@/components/brand/BrandMark"
 import { GradeBadge, GradeScale } from "@/components/catalog/Grade"
 import { PartGlyph } from "@/components/catalog/PartGlyph"
 import { Figure } from "@/components/commerce/Figure"
@@ -105,19 +108,47 @@ export default function SystemPage() {
       </Block>
 
       <Block title="Buttons">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-wrap gap-3">
-            <Button>Primary</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="transparent">Transparent</Button>
-            <Button variant="danger">Danger</Button>
+        <div className="flex flex-col gap-8">
+          <Text size="small" className="max-w-[70ch] text-ui-fg-subtle">
+            One Button component (components/ui/Button) for every button and button-styled link. Always a pill. Primary
+            buttons at large and extra-large sizes burst on press; try them.
+          </Text>
+          {(["primary", "secondary", "ink", "ghost", "danger"] as const).map((v) => (
+            <div key={v} className="flex flex-col gap-3">
+              <span className="txt-compact-small-plus capitalize text-ui-fg-subtle">{v}</span>
+              <div className="flex flex-wrap items-center gap-3">
+                {(["sm", "md", "lg", "xl"] as const).map((s) => (
+                  <Button key={s} variant={v} size={s}>Size {s}</Button>
+                ))}
+                <Button variant={v} iconLeft={<ShoppingCart />}>Icon left</Button>
+                <Button variant={v} iconRight={<ArrowRight />}>Icon right</Button>
+                <Button variant={v} iconLeft={<Plus />} iconRight={<ArrowRight />}>Both</Button>
+                <Button variant={v} iconOnly iconLeft={<ShoppingCart />} aria-label="Icon only" />
+                <Button variant={v} isLoading>Loading</Button>
+              </div>
+            </div>
+          ))}
+          <div className="flex flex-col gap-3">
+            <span className="txt-compact-small-plus text-ui-fg-subtle">As links (marketing pages)</span>
+            <div className="flex flex-wrap gap-3">
+              <PillLink href={routes.apply()} iconRight={<ArrowRight />}>Accent</PillLink>
+              <PillLink href={routes.apply()} tone="ink">Ink</PillLink>
+              <PillLink href={routes.apply()} tone="paper">Paper</PillLink>
+            </div>
           </div>
-          <Text size="small" className="text-ui-fg-subtle">Working screens use Medusa buttons above. Marketing pages use the flat pill below.</Text>
-          <div className="flex flex-wrap gap-3 rounded-xl bg-ig-paper p-4">
-            <PillLink href={routes.apply()}>Accent</PillLink>
-            <PillLink href={routes.apply()} tone="ink">Ink</PillLink>
-            <PillLink href={routes.apply()} tone="quiet">Quiet</PillLink>
-          </div>
+        </div>
+      </Block>
+
+      <Block title="Device brands">
+        <div className="flex flex-wrap items-center gap-6">
+          {["apple", "samsung", "google", "xiaomi"].map((b) => (
+            <span key={b} className="group flex items-center gap-3">
+              <BrandMark brand={b} size="lg" />
+              <BrandMark brand={b} size="md" />
+              <BrandMark brand={b} size="sm" />
+              <BrandMark brand={b} variant="plain" />
+            </span>
+          ))}
         </div>
       </Block>
     </PageContainer>

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import { ModelGrid } from "@/components/catalog/ModelGrid"
 import { Breadcrumbs, PageContainer, PageHeading } from "@/components/layout/Page"
+import { BrandMark } from "@/components/brand/BrandMark"
 import { BRANDS } from "@/lib/catalog"
 import { routes } from "@/lib/routes"
 
@@ -26,7 +27,7 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
           { label: series.name },
         ]}
       />
-      <PageHeading title={`${series.name} parts`} description="Pick the exact model. A Pro Max screen does not fit a Pro." />
+      <PageHeading icon={<BrandMark brand={brand.slug} size="md" />} title={`${series.name} parts`} description="Pick the exact model. A Pro Max screen does not fit a Pro." />
       <ModelGrid brand={brand} series={series} />
     </PageContainer>
   )

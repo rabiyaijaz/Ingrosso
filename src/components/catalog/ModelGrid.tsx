@@ -3,7 +3,7 @@ import { ArrowRight } from "@medusajs/icons"
 import { Figure } from "@/components/commerce/Figure"
 import { PRODUCTS, type Brand, type Series } from "@/lib/catalog"
 import { routes } from "@/lib/routes"
-import { PartGlyph } from "./PartGlyph"
+import { BrandMark } from "@/components/brand/BrandMark"
 
 // Model tiles for a series: name, codes, how many parts fit.
 export function ModelGrid({ brand, series }: { brand: Brand; series: Series }) {
@@ -17,9 +17,7 @@ export function ModelGrid({ brand, series }: { brand: Brand; series: Series }) {
               href={routes.model(brand.slug, series.slug, m.slug)}
               className="group flex h-full items-center gap-4 rounded-xl bg-ui-bg-base p-4 shadow-elevation-card-rest transition-shadow hover:shadow-elevation-card-hover outline-none focus-visible:shadow-borders-focus"
             >
-              <span className="grid size-14 shrink-0 place-items-center rounded-lg bg-ui-bg-subtle">
-                <PartGlyph category="screens" className="size-10" />
-              </span>
+              <BrandMark brand={brand.slug} size="lg" />
               <span className="min-w-0 flex-1">
                 <span className="block txt-compact-medium-plus text-ui-fg-base group-hover:text-ui-fg-interactive">{m.name}</span>
                 <Figure className="block truncate txt-compact-xsmall text-ui-fg-muted">{m.codes.join(" · ")}</Figure>

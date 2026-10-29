@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { Heading } from "@medusajs/ui"
 import { ModelGrid } from "@/components/catalog/ModelGrid"
 import { Breadcrumbs, PageContainer, PageHeading } from "@/components/layout/Page"
+import { BrandMark } from "@/components/brand/BrandMark"
 import { BRANDS } from "@/lib/catalog"
 import { routes } from "@/lib/routes"
 
@@ -20,7 +21,7 @@ export default async function BrandPage({ params }: { params: Promise<Params> })
   return (
     <PageContainer className="flex flex-col gap-10 pt-6">
       <Breadcrumbs items={[{ label: "Devices", href: routes.devices() }, { label: brand.name }]} />
-      <PageHeading title={`${brand.name} parts`} description="Choose the model to see every part that fits it, in each grade we stock." />
+      <PageHeading icon={<BrandMark brand={brand.slug} size="md" />} title={`${brand.name} parts`} description="Choose the model to see every part that fits it, in each grade we stock." />
       {brand.series.map((s) => (
         <section key={s.slug} className="flex flex-col gap-4">
           <Heading level="h2" className="txt-xlarge-plus">{s.name}</Heading>
