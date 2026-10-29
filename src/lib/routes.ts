@@ -12,6 +12,7 @@ const q = (params?: Record<string, string | undefined>) => {
 export const routes = {
   home: (l: string = "en") => `/${l}`,
   devices: (l: string = "en") => `/${l}/devices`,
+  parts: (l: string = "en") => `/${l}/parts`,
   brand: (brand: string, l: string = "en") => `/${l}/devices/${brand}`,
   series: (brand: string, series: string, l: string = "en") => `/${l}/devices/${brand}/${series}`,
   model: (brand: string, series: string, model: string, params?: Record<string, string | undefined>, l: string = "en") =>

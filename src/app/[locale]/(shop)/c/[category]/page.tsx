@@ -23,7 +23,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
 
   return (
     <PageContainer className="flex flex-col gap-8 pt-6">
-      <Breadcrumbs items={[{ label: "Parts" }, { label: cat.plural }]} />
+      <Breadcrumbs items={[{ label: "Parts", href: routes.parts() }, { label: cat.plural }]} />
       <PageHeading title={cat.plural} description="Narrow by brand, then pick the grade that suits the repair and the customer's budget." />
       <ListingView
         products={products}

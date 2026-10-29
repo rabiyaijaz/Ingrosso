@@ -1,0 +1,70 @@
+import Link from "next/link"
+import { ArrowRight, MagnifyingGlass } from "@medusajs/icons"
+import { BrandMark } from "@/components/brand/BrandMark"
+import { Breadcrumbs, PageContainer, PageHeading } from "@/components/layout/Page"
+import { GlassTile } from "@/components/marketing/GlassTile"
+import { BRANDS, PRODUCTS } from "@/lib/catalog"
+import { getCategories } from "@/lib/categories"
+import { routes } from "@/lib/routes"
+import { CATEGORY_IMAGE } from "@/lib/visuals"
+
+export const metadata = { title: "All parts" }
+
+// Every part category at a glance, with the same 3D tiles as the landing
+// page, in the order and names the trade desk set. Both ways in sit on one
+// page: search by model or SKU at the top, shop by device at the bottom.
+export default async function PartsPage() {
+  const categories = (await getCategories()).filter((c) => c.visible)
+  const count = (slug: string) => PRODUCTS.filter((p) => p.category === slug).length
+
+  return (
+    <PageContainer className="flex flex-col gap-8 pt-6">
+      <Breadcrumbs items={[{ label: "Parts" }]} />
+      <PageHeading title="All parts" description={`${PRODUCTS.length} parts in ${categories.length} categories, every one in its real grade.`}>
+        <form action={routes.search("")} method="get" role="search" className="relative w-full md:w-[340px]">
+          <MagnifyingGlass aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ui-fg-muted" />
+          <input
+            type="search"
+            name="q"
+            aria-label="Search all parts"
+            placeholder="Model, code or SKU"
+            className="h-10 w-full rounded-full bg-ui-bg-field pl-9 pr-3 txt-compact-small text-ui-fg-base shadow-borders-base outline-none transition-shadow placeholder:text-ui-fg-muted hover:bg-ui-bg-field-hover focus:shadow-borders-interactive-with-active"
+          />
+        </form>
+      </PageHeading>
+
+      <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+        {categories.map((c) => (
+          <li key={c.slug}>
+            <GlassTile
+              href={routes.category(c.slug)}
+              src={CATEGORY_IMAGE[c.slug] ?? CATEGORY_IMAGE.tools}
+              label={c.plural}
+              detail={`${count(c.slug)} part${count(c.slug) === 1 ? "" : "s"}`}
+            />
+          </li>
+        ))}
+      </ul>
+
+      <section className="flex flex-col gap-3 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="txt-compact-medium-plus">Or start from the handset</h2>
+          <Link href={routes.devices()} className="flex items-center gap-1 txt-compact-small-plus text-ui-fg-interactive hover:underline">
+            All devices <ArrowRight />
+          </Link>
+        </div>
+        <ul className="flex flex-wrap gap-2">
+          {BRANDS.map((b) => (
+            <li key={b.slug}>
+              <Link href={routes.brand(b.slug)} className="flex h-10 items-center gap-2 rounded-full px-4 txt-compact-small-plus text-ui-fg-base shadow-borders-base transition-colors hover:bg-ui-bg-base-hover">
+                <BrandMark brand={b.slug} variant="plain" />
+                {b.name}
+                <span className="txt-compact-xsmall text-ui-fg-muted">{b.series.reduce((n, s) => n + s.models.length, 0)} models</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </PageContainer>
+  )
+}

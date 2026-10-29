@@ -28,6 +28,18 @@ export function CategoryNav({ categories, iconStyle }: { categories: { slug: str
   return (
     <nav aria-label="Categories" className="ig-catbar">
       <ul className="ig-no-scrollbar mx-auto flex h-12 max-w-page items-center gap-1 overflow-x-auto px-[calc(var(--ig-gutter)-14px)]">
+        {/* Every category at a glance (the parts overview) */}
+        <li>
+          <Link href={routes.parts()} aria-current={pathname === routes.parts() ? "page" : undefined} className={clx(item(pathname === routes.parts()), "gap-2 pl-2")}>
+            <svg viewBox="0 0 24 24" aria-hidden className={clx("size-[18px] shrink-0", pathname !== routes.parts() && "text-ui-fg-interactive")} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round">
+              <rect x="3.5" y="3.5" width="7" height="7" rx="2" />
+              <rect x="13.5" y="3.5" width="7" height="7" rx="2" fill="currentColor" fillOpacity="0.16" />
+              <rect x="3.5" y="13.5" width="7" height="7" rx="2" fill="currentColor" fillOpacity="0.16" />
+              <rect x="13.5" y="13.5" width="7" height="7" rx="2" />
+            </svg>
+            All parts
+          </Link>
+        </li>
         {categories.map((c) => {
           const href = routes.category(c.slug)
           const active = pathname === href || pathname.startsWith(`${href}/`)
