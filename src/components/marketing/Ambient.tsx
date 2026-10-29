@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react"
 // moved at a slower rate than the page as it scrolls (parallax). Sits behind
 // a section's content; styles in globals.css (.ig-ambient). Motion stops
 // under prefers-reduced-motion.
-export function Ambient({ variant = "soft" }: { variant?: "soft" | "deep" | "bright" }) {
+export function Ambient({ variant = "soft" }: { variant?: "soft" | "deep" | "bright" | "blue" }) {
   const root = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

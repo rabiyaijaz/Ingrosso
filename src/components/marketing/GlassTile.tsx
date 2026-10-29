@@ -51,19 +51,26 @@ export function GlassTile({ href, src, label, detail }: { href: string; src: str
   )
 }
 
-export function GlassActionTile({ href, title, action }: { href: string; title: string; action: string }) {
+// Same light, breathing background as the part tiles. Pass `src` to show a
+// picture; without one it shows the device icon and the title.
+export function GlassActionTile({ href, title, action, src }: { href: string; title: string; action: string; src?: string }) {
   const tilt = useTilt()
   return (
     <Link href={href} {...tilt} className="ig-tile group">
       <span className="ig-tile__frame">
-        <span className="ig-tile__media ig-tile__media--accent">
-          <span className="ig-tile__glare" />
-          <span className="relative z-[3] flex h-full flex-col items-start justify-between p-4">
-            <span className="ig-glass-icon inline-flex size-12 items-center justify-center rounded-[14px] [&_svg]:size-7" data-family="Aftermarket">
-              <LaptopMobile />
+        <span className="ig-tile__media">
+          <span aria-hidden className="ig-tile__aura" />
+          {src ? (
+            <Image src={src} alt="" fill sizes="(min-width:1024px) 22vw, 45vw" className="object-contain p-3" />
+          ) : (
+            <span className="relative z-[1] flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
+              <span className="ig-glass-icon inline-flex size-14 items-center justify-center rounded-[16px] [&_svg]:size-8" data-family="Aftermarket">
+                <LaptopMobile />
+              </span>
+              <span className="text-[17px] font-medium leading-snug text-ig-ink">{title}</span>
             </span>
-            <span className="text-[18px] font-medium leading-snug text-white">{title}</span>
-          </span>
+          )}
+          <span className="ig-tile__glare" />
         </span>
         <span className="ig-tile__caption">
           <span className="ig-tile__label">{action}</span>

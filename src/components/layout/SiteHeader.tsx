@@ -24,7 +24,7 @@ export async function SiteHeader() {
     // data-ui: the header is working-app chrome (Medusa look) on every page,
     // including the landing page, so it keeps its own field and button styles.
     <header data-ui className="relative z-30 bg-ui-bg-base">
-      <div className="bg-ig-slate text-ig-on-slate">
+      <div className="ig-surface-blue">
         <div className="mx-auto flex h-9 max-w-page items-center justify-between gap-4 px-[var(--ig-gutter)] txt-compact-small">
           <span className="truncate"><CutoffCountdown /></span>
           <span className="hidden shrink-0 text-ig-on-slate-soft md:inline">

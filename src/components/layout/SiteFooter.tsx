@@ -7,7 +7,7 @@ import { routes } from "@/lib/routes"
 // Working-screen footer. The landing page closes with its own designed footer.
 export function SiteFooter() {
   return (
-    <footer className="mt-24 bg-ig-slate text-ig-on-slate">
+    <footer className="ig-surface-blue mt-24 overflow-hidden">
       <div className="mx-auto grid max-w-page gap-10 px-[var(--ig-gutter)] py-14 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div className="flex flex-col gap-4">
           <Logo tone="dark" />

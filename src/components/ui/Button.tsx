@@ -7,7 +7,9 @@ import { clx } from "@medusajs/ui"
 // The one button in Ingrosso. Every button and button-styled link uses it.
 // Styles live in globals.css (.ig-btn), from tokens, so every theme follows.
 //
-//   variant  primary | secondary | ink | ghost | danger
+//   variant  primary (blue) | secondary (white) | ghost | danger
+//            Main actions are blue or white; ghost is for icon-only and
+//            toolbar buttons, danger for destructive actions.
 //   size     sm | md | lg | xl
 //   iconLeft / iconRight  any icon; iconOnly for a round icon button
 //   burst    glassy particle burst on press (on by default for primary lg/xl)
@@ -16,7 +18,7 @@ import { clx } from "@medusajs/ui"
 // Medusa's prop names are accepted too (variant "transparent", size "small" |
 // "base" | "large" | "xlarge", isLoading), so it drops in for @medusajs/ui.
 
-type Variant = "primary" | "secondary" | "ink" | "ghost" | "danger"
+type Variant = "primary" | "secondary" | "ghost" | "danger"
 type Size = "sm" | "md" | "lg" | "xl"
 
 const VARIANT_ALIAS: Record<string, Variant> = { transparent: "ghost" }

@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/Button"
 // Marketing-page primitives. Buttons are the shared Button (components/ui),
 // so landing pages and working screens use the same button everywhere.
 
-type Tone = "accent" | "ink" | "paper" | "quiet"
+// accent = the main blue button, paper = the white button.
+type Tone = "accent" | "paper"
 
-const VARIANT = { accent: "primary", ink: "ink", paper: "secondary", quiet: "secondary" } as const
+const VARIANT = { accent: "primary", paper: "secondary" } as const
 
 export function PillLink({
   href,

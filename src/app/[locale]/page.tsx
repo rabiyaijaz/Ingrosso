@@ -162,7 +162,7 @@ export default async function HomePage() {
               compatible one sit side by side and you can tell your customer exactly what each is.
             </p>
             <div className="flex flex-wrap gap-3">
-              <PillLink href={example} tone="ink" iconRight={<ArrowRight />}>Compare grades on a part</PillLink>
+              <PillLink href={example} iconRight={<ArrowRight />}>Compare grades on a part</PillLink>
               <PillLink href={routes.grades()} tone="paper">Read the grade guide</PillLink>
             </div>
           </div>
@@ -170,9 +170,10 @@ export default async function HomePage() {
       </div>
       </section>
 
-      {/* How approval works: an itinerary slip on slate */}
-      <section className="bg-ig-slate text-ig-on-slate">
-        <div className="mx-auto grid max-w-page gap-12 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-12">
+      {/* How approval works: an itinerary slip on glassy blue */}
+      <section className="ig-surface-blue overflow-hidden">
+        <Ambient variant="blue" />
+        <div className="relative z-[1] mx-auto grid max-w-page gap-12 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-12">
           <div className="flex flex-col gap-6 lg:col-span-5" data-reveal>
             <h2 className={sectionTitle}>From application to price list</h2>
             <p className={clx(body, "max-w-[34ch] text-ig-on-slate-soft")}>
@@ -199,7 +200,7 @@ export default async function HomePage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-7 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-ig-ink px-7 py-2.5 text-[16px] text-ig-on-ink">
+              <div className="mt-7 flex min-h-11 flex-wrap items-center justify-between gap-x-4 bg-ig-blue px-7 py-2.5 text-[16px] text-ig-on-accent">
                 <span>Your trade prices, live</span>
                 <span className="tabular-nums">about 5 min to apply</span>
               </div>
@@ -296,13 +297,15 @@ export default async function HomePage() {
       </section>
 
       {/* Closing photograph, text beside */}
-      <section className="overflow-hidden bg-ig-slate text-ig-on-slate">
+      <section className="overflow-hidden">
         <div className="relative h-[60svh] overflow-hidden lg:h-[86svh]">
           <MotionScene glowX="50%" glowY="48%">
             <Image src="/brand/scene-office-wide.webp" alt="Glass Ingrosso tiles floating through a bright office" fill sizes="100vw" className="object-cover" />
           </MotionScene>
         </div>
-        <div className="mx-auto grid max-w-page gap-8 px-[var(--ig-gutter)] py-16 lg:grid-cols-12 lg:py-24" data-reveal>
+        <div className="ig-surface-blue overflow-hidden">
+        <Ambient variant="blue" />
+        <div className="relative z-[1] mx-auto grid max-w-page gap-8 px-[var(--ig-gutter)] py-16 lg:grid-cols-12 lg:py-24" data-reveal>
           <h2 className={clx(sectionTitle, "font-light lg:col-span-6")}>Apply once, buy at your price</h2>
           <div className="flex flex-col gap-6 lg:col-span-5 lg:col-start-8">
             <p className={clx(body, "text-ig-on-slate-soft")}>
@@ -310,6 +313,7 @@ export default async function HomePage() {
             </p>
             <PillLink href={routes.apply()} tone="paper" className="self-start">Apply for a trade account</PillLink>
           </div>
+        </div>
         </div>
       </section>
 

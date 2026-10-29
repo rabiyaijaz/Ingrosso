@@ -15,7 +15,7 @@ export default function ApplyPage() {
         <ApplicationForm />
       </div>
       <aside className="hidden lg:block">
-        <div className="sticky top-6 overflow-hidden rounded-panel bg-ig-slate">
+        <div className="ig-surface-blue sticky top-6 overflow-hidden rounded-panel">
           <Image src="/brand/mark-glass.webp" alt="The Ingrosso mark as a frosted glass tile" width={1024} height={1024} className="aspect-square w-full object-cover" />
           <ul className="flex flex-col gap-3 p-6 txt-small text-ig-on-slate">
             <li>Your own price on every part, with quantity breaks</li>

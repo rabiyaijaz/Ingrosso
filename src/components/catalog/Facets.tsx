@@ -51,7 +51,7 @@ export function GradeFilterBar({
                     scroll={false}
                     className={clx(
                       "inline-flex h-9 items-center gap-2 rounded-full pl-1.5 pr-3.5 txt-compact-small-plus transition-colors outline-none focus-visible:shadow-borders-focus",
-                      on ? "bg-ig-ink text-ig-on-ink" : "bg-ui-bg-subtle text-ui-fg-base hover:bg-ui-bg-subtle-hover"
+                      on ? "bg-ig-blue text-ig-on-accent" : "bg-ui-bg-subtle text-ui-fg-base hover:bg-ui-bg-subtle-hover"
                     )}
                   >
                     <GradeIcon grade={g.id} size="md" className="rounded-full" />

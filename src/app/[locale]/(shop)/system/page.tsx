@@ -40,7 +40,7 @@ export default function SystemPage() {
         <div className="flex flex-wrap items-center gap-8">
           <Logo href={null} />
           <Logo href={null} size="sm" />
-          <span className="rounded-xl bg-ig-slate p-3"><Logo href={null} tone="dark" /></span>
+          <span className="ig-surface-blue rounded-xl p-3"><Logo href={null} tone="dark" /></span>
         </div>
       </Block>
 
@@ -113,7 +113,7 @@ export default function SystemPage() {
             One Button component (components/ui/Button) for every button and button-styled link. Always a pill. Primary
             buttons at large and extra-large sizes burst on press; try them.
           </Text>
-          {(["primary", "secondary", "ink", "ghost", "danger"] as const).map((v) => (
+          {(["primary", "secondary", "ghost", "danger"] as const).map((v) => (
             <div key={v} className="flex flex-col gap-3">
               <span className="txt-compact-small-plus capitalize text-ui-fg-subtle">{v}</span>
               <div className="flex flex-wrap items-center gap-3">
@@ -131,9 +131,8 @@ export default function SystemPage() {
           <div className="flex flex-col gap-3">
             <span className="txt-compact-small-plus text-ui-fg-subtle">As links (marketing pages)</span>
             <div className="flex flex-wrap gap-3">
-              <PillLink href={routes.apply()} iconRight={<ArrowRight />}>Accent</PillLink>
-              <PillLink href={routes.apply()} tone="ink">Ink</PillLink>
-              <PillLink href={routes.apply()} tone="paper">Paper</PillLink>
+              <PillLink href={routes.apply()} iconRight={<ArrowRight />}>Blue</PillLink>
+              <PillLink href={routes.apply()} tone="paper">White</PillLink>
             </div>
           </div>
         </div>
