@@ -113,6 +113,23 @@ Source: `E:\Miqdad\website_assets` (renders made in Antigravity), optimised to W
 
 Colours from the brand guide: sapphire `#2563EB` is the primary (`--ig-blue`), cyan `#38BDF8` (`--ig-cyan`) and gold `#F59E0B` (`--ig-gold`) are light only, never text. The canvas stays light; cards are 28px frosted glass with a white rim and top catchlight.
 
+## Trade desk (admin)
+
+`/en/admin`, same tokens, glass cards, buttons and themes as the store, in a working layout: a frosted sidebar and wide content. Shared pieces live in `components/admin/Kit.tsx` (page header, panel, link tabs, empty state), `Fields.tsx` (native fields in the Medusa look, so forms post with server actions) and `Charts.tsx`.
+
+| Area | Screens | Why it sits there |
+| --- | --- | --- |
+| Overview | Needs-attention counts (applications, orders to pick, overdue invoices, parts running low), 7-day figures with trend, revenue per day, revenue by part, grade mix, top accounts, latest orders, inline approvals | What needs a person comes first, then performance |
+| Sell · Orders | Views by warehouse step and overdue payment; the order page moves an order one step at a time | Fulfilment is a flow, so the next step is the main button |
+| Sell · Customers | Applications, Approved, Suspended, Declined; the customer page approves with a tier, declines with a reason, changes tier, suspends | An application is a customer's first step, so approvals are a view of Customers, not a separate area |
+| Catalogue · Products | Stock views, category filter, list price and a tier price per part; Add product with a grouped model picker, a suggested SKU (checked for duplicates) and a per-tier price preview | |
+| Catalogue · Categories | Parts, out of stock and 30-day sales per category | |
+| Pricing · Price tiers | Trade, Trade Plus, Volume Partner, Distributor, plus custom tiers. Each: discount off list, quantity breaks, custom rules (category, grade family or one grade; negative to charge more), payment terms, minimum order, who qualifies, and a live price preview | Tiers are calculated from one list price, so a price change is made once |
+
+Charts follow the dataviz rules: one accent hue for a single series, 2px lines, 4px rounded bar ends on the baseline, a 2px gap between bars, a recessive grid, text in ink, and a hover tooltip. The grade mix is one hue from deep to pale with labels, never colour alone.
+
+Prototype data: sample customers, 30 days of generated orders, and the trade desk's changes kept in cookies (`lib/admin/data.ts`). Production reads and writes the database, and the admin sits behind staff sign-in.
+
 ## Brand logos
 
 `brand/BrandMark` draws the Apple, Samsung, Google and Xiaomi logos (Simple Icons) in an icon frame, or `variant="plain"` inline. They show compatibility only; both footers carry the trademark note.
