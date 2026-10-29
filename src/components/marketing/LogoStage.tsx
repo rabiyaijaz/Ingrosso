@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { clx } from "@medusajs/ui"
 
-// The simple logo as a section picture: the main (golden-core) mark floating
+// The simple logo as a section picture: the main logo mark floating
 // over soft caustic light. tone sets the ground: light canvas or deep blue.
 // Styles: .ig-logo-stage.
 export function LogoStage({ tone = "light", className }: { tone?: "light" | "dark"; className?: string }) {
