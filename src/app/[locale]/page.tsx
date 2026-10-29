@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { clx } from "@medusajs/ui"
 import { DeviceFinder } from "@/components/catalog/DeviceFinder"
@@ -12,6 +13,7 @@ import { BRANDS, CATEGORIES, PRODUCTS, partCount } from "@/lib/catalog"
 import { ALL_BRANDS_IMAGE, CATEGORY_IMAGE } from "@/lib/visuals"
 import { Ambient } from "@/components/marketing/Ambient"
 import { LogoStage } from "@/components/marketing/LogoStage"
+import { MotionScene } from "@/components/marketing/MotionScene"
 import { GlassActionTile, GlassTile } from "@/components/marketing/GlassTile"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
@@ -49,19 +51,11 @@ const QUESTIONS = [
 
 const FRAGMENTS = [<FitFragment key="fit" />, <GradeFragment key="grade" />, <PriceFragment key="price" />, <ShipFragment key="ship" />]
 
-// Landing imagery is two photographs only: the office plinth for the hero and
-// the floating tiles for the questions beside it. Every other section uses
-// the simple logo (LogoStage). Part and device renders appear in tiles only.
-// The wide tiles picture pans across its width, one stop per question.
-const TILES = "/brand/scene-office-wide.webp"
-const TILES_ALT = "Glass Ingrosso tiles floating through a bright office"
-const STAGE = [
-  { src: "/brand/scene-office.webp", alt: "The Ingrosso mark on a glass plinth in a bright office" },
-  { src: TILES, alt: TILES_ALT, position: "8% center" },
-  { src: TILES, alt: TILES_ALT, position: "45% center" },
-  { src: TILES, alt: TILES_ALT, position: "70% center" },
-  { src: TILES, alt: TILES_ALT, position: "96% center" },
-]
+// Landing imagery is two photographs only: the office plinth, fixed beside
+// the hero and the questions (it never changes, it only breathes and moves
+// with parallax), and the floating tiles in the closing band below. Every
+// other section uses the simple logo (LogoStage).
+const STAGE = [{ src: "/brand/scene-office.webp", alt: "The Ingrosso mark on a glass plinth in a bright office" }]
 
 // Part tiles: one per category, each linking to its category.
 const PART_TILES = CATEGORIES.map((c) => ({ cat: c.slug, label: c.plural, src: CATEGORY_IMAGE[c.slug] }))
@@ -294,7 +288,11 @@ export default async function HomePage() {
 
       {/* Closing photograph, text beside */}
       <section className="overflow-hidden">
-        <LogoStage tone="dark" className="h-[44svh] lg:h-[60svh]" />
+        <div className="relative h-[60svh] overflow-hidden lg:h-[86svh]">
+          <MotionScene glowX="50%" glowY="48%">
+            <Image src="/brand/scene-office-wide.webp" alt="Glass Ingrosso tiles floating through a bright office" fill sizes="100vw" className="object-cover" />
+          </MotionScene>
+        </div>
         <div className="ig-surface-blue overflow-hidden">
         <Ambient variant="blue" />
         <div className="relative z-[1] mx-auto grid max-w-page gap-8 px-[var(--ig-gutter)] py-16 lg:grid-cols-12 lg:py-24" data-reveal>
