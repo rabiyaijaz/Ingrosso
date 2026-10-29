@@ -12,6 +12,7 @@ import { routes } from "@/lib/routes"
 import { CARRIERS, PAYMENTS, VAT_RATE, orderTotals, type CarrierId, type PaymentId } from "@/lib/totals"
 import { Figure } from "./Figure"
 import { OrderSummary, type SummaryLine } from "./OrderSummary"
+import { StepLabel } from "@/components/ui/StepLabel"
 import { CardIcon, ChoiceCard } from "./ChoiceCard"
 import { Bolt, BuildingStorefront, CreditCard, DocumentText, MapPin, Paypal, Receipt, TruckFast } from "@medusajs/icons"
 
@@ -19,11 +20,11 @@ const CARRIER_ICON: Record<CarrierId, React.ReactNode> = { postnl: <TruckFast />
 const PAYMENT_ICON: Record<PaymentId, React.ReactNode> = { card: <CreditCard />, paypal: <Paypal />, invoice: <Receipt /> }
 
 type StepId = "delivery" | "shipping" | "payment" | "review"
-const STEPS: { id: StepId; label: string }[] = [
-  { id: "delivery", label: "Delivery" },
-  { id: "shipping", label: "Shipping" },
-  { id: "payment", label: "Payment" },
-  { id: "review", label: "Review" },
+const STEPS: { id: StepId; label: string; hint: string }[] = [
+  { id: "delivery", label: "Delivery", hint: "Address" },
+  { id: "shipping", label: "Shipping", hint: "Carrier" },
+  { id: "payment", label: "Payment", hint: "Method" },
+  { id: "review", label: "Review", hint: "Place order" },
 ]
 
 type Line = SummaryLine
@@ -77,16 +78,16 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
       <ProgressTabs value={step} onValueChange={(v) => setStep(v as StepId)} className="flex flex-col gap-8">
-        <ProgressTabs.List className="ig-steps overflow-hidden rounded-xl shadow-elevation-card-rest">
+        <ProgressTabs.List className="ig-steps">
           {STEPS.map((s, i) => (
             <ProgressTabs.Trigger
               key={s.id}
               value={s.id}
               disabled={i > reached}
               status={i < index || i < reached ? "completed" : i === index ? "in-progress" : "not-started"}
-              className="ig-steps__tab"
+              className={clx("ig-steps__tab", (i < index || i < reached) && i !== index && "is-done")}
             >
-              {s.label}
+              <StepLabel n={i + 1} label={s.label} hint={s.hint} done={(i < index || i < reached) && i !== index} />
             </ProgressTabs.Trigger>
           ))}
         </ProgressTabs.List>

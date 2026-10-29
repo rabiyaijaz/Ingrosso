@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, Select, Text, clx } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
+import { StepLabel } from "@/components/ui/StepLabel"
 import { submitApplication } from "@/app/actions"
 import { LAB } from "@/lib/lab"
 import { routes } from "@/lib/routes"
@@ -13,11 +14,11 @@ import { routes } from "@/lib/routes"
 // the server so it can be finished on another device (ACC-02).
 
 type StepId = "login" | "company" | "address" | "review"
-const STEPS: { id: StepId; label: string }[] = [
-  { id: "login", label: "Sign-in details" },
-  { id: "company", label: "Company" },
-  { id: "address", label: "Address" },
-  { id: "review", label: "Review" },
+const STEPS: { id: StepId; label: string; hint: string }[] = [
+  { id: "login", label: "Sign-in", hint: "Email, password" },
+  { id: "company", label: "Company", hint: "Tax number" },
+  { id: "address", label: "Address", hint: "Where orders go" },
+  { id: "review", label: "Review", hint: "Send" },
 ]
 
 const COUNTRIES = [
@@ -139,16 +140,16 @@ export function ApplicationForm() {
 
   return (
     <ProgressTabs value={step} onValueChange={(v) => setStep(v as StepId)} className="flex flex-col gap-8">
-      <ProgressTabs.List className="ig-steps overflow-hidden rounded-xl shadow-elevation-card-rest">
+      <ProgressTabs.List className="ig-steps">
         {STEPS.map((s, i) => (
           <ProgressTabs.Trigger
             key={s.id}
             value={s.id}
             disabled={i > draft.reached}
             status={i < index || i < draft.reached ? "completed" : i === index ? "in-progress" : "not-started"}
-            className="ig-steps__tab"
+            className={clx("ig-steps__tab", (i < index || i < draft.reached) && i !== index && "is-done")}
           >
-            {s.label}
+            <StepLabel n={i + 1} label={s.label} hint={s.hint} done={(i < index || i < draft.reached) && i !== index} />
           </ProgressTabs.Trigger>
         ))}
       </ProgressTabs.List>

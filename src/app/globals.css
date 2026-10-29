@@ -217,12 +217,75 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 16px -8px var(--ig-blue);
 }
 /*
-  Step tabs (checkout, application): only as wide as they need, every step
-  the same width, label centred. Overrides Medusa ProgressTabs' stretch.
+  Stepper (checkout, application; StepLabel inside Medusa ProgressTabs).
+  Equal-width steps, only as wide as they need. Each step: a numbered
+  rounded-square badge (ticked when done), name and hint; a line joins the
+  steps and fills with the accent as they are done; the current step sits
+  on a glass card with a glowing badge.
 */
-.ig-steps { display: grid !important; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); width: fit-content; max-width: 100%; }
-.ig-steps .ig-steps__tab { max-width: none; min-width: 0; width: 100%; justify-content: center; padding-inline: clamp(12px, 2vw, 22px); }
-@media (min-width: 640px) { .ig-steps .ig-steps__tab { min-width: 128px; } }
+.ig-steps { display: grid !important; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 20px; width: fit-content; max-width: 100%; background: none; }
+.ig-steps .ig-steps__tab {
+  position: relative;
+  max-width: none;
+  min-width: 0;
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  overflow: visible;
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+@media (min-width: 640px) { .ig-steps .ig-steps__tab { min-width: 148px; } }
+/* Medusa's own status icon is replaced by the numbered badge */
+.ig-steps .ig-steps__tab > span:first-child:not(.ig-step__num) { display: none; }
+.ig-steps .ig-steps__tab:hover:not(:disabled) { background: color-mix(in srgb, var(--ig-blue) 6%, transparent); }
+.ig-steps .ig-steps__tab[data-state="active"] { background: var(--bg-base); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ig-blue) 18%, transparent), 0 10px 24px -14px var(--ig-blue); }
+.ig-steps .ig-steps__tab:disabled { background: transparent; opacity: 1; }
+/* The joining line, from this step to the next */
+.ig-steps .ig-steps__tab:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -18px;
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+.ig-steps .ig-steps__tab.is-done::after { background: var(--ig-blue); }
+
+.ig-step__num {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px; /* rounded square, like every icon frame */
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+  background: var(--bg-base);
+  box-shadow: inset 0 0 0 1.5px var(--border-strong);
+  transition: all 200ms ease;
+}
+.ig-steps__tab.is-done .ig-step__num { color: var(--ig-blue); background: color-mix(in srgb, var(--ig-blue) 12%, var(--bg-base)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ig-blue) 40%, transparent); }
+.ig-steps__tab[data-state="active"] .ig-step__num {
+  color: var(--ig-on-accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ig-blue) 88%, white), var(--ig-blue));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 0 4px color-mix(in srgb, var(--ig-blue) 16%, transparent);
+}
+.ig-step__text { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; line-height: 1.2; }
+.ig-step__label { font-size: 13px; font-weight: 500; color: var(--fg-subtle); }
+.ig-step__hint { font-size: 11px; font-weight: 400; color: var(--fg-muted); white-space: nowrap; }
+.ig-steps__tab[data-state="active"] .ig-step__label,
+.ig-steps__tab.is-done .ig-step__label { color: var(--fg-base); }
+/* Small screens: badge and name only, the hint folds away */
+@media (max-width: 639px) { .ig-steps { gap: 12px; } .ig-step__hint { display: none; } .ig-steps .ig-steps__tab { padding: 8px; } .ig-steps .ig-steps__tab:not(:last-child)::after { right: -12px; width: 10px; } }
 
 /* Hidden step panels take no space (their flex class would otherwise beat [hidden] and add gaps) */
 [role="tabpanel"][hidden] { display: none !important; }

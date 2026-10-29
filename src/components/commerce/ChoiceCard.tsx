@@ -2,10 +2,12 @@
 
 import { RadioGroup, clx } from "@medusajs/ui"
 
-// A glass icon in a frame, for the head of a card (address, delivery, payment).
+// A plain icon in the accent colour, no frame, for the head of a card
+// (address, delivery, payment, order). Size sets the glyph: sm 16, md 20, lg 24.
 export function CardIcon({ children, size = "md" }: { children: React.ReactNode; size?: "sm" | "md" | "lg" }) {
+  const px = { sm: "[&_svg]:size-4", md: "[&_svg]:size-5", lg: "[&_svg]:size-6" }[size]
   return (
-    <span aria-hidden className="ig-icon-frame ig-glass-icon" data-size={size}>
+    <span aria-hidden className={clx("inline-flex shrink-0 text-ui-fg-interactive", px)}>
       {children}
     </span>
   )

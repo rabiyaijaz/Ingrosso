@@ -77,6 +77,9 @@ Where each size is used: `xs` in grade badges and brand rows; `sm` in the device
 
 - **Rounded-square containers** (tags, badges, list rows, tiles): the icon goes in a frame.
 - **Pill buttons and chips** (buttons, filter chips, anything fully rounded): the icon goes in bare, with no frame (`GradeIcon bare` / `.ig-icon-bare`, `BrandMark variant="plain"`, or a plain icon in `Button`). A bare grade icon is tinted by family and takes the chip's text colour when the chip is selected.
+- **Card heads** (address, delivery and payment options, review cards, the order summary): a plain icon in the accent colour, no frame (`commerce/ChoiceCard` `CardIcon`).
+
+**Steppers** (checkout, application): `ui/StepLabel` inside Medusa ProgressTabs with `.ig-steps`. Equal-width steps, only as wide as needed; a numbered rounded-square badge that becomes a tick when done; name plus a short hint (hidden on phones); a joining line that fills with the accent; the current step on a glass card with a glowing badge.
 
 ## Part listings (layouts under review)
 
