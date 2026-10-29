@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Heading, clx } from "@medusajs/ui"
-import { CheckMini, ChevronDown, MagnifyingGlass, XMark } from "@medusajs/icons"
+import { CheckMini, ChevronDown, Component, Puzzle, ShieldCheck, SquareTwoStack, XMark } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
 import { AddToOrder } from "@/components/commerce/AddToOrder"
 import { Figure } from "@/components/commerce/Figure"
@@ -248,9 +248,15 @@ export function ResultsBar({ shown, total, params, hrefFor }: { shown: number; t
 // ─── Grade family tabs (layout C) ───────────────────────────────────────────
 export function FamilyTabs({ products, params, hrefFor }: { products: Product[]; params: FacetParams; hrefFor: Href }) {
   const count = (f?: string) => products.filter((p) => !f || GRADES.find((g) => g.id === p.grade)?.family === f).length
-  const tabs = [{ id: undefined as string | undefined, label: "All grades" }, ...FAMILIES.map((f) => ({ id: f as string | undefined, label: f }))]
+  // Each family with its glass icon, finished like the grade icons of that family
+  const tabs: { id?: string; label: string; icon: React.ReactNode; family: string; note: string }[] = [
+    { id: undefined, label: "All grades", icon: <SquareTwoStack />, family: "", note: `${GRADES.length} grades` },
+    { id: "Genuine", label: "Genuine", icon: <ShieldCheck />, family: "Genuine", note: "From the manufacturer" },
+    { id: "Aftermarket", label: "Aftermarket", icon: <Component />, family: "Aftermarket", note: "Made to the spec" },
+    { id: "Third-party", label: "Third-party", icon: <Puzzle />, family: "Third-party", note: "Lowest cost" },
+  ]
   return (
-    <nav aria-label="Grade family" className="grid grid-cols-2 gap-2 rounded-2xl bg-ui-bg-subtle p-1.5 sm:grid-cols-4">
+    <nav aria-label="Grade family" className="grid grid-cols-2 gap-1.5 rounded-[22px] bg-[color-mix(in_srgb,var(--fg-base)_5%,transparent)] p-1.5 sm:grid-cols-4">
       {tabs.map((t) => {
         const on = (params.fam ?? undefined) === t.id
         const n = count(t.id)
@@ -259,15 +265,23 @@ export function FamilyTabs({ products, params, hrefFor }: { products: Product[];
             key={t.label}
             href={hrefFor({ ...params, fam: t.id, grade: undefined })}
             aria-current={on ? "page" : undefined}
+            aria-disabled={!n || undefined}
             scroll={false}
             className={clx(
-              "flex flex-col items-start gap-0.5 rounded-xl px-4 py-3 outline-none transition-colors focus-visible:shadow-borders-focus",
-              on ? "bg-ig-blue text-ig-on-accent shadow-[0_8px_20px_-10px_var(--ig-blue)]" : "text-ui-fg-base hover:bg-ui-bg-base",
-              !n && "pointer-events-none opacity-40"
+              "group flex items-center gap-3 rounded-2xl px-3 py-2.5 outline-none transition-[background-color,box-shadow] focus-visible:shadow-borders-focus",
+              on
+                ? "bg-ui-bg-base shadow-[0_0_0_1.5px_color-mix(in_srgb,var(--ig-blue)_45%,transparent),0_8px_20px_-12px_var(--ig-blue)]"
+                : "hover:bg-[color-mix(in_srgb,var(--bg-base)_70%,transparent)]",
+              !n && "pointer-events-none opacity-45"
             )}
           >
-            <span className="txt-compact-medium-plus">{t.label}</span>
-            <Figure className={clx("txt-compact-small", on ? "opacity-80" : "text-ui-fg-muted")}>{n} parts</Figure>
+            <span className="ig-icon-frame ig-glass-icon" data-size="md" data-family={t.family || undefined}>{t.icon}</span>
+            <span className="flex min-w-0 flex-col">
+              <span className={clx("txt-compact-medium-plus", on ? "text-ui-fg-base" : "text-ui-fg-subtle group-hover:text-ui-fg-base")}>{t.label}</span>
+              <span className="truncate txt-compact-xsmall text-ui-fg-muted">
+                <Figure>{n}</Figure> {n === 1 ? "part" : "parts"} · {t.note}
+              </span>
+            </span>
           </Link>
         )
       })}
