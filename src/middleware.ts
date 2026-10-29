@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { LAB } from "@/lib/lab"
+import { ICON_STYLE_COOKIE, isIconStyle } from "@/lib/icon-styles"
 import { LISTING_COOKIE, isListing } from "@/lib/listing-variants"
 import { THEME_COOKIE, isTheme } from "@/lib/themes"
 
@@ -10,13 +11,15 @@ export function middleware(req: NextRequest) {
   if (req.nextUrl.pathname === "/") return NextResponse.redirect(new URL("/en", req.url))
   if (!LAB) return NextResponse.next()
 
-  // Lab only: ?theme=cobalt and ?listing=sidebar preview a colour theme or a
-  // listing layout and remember it, so each can be opened or shared by link.
+  // Lab only: ?theme=cobalt, ?listing=sidebar and ?icons=render preview a
+  // colour theme, a listing layout or an icon style and remember it, so each can be opened or shared by link.
   const theme = req.nextUrl.searchParams.get("theme") ?? undefined
   const listing = req.nextUrl.searchParams.get("listing") ?? undefined
+  const icons = req.nextUrl.searchParams.get("icons") ?? undefined
   const set: [string, string][] = []
   if (isTheme(theme)) set.push([THEME_COOKIE, theme])
   if (isListing(listing)) set.push([LISTING_COOKIE, listing])
+  if (isIconStyle(icons)) set.push([ICON_STYLE_COOKIE, icons])
   if (!set.length) return NextResponse.next()
 
   set.forEach(([k, v]) => req.cookies.set(k, v))
@@ -25,4 +28,4 @@ export function middleware(req: NextRequest) {
   return res
 }
 
-export const config = { matcher: ["/((?!_next|api|brand|icons|favicon).*)"] }
+export const config = { matcher: ["/((?!_next|api|brand|icons|parts|ecosystem|states|features|favicon).*)"] }

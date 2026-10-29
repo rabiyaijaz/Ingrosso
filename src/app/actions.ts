@@ -7,6 +7,7 @@ import { CART_COOKIE, readCart } from "@/lib/cart"
 import { unitPriceAt } from "@/lib/commerce"
 import { LAB } from "@/lib/lab"
 import { THEME_COOKIE, isTheme, type ThemeId } from "@/lib/themes"
+import { ICON_STYLE_COOKIE, isIconStyle, type IconStyle } from "@/lib/icon-styles"
 import { LISTING_COOKIE, isListing, type ListingVariant } from "@/lib/listing-variants"
 import { ORDERS_COOKIE, readOrders, type PlacedOrder } from "@/lib/orders"
 import { orderTotals, type CarrierId, type PaymentId } from "@/lib/totals"
@@ -94,6 +95,13 @@ export async function setLabTheme(theme: ThemeId) {
 export async function setLabListing(variant: ListingVariant) {
   if (!LAB || !isListing(variant)) return
   ;(await cookies()).set(LISTING_COOKIE, variant, COOKIE_OPTS)
+  revalidatePath("/", "layout")
+}
+
+// Lab only: preview simple glass icons or the 3D renders at small sizes.
+export async function setLabIcons(style: IconStyle) {
+  if (!LAB || !isIconStyle(style)) return
+  ;(await cookies()).set(ICON_STYLE_COOKIE, style, COOKIE_OPTS)
   revalidatePath("/", "layout")
 }
 

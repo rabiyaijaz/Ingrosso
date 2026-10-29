@@ -6,7 +6,8 @@ import { useState, useTransition } from "react"
 import { DropdownMenu, Select, clx, toast } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { ArrowPath, ChevronDown, XMark } from "@medusajs/icons"
-import { resetPrototype, setCartLine, setLabListing, setLabTheme, setViewerState } from "@/app/actions"
+import { resetPrototype, setCartLine, setLabIcons, setLabListing, setLabTheme, setViewerState } from "@/app/actions"
+import { ICON_STYLES, type IconStyle } from "@/lib/icon-styles"
 import { LISTING_VARIANTS, type ListingVariant } from "@/lib/listing-variants"
 import { PreviewAs } from "@/components/layout/PreviewAs"
 import { routes } from "@/lib/routes"
@@ -29,7 +30,19 @@ const JUMPS: { label: string; href: string }[] = [
 
 // Floating design-lab toolbar: switch account state, take the next step of a
 // flow without filling forms, jump anywhere, reset. Lab builds only.
-export function LabBar({ state, cartLines, theme, listing }: { state: ViewerState; cartLines: number; theme: ThemeId; listing: ListingVariant }) {
+export function LabBar({
+  state,
+  cartLines,
+  theme,
+  listing,
+  icons,
+}: {
+  state: ViewerState
+  cartLines: number
+  theme: ThemeId
+  listing: ListingVariant
+  icons: IconStyle
+}) {
   const router = useRouter()
   const [open, setOpen] = useState(true)
   const [pending, start] = useTransition()
@@ -115,6 +128,19 @@ export function LabBar({ state, cartLines, theme, listing }: { state: ViewerStat
           </Select.Trigger>
           <Select.Content>
             {LISTING_VARIANTS.map((t) => (
+              <Select.Item key={t.id} value={t.id}>{t.label}</Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      </label>
+      <label className="flex items-center gap-2">
+        <span className="whitespace-nowrap txt-compact-small text-ig-on-slate-soft">Icons</span>
+        <Select size="small" value={icons} onValueChange={(v) => run(() => setLabIcons(v as IconStyle))}>
+          <Select.Trigger aria-label="Part icons" className="h-6 min-w-[130px] bg-ig-slate-2 text-ig-on-slate shadow-none">
+            <Select.Value />
+          </Select.Trigger>
+          <Select.Content>
+            {ICON_STYLES.map((t) => (
               <Select.Item key={t.id} value={t.id}>{t.label}</Select.Item>
             ))}
           </Select.Content>

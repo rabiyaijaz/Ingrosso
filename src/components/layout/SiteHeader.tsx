@@ -8,6 +8,7 @@ import { CATEGORIES } from "@/lib/catalog"
 import { readCart } from "@/lib/cart"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
+import { getIconStyle } from "@/lib/icon-style"
 import { getViewer } from "@/lib/viewer"
 import { CategoryNav } from "./CategoryNav"
 import { DeviceMenu } from "./DeviceMenu"
@@ -17,6 +18,7 @@ import { StripTicker } from "./StripTicker"
 export async function SiteHeader() {
   const viewer = await getViewer()
   const cart = await readCart()
+  const iconStyle = await getIconStyle()
   const signedIn = viewer.state !== "visitor"
   const canOrder = viewer.state === "approved" || viewer.state === "masked"
 
@@ -70,7 +72,7 @@ export async function SiteHeader() {
         <SearchBox />
       </div>
 
-      <CategoryNav categories={CATEGORIES.map(({ slug, plural }) => ({ slug, plural }))} />
+      <CategoryNav categories={CATEGORIES.map(({ slug, plural }) => ({ slug, plural }))} iconStyle={iconStyle} />
     </header>
   )
 }

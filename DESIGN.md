@@ -102,7 +102,8 @@ Source: `E:\Miqdad\website_assets` (renders made in Antigravity), optimised to W
 | Use | Files |
 | --- | --- |
 | Logo mark | `brand/logo-light.webp` on the light canvas, `brand/logo-dark.webp` on blue bands and dark sections (`Logo tone`), `brand/logo-gold.webp` reserved for a special tier; favicon `app/icon.png`, `app/apple-icon.png` |
-| Category renders | `parts/<category>.webp`: category bar (bare, in the pill), landing tiles, product rows, cards and the product page |
+| Category renders | `parts/<category>.webp`: landing tiles and the product page picture |
+| Simple glass part icons | `catalog/PartIcon`: one plain glyph per category in currentColor with a tinted fill. Used at small sizes, where a 3D render is too busy to recognise: the category bar (bare, in the pill), product rows, product cards and the grade comparison (in a glass frame). The lab's **Icons** switch (or `?icons=render`) previews the 3D renders there instead; the main app uses `DEFAULT_ICON_STYLE` (`glass`) |
 | Screen grade tiers | `parts/tier-1..4.webp`: tier 1 Service pack / Original, tier 2 Pulled / Refurbished, tier 3 Soft OLED, tier 4 In-cell / Compatible; other screen grades show the plain screen render |
 | Device families | `ecosystem/<brand>.webp`, `ecosystem/all.webp` ("Shop by device" tile) |
 | States | `states/order-confirmed.webp` (order placed), `states/rma-approved.webp` (for the returns flow) |

@@ -74,7 +74,7 @@ export function GlassActionTile({ href, title, action, src }: { href: string; ti
         </span>
         <span className="ig-tile__caption">
           <span className="ig-tile__label">{action}</span>
-          <ArrowRight className="text-ig-blue transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="transition-transform group-hover:translate-x-1" />
         </span>
       </span>
     </Link>
