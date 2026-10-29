@@ -7,8 +7,14 @@ import { CartLineQty } from "@/components/commerce/CartLineQty"
 import { Figure } from "@/components/commerce/Figure"
 import { GateCallout } from "@/components/commerce/GateCallout"
 import { PageContainer, PageHeading } from "@/components/layout/Page"
+import { ShoppingCart } from "@medusajs/icons"
+import { ProductTable } from "@/components/catalog/ProductTable"
+import { ReorderButton } from "@/components/commerce/ReorderButton"
+import { EmptyState } from "@/components/ui/EmptyState"
 import { cartWithProducts } from "@/lib/cart"
-import { unitPriceAt } from "@/lib/commerce"
+import { findModel, productsForModel } from "@/lib/catalog"
+import { commercialView, unitPriceAt } from "@/lib/commerce"
+import { readOrders } from "@/lib/orders"
 import { formatMoney } from "@/lib/money"
 import { routes } from "@/lib/routes"
 import { getViewer } from "@/lib/viewer"
@@ -34,20 +40,41 @@ export default async function CartPage() {
     return { line, product, unit, total: unit * line.qty }
   })
   const subtotal = priced.reduce((s, l) => s + l.total, 0)
+  const lastOrder = (await readOrders())[0]
+  // Finish the repair in one order: other parts for the handsets already in it
+  const inCart = new Set(lines.map((l) => l.product.slug))
+  const models = [...new Set(lines.map((l) => l.product.models[0]).filter(Boolean))]
+  const extras = models
+    .flatMap((m) => productsForModel(m))
+    .filter((p, i, all) => !inCart.has(p.slug) && all.findIndex((x) => x.slug === p.slug) === i)
+    .filter((p) => !lines.some((l) => l.product.category === p.category && l.product.models[0] === p.models[0]))
+    .filter((p) => commercialView(p, viewer).stock.kind !== "out")
+    .filter((p, i, all) => all.findIndex((x) => x.category === p.category && x.models[0] === p.models[0]) === i)
+    .slice(0, 4)
+  const firstModel = models[0] ? findModel(models[0]) : undefined
 
   return (
     <PageContainer className="flex flex-col gap-8 pt-10">
       <PageHeading title="Your order" description="Prices update to the right quantity break as you change amounts.">
-        {/* The next step in view without scrolling; on wide screens the summary beside the table carries it */}
+        {/* The next step always in view, at the top, on every screen size */}
         {lines.length > 0 && (
-          <Button asChild className="lg:hidden"><Link href={routes.checkout()}>Continue to checkout</Link></Button>
+          <Button asChild size="lg"><Link href={routes.checkout()}>Continue to checkout</Link></Button>
         )}
       </PageHeading>
       {lines.length === 0 ? (
-        <div className="ig-card flex flex-col items-start gap-3 p-6">
-          <Text>Nothing in this order yet.</Text>
-          <Button asChild variant="secondary"><Link href={routes.devices()}>Find parts by device</Link></Button>
-        </div>
+        <EmptyState
+          tone="card"
+          icon={<ShoppingCart />}
+          title="Nothing in this order yet"
+          action={
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button asChild><Link href={routes.devices()}>Find parts by device</Link></Button>
+              {lastOrder && <ReorderButton orderRef={lastOrder.ref} label={`Order ${lastOrder.ref} again`} />}
+            </div>
+          }
+        >
+          Start from the handset you are repairing, or repeat your last order.
+        </EmptyState>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
           <div className="ig-card overflow-hidden">
@@ -99,6 +126,16 @@ export default async function CartPage() {
             </Button>
           </div>
         </div>
+      )}
+
+      {extras.length > 0 && (
+        <section className="flex flex-col gap-4">
+          <div>
+            <Heading level="h2" className="txt-xlarge-plus">Often added{firstModel ? ` for the ${firstModel.model.name}` : ""}</Heading>
+            <Text className="mt-1 text-ui-fg-subtle">Other in-stock parts for the handsets in this order.</Text>
+          </div>
+          <ProductTable products={extras} viewer={viewer} />
+        </section>
       )}
     </PageContainer>
   )

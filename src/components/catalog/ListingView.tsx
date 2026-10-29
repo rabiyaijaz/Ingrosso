@@ -6,6 +6,7 @@ import { BRANDS, CATEGORIES, findModel, type Product } from "@/lib/catalog"
 import { getListingVariant } from "@/lib/listing"
 import type { Viewer } from "@/lib/viewer"
 import { Figure } from "@/components/commerce/Figure"
+import { Button } from "@/components/ui/Button"
 import { FacetGroup, GradeFilterBar, applyFacets, selected, type FacetParams } from "./Facets"
 import { ProductTable } from "./ProductTable"
 import { FilterDropdown } from "./listing/Client"
@@ -62,20 +63,13 @@ function TopbarLayout({ products, viewer, params, hrefFor, facets }: Props) {
         <span className="px-2 txt-compact-small-plus text-ui-fg-subtle">Filter by</span>
         {/* Same order as the filter panel: availability, brand, grade, part */}
         {f.inStock !== null && (
-          <Link
-            href={hrefFor({ ...params, stock: stockOn ? undefined : "in" })}
-            aria-pressed={stockOn}
-            scroll={false}
-            className={clx("ig-btn", stockOn ? "ig-btn-primary" : "ig-btn-secondary")}
-            data-variant={stockOn ? "primary" : "secondary"}
-            data-size="md"
+          <Button
+            asChild
+            variant={stockOn ? "primary" : "secondary"}
+            iconLeft={<span aria-hidden className={clx("grid size-4 place-items-center rounded-[4px]", stockOn ? "bg-white/30" : "shadow-borders-base")}>{stockOn && <CheckMini />}</span>}
           >
-            <span aria-hidden className="ig-btn__sheen" />
-            <span aria-hidden className={clx("grid size-4 place-items-center rounded-[4px]", stockOn ? "bg-white/30" : "shadow-borders-base")}>
-              {stockOn && <CheckMini />}
-            </span>
-            In stock only
-          </Link>
+            <Link href={hrefFor({ ...params, stock: stockOn ? undefined : "in" })} aria-pressed={stockOn} scroll={false}>In stock only</Link>
+          </Button>
         )}
         {facets.includes("brand") && f.brands.length > 1 && (
           <FilterDropdown label="Brand" count={selected(params, "brand").size + selected(params, "model").size}>

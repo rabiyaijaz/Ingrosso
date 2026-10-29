@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { EmptyState } from "@/components/ui/EmptyState"
 import { Heading, clx } from "@medusajs/ui"
 import { CheckMini, ChevronDown, SquareTwoStack, XMark } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
@@ -254,7 +255,7 @@ export function FamilyTabs({ products, params, hrefFor }: { products: Product[];
     ...FAMILIES.map((f) => { const Icon = FAMILY_ICON[f]; return { id: f as string, label: f, icon: <Icon />, family: f as string, note: FAMILY_NOTE[f] } }),
   ]
   return (
-    <nav aria-label="Grade family" className="grid grid-cols-2 gap-1.5 rounded-[22px] bg-[color-mix(in_srgb,var(--fg-base)_5%,transparent)] p-1.5 sm:grid-cols-4">
+    <nav aria-label="Grade family" className="ig-icontabs grid-cols-2 sm:grid-cols-4">
       {tabs.map((t) => {
         const on = (params.fam ?? undefined) === t.id
         const n = count(t.id)
@@ -265,18 +266,12 @@ export function FamilyTabs({ products, params, hrefFor }: { products: Product[];
             aria-current={on ? "page" : undefined}
             aria-disabled={!n || undefined}
             scroll={false}
-            className={clx(
-              "group flex items-center gap-3 rounded-2xl px-3 py-2.5 outline-none transition-[background-color,box-shadow] focus-visible:shadow-borders-focus",
-              on
-                ? "bg-ui-bg-base shadow-[0_0_0_1.5px_color-mix(in_srgb,var(--ig-blue)_45%,transparent),0_8px_20px_-12px_var(--ig-blue)]"
-                : "hover:bg-[color-mix(in_srgb,var(--bg-base)_70%,transparent)]",
-              !n && "pointer-events-none opacity-45"
-            )}
+            className="ig-icontabs__tab"
           >
             <span className="ig-icon-frame ig-glass-icon" data-size="md" data-family={t.family || undefined}>{t.icon}</span>
             <span className="flex min-w-0 flex-col">
-              <span className={clx("txt-compact-medium-plus", on ? "text-ui-fg-base" : "text-ui-fg-subtle group-hover:text-ui-fg-base")}>{t.label}</span>
-              <span className="truncate txt-compact-xsmall text-ui-fg-muted">
+              <span className="ig-icontabs__label txt-compact-medium-plus">{t.label}</span>
+              <span className="ig-icontabs__note truncate txt-compact-xsmall">
                 <Figure>{n}</Figure> {n === 1 ? "part" : "parts"} · {t.note}
               </span>
             </span>
@@ -291,10 +286,7 @@ export function FamilyTabs({ products, params, hrefFor }: { products: Product[];
 export function ProductCards({ products, viewer }: { products: Product[]; viewer: Viewer }) {
   if (!products.length) {
     return (
-      <div className="ig-inset px-6 py-12 text-center">
-        <p className="txt-medium-plus">No parts match these filters</p>
-        <p className="mt-1 txt-small text-ui-fg-subtle">Remove a filter to see more.</p>
-      </div>
+      <EmptyState title="No parts match these filters">Remove a filter to see more.</EmptyState>
     )
   }
   const canOrder = viewer.state === "approved" || viewer.state === "masked"

@@ -21,7 +21,8 @@ const COPY: Record<"visitor" | "pending" | "suspended", { title: string; body: s
 }
 
 // What an unapproved viewer sees where the price and buy controls would be.
-export function GateCallout({ state }: { state: ViewerState }) {
+// `next`: the page to come back to after signing in.
+export function GateCallout({ state, next }: { state: ViewerState; next?: string }) {
   if (state !== "visitor" && state !== "pending" && state !== "suspended") return null
   const copy = COPY[state]
   return (
@@ -36,7 +37,7 @@ export function GateCallout({ state }: { state: ViewerState }) {
       {state === "visitor" ? (
         <div className="flex flex-wrap gap-2 pl-7">
           <Button asChild size="large"><Link href={routes.apply()}>Apply for a trade account</Link></Button>
-          <Button asChild size="large" variant="transparent"><Link href={routes.signIn()}>Sign in</Link></Button>
+          <Button asChild size="large" variant="secondary"><Link href={next ? `${routes.signIn()}?next=${encodeURIComponent(next)}` : routes.signIn()}>Sign in</Link></Button>
         </div>
       ) : (
         <div className="pl-7">

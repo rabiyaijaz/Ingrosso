@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, RadioGroup, Text, clx, toast } from "@medusajs/ui"
+import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, RadioGroup, Text, Textarea, clx, toast } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { placeOrder } from "@/app/actions"
 import type { Money } from "@/lib/catalog"
@@ -14,7 +14,7 @@ import { Figure } from "./Figure"
 import { OrderSummary, type SummaryLine } from "./OrderSummary"
 import { CardIcon, ChoiceCard } from "./ChoiceCard"
 import { WithIcon } from "@/components/ui/WithIcon"
-import { Bolt, BuildingStorefront, CreditCard, DocumentText, MapPin, Paypal, Receipt, TruckFast } from "@medusajs/icons"
+import { Bolt, BuildingStorefront, ChatBubble, CreditCard, DocumentText, MapPin, PencilSquare, Paypal, Receipt, TruckFast } from "@medusajs/icons"
 
 const CARRIER_ICON: Record<CarrierId, React.ReactNode> = { postnl: <TruckFast />, ups: <Bolt />, collect: <BuildingStorefront /> }
 const PAYMENT_ICON: Record<PaymentId, React.ReactNode> = { card: <CreditCard />, paypal: <Paypal />, invoice: <Receipt /> }
@@ -44,6 +44,7 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
   const [step, setStep] = useState<StepId>("delivery")
   const [reached, setReached] = useState(0)
   const [reference, setReference] = useState("")
+  const [note, setNote] = useState("")
   const [sameInvoice, setSameInvoice] = useState(true)
   const [carrier, setCarrier] = useState<CarrierId>("postnl")
   const [payment, setPayment] = useState<PaymentId>("invoice")
@@ -64,7 +65,7 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
   const place = () => {
     if (!LAB && !terms) return setTermsError(true)
     start(async () => {
-      const res = await placeOrder({ carrier, payment, reference })
+      const res = await placeOrder({ carrier, payment, reference, note })
       if (res.ok) router.push(routes.order(res.ref))
       else toast.error("Order not placed", { description: res.error })
     })
@@ -102,8 +103,8 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
           </div>
         </div>
 
-        <ProgressTabs.Content value="delivery" className="flex flex-col gap-5">
-          <StepHead title="Where should it go?" body="Your saved delivery address. Add more addresses from your account." />
+        <ProgressTabs.Content value="delivery" className="ig-panel-in flex flex-col gap-5">
+          <StepHead title="Where should it go?" body="Your registered delivery address. To change it, contact the trade desk." />
           <div className="ig-card flex items-start gap-4 p-5">
             <CardIcon><MapPin /></CardIcon>
             <div className="flex flex-col gap-1">
@@ -122,9 +123,14 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
             </WithIcon>
             <Hint id="reference-hint">Printed on the invoice and the packing slip. Optional.</Hint>
           </div>
+          <div className="flex max-w-[520px] flex-col gap-1.5">
+            <Label htmlFor="note" size="small" weight="plus" className="flex items-center gap-1.5"><ChatBubble className="text-ui-fg-muted" /> Note for the warehouse</Label>
+            <Textarea id="note" rows={2} maxLength={200} value={note} onChange={(e) => setNote(e.target.value)} placeholder="For example: deliver to the back entrance" aria-describedby="note-hint" />
+            <Hint id="note-hint">Optional. The packers read it before your parcel ships.</Hint>
+          </div>
         </ProgressTabs.Content>
 
-        <ProgressTabs.Content value="shipping" className="flex flex-col gap-5">
+        <ProgressTabs.Content value="shipping" className="ig-panel-in flex flex-col gap-5">
           <StepHead title="How should it ship?" body="Free PostNL delivery on orders over €500 before VAT." />
           <RadioGroup value={carrier} onValueChange={(v) => setCarrier(v as CarrierId)} className="flex flex-col gap-2">
             {CARRIERS.map((c) => (
@@ -133,7 +139,7 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
           </RadioGroup>
         </ProgressTabs.Content>
 
-        <ProgressTabs.Content value="payment" className="flex flex-col gap-5">
+        <ProgressTabs.Content value="payment" className="ig-panel-in flex flex-col gap-5">
           <StepHead title="How will you pay?" body="Card details are entered on the payment provider's page, never on ours." />
           <RadioGroup value={payment} onValueChange={(v) => setPayment(v as PaymentId)} className="flex flex-col gap-2">
             {PAYMENTS.map((p) => (
@@ -142,25 +148,28 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
           </RadioGroup>
         </ProgressTabs.Content>
 
-        <ProgressTabs.Content value="review" className="flex flex-col gap-5">
+        <ProgressTabs.Content value="review" className="ig-panel-in flex flex-col gap-5">
           <StepHead title="Check and place the order" body="Stock is reserved for you the moment the order is placed." />
-          <dl className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {([
-              ["Deliver to", `${company}, ${address.join(", ")}`, <MapPin key="i" />],
-              ["Invoice to", sameInvoice ? "Same as delivery" : "Your invoice address on file", <Receipt key="i" />],
-              ["Shipping", CARRIERS.find((c) => c.id === carrier)!.name, CARRIER_ICON[carrier]],
-              ["Payment", PAYMENTS.find((p) => p.id === payment)!.name, PAYMENT_ICON[payment]],
-              ["Your reference", reference || "None", <DocumentText key="i" />],
-            ] as [string, string, React.ReactNode][]).map(([k, v, icon]) => (
-              <div key={k} className="ig-card flex items-start gap-3 p-4">
+              ["Deliver to", `${company}, ${address.join(", ")}`, <MapPin key="i" />, "delivery"],
+              ["Invoice to", sameInvoice ? "Same as delivery" : "Your invoice address on file", <Receipt key="i" />, "delivery"],
+              ["Shipping", CARRIERS.find((c) => c.id === carrier)!.name, CARRIER_ICON[carrier], "shipping"],
+              ["Payment", PAYMENTS.find((p) => p.id === payment)!.name, PAYMENT_ICON[payment], "payment"],
+              ["Your reference", reference || "None", <DocumentText key="i" />, "delivery"],
+              ...(note ? [["Note for the warehouse", note, <ChatBubble key="i" />, "delivery"]] : []),
+            ] as [string, string, React.ReactNode, StepId][]).map(([k, v, icon, to]) => (
+              // Each card opens its step to change it
+              <button key={k} type="button" onClick={() => setStep(to)} className="ig-card ig-card-hover group flex items-start gap-3 p-4 text-left outline-none focus-visible:shadow-borders-focus">
                 <CardIcon size="sm">{icon}</CardIcon>
-                <div className="flex min-w-0 flex-col gap-0.5 txt-compact-small">
-                  <dt className="text-ui-fg-subtle">{k}</dt>
-                  <dd className="txt-compact-small-plus text-ui-fg-base">{v}</dd>
+                <div className="flex min-w-0 flex-1 flex-col gap-0.5 txt-compact-small">
+                  <span className="text-ui-fg-subtle">{k}</span>
+                  <span className="break-words txt-compact-small-plus text-ui-fg-base">{v}</span>
                 </div>
-              </div>
+                <span className="flex items-center gap-1 txt-compact-xsmall-plus text-ui-fg-interactive opacity-70 group-hover:opacity-100"><PencilSquare /> Edit</span>
+              </button>
             ))}
-          </dl>
+          </div>
           <div className="flex items-start gap-3">
             <Checkbox id="terms" checked={terms} onCheckedChange={(v) => { setTerms(v === true); setTermsError(false) }} aria-describedby={termsError ? "terms-hint" : undefined} />
             <div className="flex flex-col gap-1">

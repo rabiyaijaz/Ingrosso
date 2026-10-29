@@ -11,6 +11,7 @@ import { deviceTree, searchStarters } from "@/lib/public"
 import { routes } from "@/lib/routes"
 import { getIconStyle } from "@/lib/icon-style"
 import { getViewer } from "@/lib/viewer"
+import { CartButton } from "./CartButton"
 import { CategoryNav } from "./CategoryNav"
 import { DeviceMenu } from "./DeviceMenu"
 import { SearchBox } from "./SearchBox"
@@ -19,6 +20,7 @@ import { StripTicker } from "./StripTicker"
 export async function SiteHeader() {
   const viewer = await getViewer()
   const cart = await readCart()
+  const units = cart.reduce((n, l) => n + l.qty, 0)
   const iconStyle = await getIconStyle()
   const starters = searchStarters()
   const categories = await getCategories()
@@ -41,7 +43,7 @@ export async function SiteHeader() {
         <SearchBox starters={starters} className="hidden flex-1 md:block md:max-w-[640px]" />
         <div className="ml-auto flex items-center gap-2">
           {signedIn ? (
-            <Button asChild variant="transparent" size="large" className="rounded-full">
+            <Button asChild variant="transparent" size="large">
               <Link href={routes.account()}>
                 <User />
                 <span className="hidden lg:inline">Account</span>
@@ -49,10 +51,10 @@ export async function SiteHeader() {
             </Button>
           ) : (
             <>
-              <Button asChild variant="transparent" size="large" className="hidden rounded-full sm:inline-flex">
+              <Button asChild variant="transparent" size="large" className="hidden sm:inline-flex">
                 <Link href={routes.signIn()}>Sign in</Link>
               </Button>
-              <Button asChild size="large" className="rounded-full">
+              <Button asChild size="large">
                 <Link href={routes.apply()}>
                   <span className="sm:hidden">Apply</span>
                   <span className="hidden sm:inline">Apply for trade</span>
@@ -60,22 +62,7 @@ export async function SiteHeader() {
               </Button>
             </>
           )}
-          {canOrder && (
-            <Button asChild variant="secondary" size="large" className={clx("ig-cart rounded-full", cart.length > 0 && "is-filled")}>
-              <Link href={routes.cart()} aria-label={`Order, ${cart.length} lines`}>
-                {/* The count is a badge on the cart; key replays its pop when the count changes */}
-                <span className="relative inline-flex">
-                  <ShoppingCart />
-                  {cart.length > 0 && (
-                    <span key={cart.length} aria-hidden className="ig-cart__badge">
-                      <Figure>{cart.length}</Figure>
-                    </span>
-                  )}
-                </span>
-                <span className="hidden md:inline">Order</span>
-              </Link>
-            </Button>
-          )}
+          {canOrder && <CartButton lines={cart.length} units={units} />}
         </div>
       </div>
 

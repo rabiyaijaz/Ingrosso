@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useId, useRef, useState } from "react"
+import { chipClass } from "@/components/ui/Chip"
 import { useRouter } from "next/navigation"
 import { Kbd, clx } from "@medusajs/ui"
 import { ArrowUpRightMini, Clock, MagnifyingGlass, XMarkMini } from "@medusajs/icons"
@@ -277,7 +278,7 @@ function Chip({ children, icon, onPick }: { children: React.ReactNode; icon: Rea
         e.preventDefault()
         onPick()
       }}
-      className="flex h-8 items-center gap-1.5 rounded-full px-3 txt-compact-small text-ui-fg-base shadow-borders-base transition-colors hover:bg-ui-bg-base-hover [&_svg]:text-ui-fg-muted"
+      className={clx(chipClass(), "[&_svg]:text-ui-fg-muted")}
     >
       {icon}
       {children}

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Hint, Input, Label } from "@medusajs/ui"
+import { Hint, Input, Label, toast } from "@medusajs/ui"
 import { Envelope, Key } from "@medusajs/icons"
 import { Button } from "@/components/ui/Button"
 import { WithIcon } from "@/components/ui/WithIcon"
@@ -13,7 +13,8 @@ import { routes } from "@/lib/routes"
 
 // Prototype sign-in: signs in as the sample approved account. Real
 // authentication replaces the action when the backend is connected.
-export function SignInForm() {
+// `next` returns the buyer to the page that asked them to sign in.
+export function SignInForm({ next }: { next?: string }) {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -28,7 +29,9 @@ export function SignInForm() {
         if (!LAB && (!email || !password)) return setError("Enter your email and password")
         start(async () => {
           await setViewerState("approved")
-          router.push(routes.account())
+          toast.success("Signed in", { description: "Your prices and stock are showing." })
+          // Only paths on this site, never another origin
+          router.push(next && next.startsWith("/") && !next.startsWith("//") ? next : routes.account())
         })
       }}
     >

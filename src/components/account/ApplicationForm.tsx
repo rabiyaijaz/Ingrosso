@@ -130,7 +130,7 @@ export function ApplicationForm() {
     start(async () => {
       await submitApplication()
       try { localStorage.removeItem(KEY) } catch {}
-      router.push(routes.account())
+      router.push(`${routes.account()}?applied=1`)
     })
   }
 
@@ -181,13 +181,13 @@ export function ApplicationForm() {
       </div>
 
       {/* Fields sit two to a row (three for the address), so none stretches wider than what goes in it */}
-      <ProgressTabs.Content value="login" className="grid gap-5 sm:grid-cols-2">
+      <ProgressTabs.Content value="login" className="ig-panel-in grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-2"><StepHead title="Create your sign-in" body="Use the email address your shop already uses for orders and invoices." /></div>
         {field("email", "Work email", { type: "email", autoComplete: "email", placeholder: "orders@yourshop.nl" })}
         {field("password", "Password", { type: "password", autoComplete: "new-password" }, "At least 10 characters")}
       </ProgressTabs.Content>
 
-      <ProgressTabs.Content value="company" className="grid gap-5 sm:grid-cols-2">
+      <ProgressTabs.Content value="company" className="ig-panel-in grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-2"><StepHead title="Tell us about the business" body="We approve repair shops and resellers. Your tax number decides how VAT is applied to each invoice." /></div>
         {field("company", "Registered company name", { autoComplete: "organization" })}
         <div className="flex flex-col gap-1.5">
@@ -214,7 +214,7 @@ export function ApplicationForm() {
         {field("phone", "Phone", { type: "tel", autoComplete: "tel" }, "Our trade desk calls this number if anything needs checking")}
       </ProgressTabs.Content>
 
-      <ProgressTabs.Content value="address" className="grid gap-5 sm:grid-cols-[1.6fr_1.2fr_0.8fr]">
+      <ProgressTabs.Content value="address" className="ig-panel-in grid gap-5 sm:grid-cols-[1.6fr_1.2fr_0.8fr]">
         <div className="sm:col-span-3"><StepHead title="Where should orders go?" body="This becomes your first delivery and invoice address. You can add more after approval." /></div>
         {field("street", "Street and number", { autoComplete: "street-address" })}
         {field("city", "City", { autoComplete: "address-level2" })}
@@ -222,7 +222,7 @@ export function ApplicationForm() {
         <Text size="small" className="text-ui-fg-subtle sm:col-span-3">Country: {country.name}</Text>
       </ProgressTabs.Content>
 
-      <ProgressTabs.Content value="review" className="flex flex-col gap-5">
+      <ProgressTabs.Content value="review" className="ig-panel-in flex flex-col gap-5">
         <StepHead title="Check and send" body="A person on our trade desk reviews every application. You can sign in and see its status at any time." />
         <dl className="ig-inset grid gap-x-6 gap-y-3 p-5 txt-compact-small sm:grid-cols-[180px_1fr]">
           {[

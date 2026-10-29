@@ -1,7 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, MagnifyingGlass } from "@medusajs/icons"
+import { ArrowRight } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
+import { clx } from "@medusajs/ui"
+import { chipClass } from "@/components/ui/Chip"
+import { SearchField } from "@/components/ui/SearchField"
 import { Breadcrumbs, PageContainer, PageHeading } from "@/components/layout/Page"
 import { GlassTile } from "@/components/marketing/GlassTile"
 import { BRANDS, PRODUCTS } from "@/lib/catalog"
@@ -23,14 +26,7 @@ export default async function PartsPage() {
       <Breadcrumbs items={[{ label: "Parts" }]} />
       <PageHeading title="All parts" description={`${PRODUCTS.length} parts in ${categories.length} categories, every one in its real grade.`}>
         <form action={routes.search("")} method="get" role="search" className="relative w-full md:w-[340px]">
-          <MagnifyingGlass aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ui-fg-muted" />
-          <input
-            type="search"
-            name="q"
-            aria-label="Search all parts"
-            placeholder="Model, code or SKU"
-            className="h-10 w-full rounded-full bg-ui-bg-field pl-9 pr-3 txt-compact-small text-ui-fg-base shadow-borders-base outline-none transition-shadow placeholder:text-ui-fg-muted hover:bg-ui-bg-field-hover focus:shadow-borders-interactive-with-active"
-          />
+          <SearchField size="md" name="q" aria-label="Search all parts" placeholder="Model, code or SKU" />
         </form>
       </PageHeading>
 
@@ -45,7 +41,7 @@ export default async function PartsPage() {
         <ul className="flex flex-wrap gap-2">
           {BRANDS.map((b) => (
             <li key={b.slug}>
-              <Link href={routes.brand(b.slug)} className="flex h-10 items-center gap-2 rounded-full px-4 txt-compact-small-plus text-ui-fg-base shadow-borders-base transition-colors hover:bg-ui-bg-base-hover">
+              <Link href={routes.brand(b.slug)} className={clx(chipClass({ size: "lg" }), "gap-2 txt-compact-small-plus")}>
                 <BrandMark brand={b.slug} variant="plain" />
                 {b.name}
                 <span className="txt-compact-xsmall text-ui-fg-muted">{b.series.reduce((n, s) => n + s.models.length, 0)} models</span>

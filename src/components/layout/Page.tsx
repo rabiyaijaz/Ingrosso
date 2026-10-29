@@ -30,7 +30,7 @@ export function PageHeading({ title, description, icon, children }: { title: str
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div className="flex flex-col gap-2">
-        <Heading level="h1" className="flex items-center gap-3 text-[32px] leading-[38px] font-medium tracking-[-0.02em]">
+        <Heading level="h1" className="ig-page-title flex items-center gap-3">
           {icon}
           {title}
         </Heading>

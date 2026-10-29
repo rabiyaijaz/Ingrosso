@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { clx, toast } from "@medusajs/ui"
+import { chipClass } from "@/components/ui/Chip"
 import { ArchiveBox, CheckMini, Hashtag, Tag } from "@medusajs/icons"
 import { addProduct } from "@/app/admin-actions"
 import { PartIcon } from "@/components/catalog/PartIcon"
@@ -136,12 +137,12 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
             <span className="txt-compact-small text-ui-fg-subtle">{models.length} selected</span>
           </div>
           {errors.models && <p className="txt-compact-small text-ui-fg-error">{errors.models}</p>}
-          <div role="tablist" aria-label="Brand" className="flex flex-wrap gap-1">
+          <div role="tablist" aria-label="Brand" data-fit className="ig-steps ig-no-scrollbar overflow-x-auto">
             {tree.map((b) => {
               const n = b.series.flatMap((s) => s.models).filter((m) => models.includes(m.slug)).length
               return (
-                <button key={b.slug} type="button" role="tab" aria-selected={b.slug === brand} onClick={() => setBrand(b.slug)}
-                  className={clx("flex h-8 items-center gap-1.5 rounded-full px-3 txt-compact-small-plus", b.slug === brand ? "bg-ui-bg-highlight text-ui-fg-interactive shadow-borders-interactive-with-active" : "text-ui-fg-subtle shadow-borders-base hover:text-ui-fg-base")}>
+                <button key={b.slug} type="button" role="tab" aria-selected={b.slug === brand} data-state={b.slug === brand ? "active" : "inactive"} onClick={() => setBrand(b.slug)}
+                  className="ig-steps__tab flex items-center gap-1.5 txt-compact-small-plus">
                   {b.name}
                   {n > 0 && <span className="ig-figure txt-compact-xsmall">{n}</span>}
                 </button>
@@ -164,8 +165,7 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
                     {s.models.map((m) => {
                       const on = models.includes(m.slug)
                       return (
-                        <button key={m.slug} type="button" aria-pressed={on} onClick={() => toggle(m.slug)}
-                          className={clx("flex h-8 items-center gap-1.5 rounded-full px-3 txt-compact-small outline-none focus-visible:shadow-borders-focus", on ? "bg-ig-blue text-ig-on-accent" : "shadow-borders-base hover:bg-ui-bg-base-hover")}>
+                        <button key={m.slug} type="button" aria-pressed={on} onClick={() => toggle(m.slug)} className={chipClass({ selected: on })}>
                           {on && <CheckMini />}
                           {m.name}
                         </button>

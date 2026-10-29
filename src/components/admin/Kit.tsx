@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Heading, clx } from "@medusajs/ui"
 import { ChevronRight } from "@medusajs/icons"
+import { Breadcrumbs } from "@/components/layout/Page"
 
 // Building blocks shared by every admin screen, so the trade desk changes in
 // one place: page header, panel, stat tile, tabs, empty state.
@@ -21,17 +22,9 @@ export function AdminHeader({
   return (
     <header className="mb-6 flex flex-col gap-4">
       <div className="flex min-w-0 flex-col gap-1.5">
-        {crumbs && (
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1 txt-compact-small text-ui-fg-subtle">
-            {crumbs.map((c) => (
-              <span key={c.href} className="flex items-center gap-1">
-                <Link href={c.href} className="hover:text-ui-fg-base">{c.label}</Link>
-                <ChevronRight className="text-ui-fg-muted" />
-              </span>
-            ))}
-          </nav>
-        )}
-        <Heading level="h1" className="text-[28px] leading-[34px] font-medium tracking-[-0.02em]">{title}</Heading>
+        {/* The store's breadcrumb, ending on this page */}
+        {crumbs && <Breadcrumbs items={[...crumbs, ...(typeof title === "string" ? [{ label: title }] : [])]} />}
+        <Heading level="h1" data-size="compact" className="ig-page-title">{title}</Heading>
         {/* A div, not Text's <p>: descriptions can hold badges, which render divs */}
         {description && <div className="max-w-[70ch] txt-medium text-ui-fg-subtle">{description}</div>}
       </div>
@@ -74,27 +67,18 @@ export function PanelLink({ href, children }: { href: string; children: React.Re
   )
 }
 
-// Server-rendered tabs that are links (?status=), with a count on each.
+// Server-rendered tabs that are links (?status=), with a count on each. The
+// same segmented control as the checkout and application steps (.ig-steps),
+// sized to their labels.
 export function Tabs({ tabs, active }: { tabs: { id: string; label: string; href: string; count?: number }[]; active: string }) {
   return (
-    <nav aria-label="Views" className="ig-no-scrollbar mb-4 flex gap-1 overflow-x-auto rounded-full bg-ui-bg-component p-1 shadow-borders-base sm:w-fit">
-      {tabs.map((t) => {
-        const on = t.id === active
-        return (
-          <Link
-            key={t.id}
-            href={t.href}
-            aria-current={on ? "page" : undefined}
-            className={clx(
-              "flex h-8 items-center gap-2 whitespace-nowrap rounded-full px-3.5 txt-compact-small-plus outline-none focus-visible:shadow-borders-focus",
-              on ? "bg-ui-bg-base text-ui-fg-base shadow-elevation-card-rest" : "text-ui-fg-subtle hover:text-ui-fg-base"
-            )}
-          >
-            {t.label}
-            {t.count !== undefined && <span className="ig-figure txt-compact-xsmall text-ui-fg-muted">{t.count}</span>}
-          </Link>
-        )
-      })}
+    <nav aria-label="Views" data-fit className="ig-steps ig-no-scrollbar mb-4 overflow-x-auto">
+      {tabs.map((t) => (
+        <Link key={t.id} href={t.href} aria-current={t.id === active ? "page" : undefined} className="ig-steps__tab txt-compact-small-plus">
+          {t.label}
+          {t.count !== undefined && <span className="ig-figure txt-compact-xsmall text-ui-fg-muted">{t.count}</span>}
+        </Link>
+      ))}
     </nav>
   )
 }

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { EmptyState } from "@/components/ui/EmptyState"
 import { Heading, Table, clx } from "@medusajs/ui"
 import { AddToOrder } from "@/components/commerce/AddToOrder"
 import { Figure } from "@/components/commerce/Figure"
@@ -22,10 +23,7 @@ export function ProductTable({ products, viewer, groupByCategory = false, classN
 
   if (!products.length) {
     return (
-      <div className="ig-inset px-6 py-12 text-center">
-        <p className="txt-medium-plus">No parts match these filters</p>
-        <p className="mt-1 txt-small text-ui-fg-subtle">Clear a grade or category to see more.</p>
-      </div>
+      <EmptyState title="No parts match these filters">Clear a grade or category to see more.</EmptyState>
     )
   }
 
@@ -71,6 +69,19 @@ export function ProductTable({ products, viewer, groupByCategory = false, classN
                               {p.grade && <GradeBadge grade={p.grade} className="md:hidden" />}
                               <StockTag view={view.stock} className="lg:hidden" />
                             </div>
+                            {/* Below the wide layout the Order column is hidden: order from the row itself */}
+                            {canOrder && view.stock.kind !== "out" && (
+                              <div className="mt-2 xl:hidden [&>div]:justify-start">
+                                <AddToOrder
+                                  variant="row"
+                                  slug={p.slug}
+                                  name={p.name}
+                                  orderStep={view.orderStep}
+                                  breaks={view.price.kind === "priced" ? view.price.breaks : null}
+                                  maxAvailable={view.stock.kind === "count" ? view.stock.available : null}
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       </Table.Cell>

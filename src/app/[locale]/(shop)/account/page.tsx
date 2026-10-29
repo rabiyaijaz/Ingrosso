@@ -5,7 +5,14 @@ import { MaskToggle } from "@/components/account/MaskToggle"
 import { SignOutButton } from "@/components/account/SignOutButton"
 import { CardIcon } from "@/components/commerce/ChoiceCard"
 import { Figure } from "@/components/commerce/Figure"
-import { MapPin } from "@medusajs/icons"
+import { BellAlert, MapPin } from "@medusajs/icons"
+import { NotifyMe } from "@/components/commerce/NotifyMe"
+import { ReorderButton } from "@/components/commerce/ReorderButton"
+import { CheckDraw } from "@/components/ui/CheckDraw"
+import { EmptyState } from "@/components/ui/EmptyState"
+import { ORDER_STATUS, getOrderChanges } from "@/lib/admin/data"
+import { productBySlug } from "@/lib/catalog"
+import { readWatchList } from "@/lib/watch"
 import { PageContainer, PageHeading } from "@/components/layout/Page"
 import { formatMoney } from "@/lib/money"
 import { readOrders } from "@/lib/orders"
@@ -22,18 +29,28 @@ const SAMPLE_ORDERS = [
 ]
 
 const STATUS_COLOR = { Received: "orange", Shipped: "green", Packed: "blue" } as const
+const STATUS_LABEL = { new: "Received", picking: "Picking", packed: "Packed", shipped: "Shipped", delivered: "Delivered", cancelled: "Cancelled" } as const
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+  const sp = await searchParams
   const viewer = await getViewer()
-  const placed = (await readOrders()).map((o) => ({
-    ref: o.ref,
-    href: routes.order(o.ref),
-    date: new Date(o.placedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Amsterdam" }),
-    lines: o.lines.length,
-    total: formatMoney(o.total),
-    status: "Received" as const,
-  }))
-  const orders = [...placed, ...SAMPLE_ORDERS.map((o) => ({ ...o, href: null as string | null }))]
+  const [changes, watching] = await Promise.all([getOrderChanges(), readWatchList()])
+  // Orders placed here show where the trade desk has them
+  const placed = (await readOrders()).map((o) => {
+    const s = changes[o.ref]?.status ?? "new"
+    return {
+      ref: o.ref,
+      href: routes.order(o.ref) as string | null,
+      date: new Date(o.placedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Amsterdam" }),
+      lines: o.lines.length,
+      total: formatMoney(o.total),
+      label: STATUS_LABEL[s] as string,
+      color: ORDER_STATUS[s].color,
+      again: true,
+    }
+  })
+  const orders = [...placed, ...SAMPLE_ORDERS.map((o) => ({ ...o, href: null as string | null, label: o.status as string, color: STATUS_COLOR[o.status], again: false }))]
+  const watched = watching.map((s) => productBySlug(s)).filter((p) => p !== undefined)
 
   if (viewer.state === "visitor") {
     return (
@@ -54,6 +71,16 @@ export default async function AccountPage() {
         <PageHeading title={viewer.company ?? "Your account"}>
           <SignOutButton />
         </PageHeading>
+        {/* The moment right after applying: say it arrived */}
+        {pending && sp.applied && (
+          <div className="ig-card ig-row-in flex items-center gap-3 p-4 text-ui-tag-green-icon">
+            <CheckDraw className="size-6" />
+            <span className="flex flex-col">
+              <span className="txt-compact-medium-plus text-ui-fg-base">Application sent</span>
+              <span className="txt-compact-small text-ui-fg-subtle">We reply by email, usually within one working day.</span>
+            </span>
+          </div>
+        )}
         <div className="ig-card flex flex-col gap-4 p-6">
           <StatusBadge color={pending ? "orange" : "red"} className="w-fit">{pending ? "Application under review" : "Account suspended"}</StatusBadge>
           <Heading level="h2" className="txt-xlarge-plus">
@@ -96,6 +123,7 @@ export default async function AccountPage() {
                   <Table.HeaderCell className="hidden sm:table-cell text-right">Lines</Table.HeaderCell>
                   <Table.HeaderCell className="text-right">Total</Table.HeaderCell>
                   <Table.HeaderCell>Status</Table.HeaderCell>
+                  <Table.HeaderCell><span className="sr-only">Buy again</span></Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -111,7 +139,8 @@ export default async function AccountPage() {
                     <Table.Cell className="hidden sm:table-cell">{o.date}</Table.Cell>
                     <Table.Cell className="hidden sm:table-cell text-right"><Figure>{o.lines}</Figure></Table.Cell>
                     <Table.Cell className="text-right"><Figure>{viewer.state === "masked" ? "—" : o.total}</Figure></Table.Cell>
-                    <Table.Cell><StatusBadge color={STATUS_COLOR[o.status]}>{o.status}</StatusBadge></Table.Cell>
+                    <Table.Cell><StatusBadge color={o.color}>{o.label}</StatusBadge></Table.Cell>
+                    <Table.Cell className="text-right">{o.again && <ReorderButton orderRef={o.ref} size="sm" />}</Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
@@ -122,6 +151,22 @@ export default async function AccountPage() {
         <aside className="flex flex-col gap-6">
           <div className="ig-card p-5">
             <MaskToggle masked={viewer.state === "masked"} />
+          </div>
+          {/* Parts the buyer asked to hear about */}
+          <div className="ig-card flex flex-col gap-3 p-5">
+            <Heading level="h2" className="flex items-center gap-2 txt-compact-medium-plus"><BellAlert className="text-ui-fg-interactive" /> Back-in-stock alerts</Heading>
+            {watched.length === 0 ? (
+              <EmptyState tone="plain" title="No alerts" className="py-4">On an out-of-stock part, choose Email me when it&apos;s back.</EmptyState>
+            ) : (
+              <ul className="flex flex-col gap-3">
+                {watched.map((p) => (
+                  <li key={p.slug} className="flex items-center justify-between gap-3">
+                    <Link href={routes.product(p.slug)} className="min-w-0 truncate txt-compact-small-plus hover:text-ui-fg-interactive">{p.name}</Link>
+                    <NotifyMe slug={p.slug} name={p.name} watching size="sm" />
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div className="ig-card flex items-start gap-4 p-5">
             <CardIcon><MapPin /></CardIcon>

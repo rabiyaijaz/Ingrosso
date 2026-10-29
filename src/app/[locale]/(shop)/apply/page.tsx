@@ -1,4 +1,5 @@
 import { Clock, Receipt, ShieldCheck, Tag, TruckFast, User } from "@medusajs/icons"
+import { Chip } from "@/components/ui/Chip"
 import { ApplicationForm } from "@/components/account/ApplicationForm"
 import { CardIcon } from "@/components/commerce/ChoiceCard"
 import { PageContainer, PageHeading } from "@/components/layout/Page"
@@ -44,8 +45,8 @@ export default function ApplyPage() {
               ))}
             </ul>
             <div className="flex flex-wrap gap-2 border-t border-ui-border-base pt-4 txt-compact-small text-ui-fg-subtle">
-              <span className="flex items-center gap-1.5 rounded-full bg-ui-bg-subtle px-2.5 py-1"><Clock className="text-ui-fg-muted" /> About 5 minutes</span>
-              <span className="flex items-center gap-1.5 rounded-full bg-ui-bg-subtle px-2.5 py-1"><User className="text-ui-fg-muted" /> Checked by a person</span>
+              <Chip static><Clock className="text-ui-fg-muted" /> About 5 minutes</Chip>
+              <Chip static><User className="text-ui-fg-muted" /> Checked by a person</Chip>
             </div>
           </div>
         </div>

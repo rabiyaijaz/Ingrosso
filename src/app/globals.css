@@ -250,6 +250,28 @@ body {
 .ig-steps .ig-steps__tab:hover:not(:disabled) { background: color-mix(in srgb, var(--bg-base) 70%, transparent); color: var(--fg-base); }
 .ig-steps .ig-steps__tab[data-state="active"] { background: var(--bg-base); color: var(--fg-base); box-shadow: 0 1px 2px rgba(15, 22, 32, 0.08), 0 0 0 1px color-mix(in srgb, var(--fg-base) 6%, transparent); }
 .ig-steps .ig-steps__tab:disabled { background: transparent; cursor: default; opacity: 0.55; }
+/* The same control as link tabs (trade desk views): current page = the white pill */
+.ig-steps a.ig-steps__tab { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--fg-subtle); outline: none; }
+.ig-steps a.ig-steps__tab[aria-current="page"] { background: var(--bg-base); color: var(--fg-base); box-shadow: 0 1px 2px rgba(15, 22, 32, 0.08), 0 0 0 1px color-mix(in srgb, var(--fg-base) 6%, transparent); }
+.ig-steps a.ig-steps__tab:focus-visible { box-shadow: 0 0 0 2px var(--ig-blue); }
+.ig-steps[data-fit] { grid-auto-columns: auto; }
+.ig-steps[data-fit] .ig-steps__tab { min-width: 0; }
+
+/*
+  Icon tabs: the big choice between a few options that each have an icon and
+  a one-line note (grade families on listings and on the landing page). One
+  soft track; each option a rounded card with its glass icon; the chosen one
+  a white card with an accent rim and glow.
+*/
+.ig-icontabs { display: grid; gap: 6px; padding: 6px; border-radius: 22px; background: color-mix(in srgb, var(--fg-base) 5%, transparent); }
+.ig-icontabs__tab { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 10px 12px; border-radius: 16px; text-align: left; outline: none; transition: background-color 180ms ease, box-shadow 180ms ease; }
+.ig-icontabs__tab:hover { background: color-mix(in srgb, var(--bg-base) 70%, transparent); }
+.ig-icontabs__tab:focus-visible { box-shadow: 0 0 0 2px var(--ig-blue); }
+.ig-icontabs__tab[aria-current="page"], .ig-icontabs__tab[aria-selected="true"] { background: var(--bg-base); box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--ig-blue) 45%, transparent), 0 8px 20px -12px var(--ig-blue); }
+.ig-icontabs__tab[aria-disabled="true"] { pointer-events: none; opacity: 0.45; }
+.ig-icontabs__label { color: var(--fg-subtle); }
+.ig-icontabs__tab:hover .ig-icontabs__label, .ig-icontabs__tab[aria-current="page"] .ig-icontabs__label, .ig-icontabs__tab[aria-selected="true"] .ig-icontabs__label { color: var(--fg-base); }
+.ig-icontabs__note { color: var(--fg-muted); }
 
 /*
   Header order button: the line count as an accent badge on the cart that
@@ -1239,3 +1261,15 @@ body {
 .ig-card { @apply rounded-2xl bg-ui-bg-base shadow-elevation-card-rest; }
 .ig-card-hover { @apply transition-shadow hover:shadow-elevation-card-hover; }
 .ig-inset { @apply rounded-xl bg-ui-bg-subtle; }
+/* Page titles: one style for every page's h1 (store and trade desk). Long
+   titles (a product name) and working screens (the trade desk) use the
+   compact size. */
+.ig-page-title { font-size: 32px; line-height: 38px; font-weight: 500; letter-spacing: -0.02em; }
+.ig-page-title[data-size="compact"] { font-size: 28px; line-height: 34px; }
+/* Printing an order or invoice: just the document */
+@media print {
+  header, footer, nav[aria-label="Categories"], .ig-no-print, [data-lab-bar], [aria-label="Design lab"] { display: none !important; }
+  body { background: #fff !important; }
+  .ig-card, .ig-inset { box-shadow: none !important; border: 1px solid #d0d5dd; background: #fff !important; }
+  .ig-progress-fill { animation: none !important; }
+}

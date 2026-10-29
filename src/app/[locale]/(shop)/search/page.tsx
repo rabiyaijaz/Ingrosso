@@ -22,7 +22,11 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         products={products}
         viewer={viewer}
         params={{ grade: sp.grade, cat: sp.cat, brand: sp.brand, model: sp.model, find: sp.find, fam: sp.fam, stock: sp.stock, sort: sp.sort }}
-        hrefFor={(fp) => `${routes.search(q)}${Object.entries(fp).filter(([, v]) => v).map(([k, v]) => `&${k}=${encodeURIComponent(v!)}`).join("")}`}
+        hrefFor={(fp) => {
+          // One query string, whether or not there is a search term (an empty q has no "?")
+          const qs = new URLSearchParams(Object.entries({ q, ...fp }).filter((e): e is [string, string] => !!e[1]))
+          return `${routes.search("")}${qs.size ? `?${qs}` : ""}`
+        }}
         facets={["cat", "brand"]}
       />
     </PageContainer>

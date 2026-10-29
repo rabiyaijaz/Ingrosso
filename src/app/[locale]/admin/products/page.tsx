@@ -91,10 +91,10 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                         <div className="flex items-center gap-3">
                           <PartIcon category={p.category} size="md" />
                           <div className="min-w-0">
-                            <p className="flex items-center gap-2 txt-compact-small-plus">
+                            <div className="flex items-center gap-2 txt-compact-small-plus">
                               {p.added ? p.name : <Link href={routes.product(p.slug)} className="hover:underline">{p.name}</Link>}
                               {p.added && <StatusBadge color="blue">Added</StatusBadge>}
-                            </p>
+                            </div>
                             <Figure className="text-ui-fg-subtle">{p.sku}</Figure>
                           </div>
                         </div>

@@ -20,6 +20,7 @@ export type PlacedOrder = {
   carrier: CarrierId
   payment: PaymentId
   reference: string
+  note?: string // for the warehouse
 }
 
 export async function readOrders(): Promise<PlacedOrder[]> {

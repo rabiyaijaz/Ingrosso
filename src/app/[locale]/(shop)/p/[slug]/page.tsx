@@ -1,6 +1,7 @@
 import Link from "next/link"
+import { chipClass } from "@/components/ui/Chip"
 import { notFound } from "next/navigation"
-import { Heading, Table, Text } from "@medusajs/ui"
+import { Heading, Table, Text, clx } from "@medusajs/ui"
 import { GradeBadge, GradeScale } from "@/components/catalog/Grade"
 import { GradeCompare } from "@/components/catalog/GradeCompare"
 import { PartImage } from "@/components/catalog/PartImage"
@@ -11,7 +12,10 @@ import { PriceTag } from "@/components/commerce/PriceTag"
 import { QuantityBreaks } from "@/components/commerce/QuantityBreaks"
 import { StockTag } from "@/components/commerce/StockTag"
 import { Breadcrumbs, PageContainer } from "@/components/layout/Page"
-import { PRODUCTS, categoryBySlug, findModel, gradeById, productBySlug } from "@/lib/catalog"
+import { PRODUCTS, categoryBySlug, findModel, gradeById, productBySlug, productsForModel } from "@/lib/catalog"
+import { readWatchList } from "@/lib/watch"
+import { NotifyMe } from "@/components/commerce/NotifyMe"
+import { ProductTable } from "@/components/catalog/ProductTable"
 import { commercialView } from "@/lib/commerce"
 import { routes } from "@/lib/routes"
 import { getViewer } from "@/lib/viewer"
@@ -34,6 +38,15 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
   const siblings = primary
     ? PRODUCTS.filter((p) => p.category === product.category && p.models.includes(primary.model.slug))
     : []
+  // The rest of the same repair job: other parts for this model, one per category, in stock first
+  const inStock = (p: (typeof PRODUCTS)[number]) => Number(commercialView(p, viewer).stock.kind !== "out")
+  const alsoFor = primary
+    ? [...new Set(productsForModel(primary.model.slug).map((p) => p.category))]
+        .filter((c) => c !== product.category)
+        .map((c) => productsForModel(primary.model.slug).filter((p) => p.category === c).sort((a, b) => inStock(b) - inStock(a))[0])
+        .slice(0, 5)
+    : []
+  const watching = await readWatchList()
 
   return (
     <PageContainer className="flex flex-col gap-12 pt-6">
@@ -59,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             {grade && <GradeBadge grade={grade.id} className="w-fit" />}
-            <Heading level="h1" className="text-[30px] leading-[36px] font-medium tracking-[-0.02em]">{product.name}</Heading>
+            <Heading level="h1" data-size="compact" className="ig-page-title">{product.name}</Heading>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 txt-compact-small text-ui-fg-subtle">
               <span>SKU <Figure className="text-ui-fg-base">{product.sku}</Figure></span>
               <StockTag view={view.stock} />
@@ -77,12 +90,15 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
           )}
 
           {view.price.kind === "gated" ? (
-            <GateCallout state={viewer.state} />
+            <GateCallout state={viewer.state} next={routes.product(product.slug)} />
           ) : (
             <div className="ig-card flex flex-col gap-5 p-5">
               <PriceTag view={view.price} size="lg" />
               {view.stock.kind === "out" ? (
-                <Text size="small" className="text-ui-fg-subtle">Out of stock. Compare the other grades below for one that ships today.</Text>
+                <div className="flex flex-col items-start gap-3">
+                  <Text size="small" className="text-ui-fg-subtle">Out of stock. Compare the other grades below for one that ships today, or get an email when this one is back.</Text>
+                  <NotifyMe slug={product.slug} name={product.name} watching={watching.includes(product.slug)} />
+                </div>
               ) : (
                 <AddToOrder
                   slug={product.slug}
@@ -118,7 +134,7 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
                   <li key={r.model.slug}>
                     <Link
                       href={routes.model(r.brand.slug, r.series.slug, r.model.slug)}
-                      className="inline-flex h-8 items-center gap-2 rounded-full px-3 txt-compact-small shadow-borders-base hover:bg-ui-bg-base-hover"
+                      className={clx(chipClass(), "gap-2")}
                     >
                       {r.model.name}
                       <Figure className="text-ui-fg-muted">{r.model.codes[0]}</Figure>
@@ -134,12 +150,22 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
       {siblings.length > 1 && primary && (
         <section className="flex flex-col gap-4">
           <div>
-            <Heading level="h2" className="text-[24px] leading-[30px] font-medium tracking-[-0.01em]">
+            <Heading level="h2" className="txt-xlarge-plus">
               Every grade of this {category.name.toLowerCase()}
             </Heading>
             <Text className="mt-1 text-ui-fg-subtle">The same repair on a {primary.model.name}, from genuine to third-party.</Text>
           </div>
           <GradeCompare current={product} siblings={siblings} viewer={viewer} />
+        </section>
+      )}
+
+      {alsoFor.length > 0 && primary && (
+        <section className="flex flex-col gap-4">
+          <div>
+            <Heading level="h2" className="txt-xlarge-plus">Also for the {primary.model.name}</Heading>
+            <Text className="mt-1 text-ui-fg-subtle">Other parts for the same handset, to finish the repair in one order.</Text>
+          </div>
+          <ProductTable products={alsoFor} viewer={viewer} />
         </section>
       )}
     </PageContainer>

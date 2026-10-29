@@ -34,8 +34,7 @@ export function DeviceMenu({ tree }: { tree: DeviceTree }) {
         size="large"
         aria-expanded={open}
         aria-controls="device-menu"
-        onClick={() => setOpen((o) => !o)}
-        className="rounded-full"
+        onClick={() => setOpen((o) => !o)}
       >
         <LaptopMobile />
         <span className="hidden lg:inline">Shop by device</span>

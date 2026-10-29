@@ -4,7 +4,8 @@ import { cookies } from "next/headers"
 import { revalidatePath } from "next/cache"
 import { productBySlug } from "@/lib/catalog"
 import { CART_COOKIE, readCart } from "@/lib/cart"
-import { unitPriceAt } from "@/lib/commerce"
+import { stockOf, unitPriceAt } from "@/lib/commerce"
+import { WATCH_COOKIE, readWatchList } from "@/lib/watch"
 import { LAB } from "@/lib/lab"
 import { THEME_COOKIE, isTheme, type ThemeId } from "@/lib/themes"
 import { ICON_STYLE_COOKIE, isIconStyle, type IconStyle } from "@/lib/icon-styles"
@@ -50,9 +51,47 @@ export async function signOut() {
   revalidatePath("/", "layout")
 }
 
+// Buy again: an earlier order's lines go back into the current order, on top
+// of what is there, rounded to each part's order step. Parts out of stock are
+// left out and counted, so the buyer is told.
+export async function reorder(ref: string) {
+  const viewer = await getViewer()
+  if (viewer.state !== "approved" && viewer.state !== "masked") return { ok: false as const, error: "Your account cannot order right now." }
+  const order = (await readOrders()).find((o) => o.ref === ref)
+  if (!order) return { ok: false as const, error: "That order was not found." }
+  const lines = await readCart()
+  let added = 0
+  let skipped = 0
+  for (const l of order.lines) {
+    const product = productBySlug(l.slug)
+    if (!product || stockOf(product).available === 0) { skipped++; continue }
+    const existing = lines.find((x) => x.slug === l.slug)
+    const qty = Math.ceil(((existing?.qty ?? 0) + l.qty) / product.orderStep) * product.orderStep
+    if (existing) existing.qty = qty
+    else lines.push({ slug: l.slug, qty })
+    added++
+  }
+  ;(await cookies()).set(CART_COOKIE, JSON.stringify(lines), COOKIE_OPTS)
+  revalidatePath("/", "layout")
+  return { ok: true as const, added, skipped }
+}
+
+// "Email me when it's back": a watch list of out-of-stock parts (prototype:
+// kept in a cookie; production subscribes the account's email)
+export async function toggleStockWatch(slug: string) {
+  if (!productBySlug(slug)) return { ok: false as const }
+  const store = await cookies()
+  const list = await readWatchList()
+  const on = !list.includes(slug)
+  const next = on ? [...list, slug].slice(-30) : list.filter((s) => s !== slug)
+  store.set(WATCH_COOKIE, JSON.stringify(next), COOKIE_OPTS)
+  revalidatePath("/", "layout")
+  return { ok: true as const, on }
+}
+
 // Places the current order. Prices are re-resolved here from the price gate,
 // never taken from the browser (R2).
-export async function placeOrder(input: { carrier: CarrierId; payment: PaymentId; reference: string }) {
+export async function placeOrder(input: { carrier: CarrierId; payment: PaymentId; reference: string; note?: string }) {
   const viewer = await getViewer()
   if (viewer.state !== "approved" && viewer.state !== "masked") return { ok: false as const, error: "Your account cannot order right now." }
   const lines = await readCart()
@@ -74,6 +113,7 @@ export async function placeOrder(input: { carrier: CarrierId; payment: PaymentId
     carrier: input.carrier,
     payment: input.payment,
     reference: input.reference.slice(0, 40),
+    note: input.note?.trim().slice(0, 200) || undefined,
   }
 
   const store = await cookies()
@@ -111,5 +151,6 @@ export async function resetPrototype() {
   store.set(VIEW_COOKIE, "visitor", COOKIE_OPTS)
   store.set(CART_COOKIE, "[]", COOKIE_OPTS)
   store.set(ORDERS_COOKIE, "[]", COOKIE_OPTS)
+  store.set(WATCH_COOKIE, "[]", COOKIE_OPTS)
   revalidatePath("/", "layout")
 }
