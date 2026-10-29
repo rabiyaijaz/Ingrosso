@@ -1,6 +1,10 @@
 import type { Config } from "tailwindcss"
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const medusaPreset = require("@medusajs/ui-preset")
+import * as presetModule from "@medusajs/ui-preset"
+
+// The preset is CommonJS with no typed default export. A namespace import
+// works whether Tailwind loads this file as an ES module (newer Node, where
+// require is not defined) or through its own CommonJS loader.
+const medusaPreset = ((presetModule as { default?: unknown }).default ?? presetModule) as Config
 
 // Medusa's preset supplies every token class (bg-ui-*, txt-*, shadow-*).
 // Ingrosso's colours are set once in src/app/globals.css by overriding the

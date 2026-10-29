@@ -7,7 +7,7 @@ import { Logo } from "@/components/brand/Logo"
 import { Figure } from "@/components/commerce/Figure"
 import { CATEGORIES } from "@/lib/catalog"
 import { readCart } from "@/lib/cart"
-import { deviceTree } from "@/lib/public"
+import { deviceTree, searchStarters } from "@/lib/public"
 import { routes } from "@/lib/routes"
 import { getIconStyle } from "@/lib/icon-style"
 import { getViewer } from "@/lib/viewer"
@@ -20,6 +20,7 @@ export async function SiteHeader() {
   const viewer = await getViewer()
   const cart = await readCart()
   const iconStyle = await getIconStyle()
+  const starters = searchStarters()
   const signedIn = viewer.state !== "visitor"
   const canOrder = viewer.state === "approved" || viewer.state === "masked"
 
@@ -36,7 +37,7 @@ export async function SiteHeader() {
       <div className="mx-auto flex h-[72px] max-w-page items-center gap-3 px-[var(--ig-gutter)] md:gap-5">
         <Logo />
         <DeviceMenu tree={deviceTree()} />
-        <SearchBox className="hidden flex-1 md:block md:max-w-[640px]" />
+        <SearchBox starters={starters} className="hidden flex-1 md:block md:max-w-[640px]" />
         <div className="ml-auto flex items-center gap-2">
           {signedIn ? (
             <Button asChild variant="transparent" size="large" className="rounded-full">
@@ -78,7 +79,7 @@ export async function SiteHeader() {
       </div>
 
       <div className="px-[var(--ig-gutter)] pb-3 md:hidden">
-        <SearchBox />
+        <SearchBox starters={starters} />
       </div>
 
       <CategoryNav categories={CATEGORIES.map(({ slug, plural }) => ({ slug, plural }))} iconStyle={iconStyle} />
