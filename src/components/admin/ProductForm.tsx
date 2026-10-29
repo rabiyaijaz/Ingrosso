@@ -3,9 +3,9 @@
 import { useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { clx, toast } from "@medusajs/ui"
-import { chipClass } from "@/components/ui/Chip"
-import { ArchiveBox, CheckMini, Hashtag, Tag } from "@medusajs/icons"
+import { ArchiveBox, Hashtag, Tag } from "@medusajs/icons"
 import { addProduct } from "@/app/admin-actions"
+import { DeviceFinder } from "@/components/catalog/DeviceFinder"
 import { PartIcon } from "@/components/catalog/PartIcon"
 import { Button } from "@/components/ui/Button"
 import { WithIcon } from "@/components/ui/WithIcon"
@@ -34,7 +34,6 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
   const [name, setName] = useState("")
   const [category, setCategory] = useState(categories[0].slug)
   const [grade, setGrade] = useState("")
-  const [brand, setBrand] = useState(tree[0].slug)
   const [models, setModels] = useState<string[]>([])
   const [skuEdited, setSkuEdited] = useState<string | null>(null)
   const [price, setPrice] = useState("")
@@ -49,9 +48,9 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
   const sku = skuEdited ?? suggested
   const list = toMoney(price)
 
-  const toggle = (slug: string) => setModels((m) => (m.includes(slug) ? m.filter((x) => x !== slug) : [...m, slug]))
-  const toggleSeries = (slugs: string[]) =>
-    setModels((m) => (slugs.every((s) => m.includes(s)) ? m.filter((x) => !slugs.includes(x)) : [...new Set([...m, ...slugs])]))
+  // Flips each given model: picked ones go, the rest are added
+  const toggle = (slugs: string[]) =>
+    setModels((m) => [...m.filter((x) => !slugs.includes(x)), ...slugs.filter((x) => !m.includes(x))])
 
   const submit = () =>
     start(async () => {
@@ -68,7 +67,6 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
     })
 
   const families = ["Genuine", "Aftermarket", "Third-party"]
-  const activeBrand = tree.find((b) => b.slug === brand)!
 
   return (
     <form
@@ -137,45 +135,8 @@ export function ProductForm({ tree, grades, categories, tiers }: { tree: DeviceT
             <span className="txt-compact-small text-ui-fg-subtle">{models.length} selected</span>
           </div>
           {errors.models && <p className="txt-compact-small text-ui-fg-error">{errors.models}</p>}
-          <div role="tablist" aria-label="Brand" data-fit className="ig-steps ig-no-scrollbar overflow-x-auto">
-            {tree.map((b) => {
-              const n = b.series.flatMap((s) => s.models).filter((m) => models.includes(m.slug)).length
-              return (
-                <button key={b.slug} type="button" role="tab" aria-selected={b.slug === brand} data-state={b.slug === brand ? "active" : "inactive"} onClick={() => setBrand(b.slug)}
-                  className="ig-steps__tab flex items-center gap-1.5 txt-compact-small-plus">
-                  {b.name}
-                  {n > 0 && <span className="ig-figure txt-compact-xsmall">{n}</span>}
-                </button>
-              )
-            })}
-          </div>
-          <div className="flex flex-col gap-4">
-            {activeBrand.series.map((s) => {
-              const slugs = s.models.map((m) => m.slug)
-              const all = slugs.every((x) => models.includes(x))
-              return (
-                <div key={s.slug} className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <span className="txt-compact-xsmall-plus uppercase tracking-[0.05em] text-ui-fg-muted">{s.name}</span>
-                    <button type="button" onClick={() => toggleSeries(slugs)} className="txt-compact-small text-ui-fg-interactive hover:underline">
-                      {all ? "Clear series" : "Whole series"}
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {s.models.map((m) => {
-                      const on = models.includes(m.slug)
-                      return (
-                        <button key={m.slug} type="button" aria-pressed={on} onClick={() => toggle(m.slug)} className={chipClass({ selected: on })}>
-                          {on && <CheckMini />}
-                          {m.name}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+          {/* The same Brand → Series → Model columns as the store's device finder */}
+          <DeviceFinder tree={tree} pick={{ selected: models, onToggle: toggle }} className="-mx-2" />
         </section>
       </div>
 
