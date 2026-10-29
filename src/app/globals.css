@@ -571,7 +571,7 @@ body {
 */
 .ig-icon-bare { display: inline-flex; flex-shrink: 0; color: var(--ig-blue); }
 .ig-icon-bare svg { width: 18px; height: 18px; }
-.ig-icon-bare[data-family="Third-party"] { color: color-mix(in srgb, var(--ig-blue) 55%, var(--ig-ink-soft)); }
+.ig-icon-bare[data-family="Third-party"] { color: color-mix(in srgb, var(--ig-blue) 80%, white); }
 [aria-pressed="true"] > .ig-icon-bare,
 [aria-current="page"] > .ig-icon-bare { color: currentColor; }
 
@@ -626,7 +626,7 @@ body {
   --glass-lo: color-mix(in srgb, var(--ig-blue) 6%, white);
   --glass-ring: color-mix(in srgb, var(--ig-blue) 16%, transparent);
   --glass-shadow: color-mix(in srgb, var(--ig-blue) 18%, transparent);
-  --glass-ink: color-mix(in srgb, var(--ig-blue) 55%, var(--ig-ink-soft));
+  --glass-ink: color-mix(in srgb, var(--ig-blue) 80%, white);
 }
 /* Device-brand logos: clear glass, ink logo, brand colour on hover */
 .ig-glass-icon[data-family="Brand"] {
