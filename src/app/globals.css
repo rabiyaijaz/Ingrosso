@@ -67,9 +67,10 @@
 
   --fg-base: #0f1620;
   --fg-subtle: #4a5463;
-  --fg-muted: #667183;
-  --fg-interactive: #2563eb;
-  --fg-interactive-hover: #1d4ed8;
+  --fg-muted: #5f6a7c;
+  /* Link blue one step deeper than the accent so it passes on tinted rows too */
+  --fg-interactive: #1d4ed8;
+  --fg-interactive-hover: #1e40af;
 
   --border-base: #e1e5eb;
   --border-strong: #cbd2db;
@@ -273,8 +274,8 @@ body {
   flex-shrink: 0;
   width: 52px;
   height: 20px;
-  color: #fff;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+  color: var(--ig-band-ink);
+  filter: drop-shadow(0 0 6px var(--ig-band-glow));
 }
 
 /* 1 · Truck over a moving road */
@@ -288,7 +289,7 @@ body {
   position: absolute;
   inset: auto 0 1px 0;
   height: 1.5px;
-  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.55) 0 5px, transparent 5px 10px);
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, currentColor 55%, transparent) 0 5px, transparent 5px 10px);
   animation: ig-road 0.6s linear infinite;
 }
 .ig-truck {
@@ -305,8 +306,8 @@ body {
   height: 7px;
   margin: 0 1px 5px 0;
   background:
-    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8)) 0 0 / 100% 1.5px no-repeat,
-    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6)) 3px 5px / 70% 1.5px no-repeat;
+    linear-gradient(90deg, transparent, color-mix(in srgb, currentColor 80%, transparent)) 0 0 / 100% 1.5px no-repeat,
+    linear-gradient(90deg, transparent, color-mix(in srgb, currentColor 60%, transparent)) 3px 5px / 70% 1.5px no-repeat;
 }
 @keyframes ig-road { to { background-position: -10px 0; } }
 @keyframes ig-bob { to { transform: translateY(-0.8px); } }
@@ -325,7 +326,7 @@ body {
   width: 16px;
   height: 5px;
   border-radius: 50%;
-  background: #fff;
+  background: currentColor;
   box-shadow: inset 0 -1.5px 0 color-mix(in srgb, var(--ig-blue) 45%, white);
   animation: ig-coin-drop 2.4s cubic-bezier(.5,0,.6,1.4) infinite;
   animation-delay: calc(var(--n) * 0.22s);
@@ -357,7 +358,7 @@ body {
   top: 0;
   width: 7px;
   height: 7px;
-  background: #fff;
+  background: currentColor;
   clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
   animation: ig-glint 2.4s ease-in-out infinite 0.9s;
 }
@@ -369,7 +370,7 @@ body {
   width: 5px;
   height: calc(6px + var(--n) * 5px);
   border-radius: 2px;
-  background: #fff;
+  background: currentColor;
   transform-origin: bottom;
   animation: ig-bar 2.4s cubic-bezier(.2,.8,.2,1) infinite;
   animation-delay: calc(var(--n) * 0.15s);
@@ -616,15 +617,30 @@ body {
 */
 /* Zero-specificity position so utilities like `sticky` still win */
 :where(.ig-surface-blue) { position: relative; }
+/*
+  Band colours are tokens so each theme picks a band and a text colour that
+  pass contrast together (WCAG AA 4.5:1 at the band's lightest point):
+  light text on a deep band, or dark text on a bright band. Everything on
+  the band reads --ig-on-slate / --ig-on-slate-soft, set here.
+*/
+:root {
+  --ig-band-from: #1e3a8a;
+  --ig-band-mid: #1e40af;
+  --ig-band-to: #1d4ed8;
+  --ig-band-ink: #ffffff;
+  --ig-band-ink-soft: #eef3ff;
+  --ig-band-glow: rgba(255, 255, 255, 0.12);
+  --ig-band-glow-2: rgba(140, 200, 255, 0.12);
+}
 .ig-surface-blue {
-  --ig-on-slate: #ffffff;
-  --ig-on-slate-soft: rgba(236, 243, 255, 0.86);
+  --ig-on-slate: var(--ig-band-ink);
+  --ig-on-slate-soft: var(--ig-band-ink-soft);
   isolation: isolate;
-  color: #fff;
+  color: var(--ig-band-ink);
   background:
-    radial-gradient(900px 520px at 12% 0%, rgba(255, 255, 255, 0.3), transparent 60%),
-    radial-gradient(800px 600px at 100% 100%, rgba(130, 205, 255, 0.5), transparent 62%),
-    linear-gradient(135deg, color-mix(in srgb, var(--ig-blue) 82%, #061a6b) 0%, var(--ig-blue) 45%, color-mix(in srgb, var(--ig-blue) 62%, #9fd2ff) 100%);
+    radial-gradient(900px 520px at 12% 0%, var(--ig-band-glow), transparent 60%),
+    radial-gradient(800px 600px at 100% 100%, var(--ig-band-glow-2), transparent 62%),
+    linear-gradient(135deg, var(--ig-band-from) 0%, var(--ig-band-mid) 45%, var(--ig-band-to) 100%);
 }
 .ig-surface-blue::before {
   content: "";
@@ -639,9 +655,9 @@ body {
   mix-blend-mode: soft-light;
 }
 .ig-ambient[data-variant="blue"] { background: transparent; }
-.ig-ambient[data-variant="blue"] .ig-orb--1 { background: radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.4), transparent 68%); }
-.ig-ambient[data-variant="blue"] .ig-orb--2 { background: radial-gradient(circle, rgba(150, 215, 255, 0.55), transparent 68%); }
-.ig-ambient[data-variant="blue"] .ig-orb--3 { background: radial-gradient(circle, rgba(255, 255, 255, 0.25), transparent 68%); }
+.ig-ambient[data-variant="blue"] .ig-orb--1 { background: radial-gradient(circle at 40% 40%, var(--ig-band-glow), transparent 68%); }
+.ig-ambient[data-variant="blue"] .ig-orb--2 { background: radial-gradient(circle, var(--ig-band-glow-2), transparent 68%); }
+.ig-ambient[data-variant="blue"] .ig-orb--3 { background: radial-gradient(circle, var(--ig-band-glow), transparent 68%); }
 .ig-ambient[data-variant="blue"]::after { opacity: 0.35; }
 
 /*
@@ -852,7 +868,8 @@ body {
 /* Variants */
 .ig-btn[data-variant="primary"] {
   color: var(--ig-on-accent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--ig-blue) 78%, white) 0%, var(--ig-blue) 55%, color-mix(in srgb, var(--ig-blue) 88%, black) 100%);
+  /* Kept close to the accent so the label holds contrast across the face */
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ig-blue) 94%, white) 0%, var(--ig-blue) 50%, color-mix(in srgb, var(--ig-blue) 86%, black) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.45),
     inset 0 -1px 0 rgba(0, 0, 0, 0.12),

@@ -45,6 +45,8 @@ Light, glassy and minimal, in the Apple style: very light blue gradients, froste
 - **Big menus** (landing footer): full-width rows with hairlines, a glass arrow tile that turns solid blue on hover, and a soft blue wash (`.ig-menu`).
 - All motion stops under `prefers-reduced-motion`.
 
+**Text contrast, every theme:** text passes WCAG AA (4.5:1, 3:1 for large text) on whatever sits behind it. Dark text on bright fills, light text on deep fills, never light on light. Each theme sets its band (`--ig-band-from/-mid/-to`), the text on it (`--ig-band-ink`, `--ig-band-ink-soft`) and the text on accent fills (`--ig-on-accent`) as a pair that passes at the fill's lightest point. A bright accent (Obsidian green, Amber copper) gets a bright band with dark text; a deep accent (light, Cobalt) gets a deep band with white text. Muted text and links are set per theme to pass on their cards and tinted rows.
+
 ## Buttons
 
 One component: `components/ui/Button`. Nothing else is styled as a button.

@@ -10,6 +10,9 @@
 
 /* ───────────────────────── 1 · Cobalt glass ───────────────────────── */
 :root:root[data-theme="cobalt"] {
+  --ig-band-from: #0f2470; --ig-band-mid: #183aa8; --ig-band-to: #1c45c4;
+  --ig-band-ink: #ffffff; --ig-band-ink-soft: #e8efff;
+  --ig-band-glow: rgba(255, 255, 255, 0.1); --ig-band-glow-2: rgba(140, 200, 255, 0.12);
   --ig-canvas:
     radial-gradient(1200px 800px at 12% -10%, rgba(64, 128, 255, 0.38), transparent 60%),
     radial-gradient(900px 700px at 100% 18%, rgba(24, 70, 210, 0.45), transparent 62%),
@@ -22,7 +25,7 @@
   --ig-on-ink: #071233;
   --ig-ink: #eef3ff;
   --ig-ink-soft: #a9b8de;
-  --ig-blue: #3d7bff;
+  --ig-blue: #2a5ff0;
   --ig-blue-ink: #6b9bff;
   --ig-blue-wash: rgba(61, 123, 255, 0.18);
   --ig-slate: rgba(3, 8, 24, 0.7);
@@ -51,20 +54,20 @@
   --bg-field-component-hover: rgba(4, 10, 30, 0.75);
   --bg-highlight: rgba(61, 123, 255, 0.2);
   --bg-highlight-hover: rgba(61, 123, 255, 0.28);
-  --bg-interactive: #3d7bff;
+  --bg-interactive: #2a5ff0;
   --bg-switch-off: rgba(255, 255, 255, 0.14);
   --bg-switch-off-hover: rgba(255, 255, 255, 0.2);
   --fg-base: #eef3ff;
   --fg-subtle: #a9b8de;
-  --fg-muted: #7d8fbf;
+  --fg-muted: #9aabd6;
   --fg-interactive: #8db4ff;
   --fg-interactive-hover: #b5ceff;
   --border-base: rgba(140, 175, 255, 0.16);
   --border-strong: rgba(140, 175, 255, 0.28);
   --border-interactive: #5b8cff;
   --border-menu-top: rgba(140, 175, 255, 0.16);
-  --button-inverted: #2f6bff;
-  --button-inverted-hover: #3d7bff;
+  --button-inverted: #2a5ff0;
+  --button-inverted-hover: #2559e6;
   --button-inverted-pressed: #1f55e0;
   --button-neutral: rgba(255, 255, 255, 0.07);
   --button-neutral-hover: rgba(255, 255, 255, 0.12);
@@ -80,6 +83,10 @@
 
 /* ───────────────────────── 2 · Obsidian neon ───────────────────────── */
 :root:root[data-theme="obsidian"] {
+  /* Bright neon band with dark text: light-on-light never passes */
+  --ig-band-from: #5dffc2; --ig-band-mid: #19f5a3; --ig-band-to: #12d18a;
+  --ig-band-ink: #02140c; --ig-band-ink-soft: #073d28;
+  --ig-band-glow: rgba(255, 255, 255, 0.35); --ig-band-glow-2: rgba(255, 255, 255, 0.2);
   --ig-canvas:
     radial-gradient(800px 520px at 88% -12%, rgba(25, 245, 163, 0.14), transparent 60%),
     radial-gradient(700px 600px at -5% 105%, rgba(0, 200, 140, 0.09), transparent 60%),
@@ -125,7 +132,7 @@
   --bg-switch-off-hover: #2c373e;
   --fg-base: #eaf2ef;
   --fg-subtle: #9aa8a3;
-  --fg-muted: #6c7975;
+  --fg-muted: #85928d;
   --fg-interactive: #2dffb3;
   --fg-interactive-hover: #8cffd6;
   --border-base: #1f272d;
@@ -149,6 +156,10 @@
 
 /* ───────────────────────── 3 · Luxe amber ───────────────────────── */
 :root:root[data-theme="amber"] {
+  /* Bright copper band with dark text */
+  --ig-band-from: #f6cf9b; --ig-band-mid: #e0a15a; --ig-band-to: #cf8a4a;
+  --ig-band-ink: #1d1206; --ig-band-ink-soft: #3d2510;
+  --ig-band-glow: rgba(255, 255, 255, 0.3); --ig-band-glow-2: rgba(255, 240, 220, 0.2);
   --ig-canvas:
     radial-gradient(900px 620px at 82% -12%, rgba(224, 150, 72, 0.22), transparent 60%),
     radial-gradient(800px 700px at -5% 110%, rgba(184, 112, 52, 0.16), transparent 60%),
@@ -194,7 +205,7 @@
   --bg-switch-off-hover: #2c4d58;
   --fg-base: #f4ebe0;
   --fg-subtle: #c2b4a3;
-  --fg-muted: #8f8577;
+  --fg-muted: #a39888;
   --fg-interactive: #f0bb7a;
   --fg-interactive-hover: #f7d3a6;
   --border-base: rgba(240, 200, 150, 0.12);
@@ -248,7 +259,7 @@
 /* 1 · Cobalt glass: multi-stop blue, top bevel, layered ambient shadow */
 [data-theme="cobalt"] .bg-ui-button-inverted,
 [data-theme="cobalt"] .ig-btn-primary {
-  background-image: linear-gradient(180deg, #6a9dff 0%, #3a76ff 42%, #2a62f0 70%, #1c4fd2 100%);
+  background-image: linear-gradient(180deg, #3f70f5 0%, #2a5ff0 42%, #2357e0 70%, #1a49c6 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -1px 0 rgba(0, 0, 0, 0.25),
