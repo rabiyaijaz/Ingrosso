@@ -15,14 +15,17 @@ type Props = {
   buttonVariant?: "primary" | "secondary"
   onNavigate?: () => void
   className?: string
+  /** Open at this brand and series (the brand and series pages) */
+  initialBrand?: string
+  initialSeries?: string
 }
 
 // Brand → Series → Model, the primary way into the catalogue (CAT-01).
 // "columns" for the device menu and devices page, "select" for compact spots.
-export function DeviceFinder({ tree, variant = "columns", buttonVariant = "primary", onNavigate, className }: Props) {
-  const [brand, setBrand] = useState<string | undefined>(tree[0]?.slug)
+export function DeviceFinder({ tree, variant = "columns", buttonVariant = "primary", onNavigate, className, initialBrand, initialSeries }: Props) {
+  const [brand, setBrand] = useState<string | undefined>(initialBrand ?? tree[0]?.slug)
   const b = tree.find((x) => x.slug === brand) ?? tree[0]
-  const [series, setSeries] = useState<string | undefined>(b?.series[0]?.slug)
+  const [series, setSeries] = useState<string | undefined>(initialSeries ?? b?.series[0]?.slug)
   const s = b?.series.find((x) => x.slug === series) ?? b?.series[0]
   const [model, setModel] = useState<string | undefined>(s?.models[0]?.slug)
   const m = s?.models.find((x) => x.slug === model) ?? s?.models[0]
@@ -128,7 +131,7 @@ export function DeviceFinder({ tree, variant = "columns", buttonVariant = "prima
             </li>
           ))}
         </ul>
-        {s && (
+        {s && !(b.slug === initialBrand && s.slug === initialSeries) && (
           <Link href={routes.series(b.slug, s.slug)} onClick={onNavigate} className="mt-3 inline-flex items-center gap-1 px-3 txt-compact-small-plus text-ui-fg-interactive hover:text-ui-fg-interactive-hover">
             All {s.name} models <ArrowRight />
           </Link>
