@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { clx } from "@medusajs/ui"
 
 import { Button } from "@/components/ui/Button"
 import { ShoppingCart, User } from "@medusajs/icons"
@@ -58,10 +59,18 @@ export async function SiteHeader() {
             </>
           )}
           {canOrder && (
-            <Button asChild variant="secondary" size="large" className="rounded-full">
+            <Button asChild variant="secondary" size="large" className={clx("ig-cart rounded-full", cart.length > 0 && "is-filled")}>
               <Link href={routes.cart()} aria-label={`Order, ${cart.length} lines`}>
-                <ShoppingCart />
-                <Figure>{cart.length}</Figure>
+                {/* The count is a badge on the cart; key replays its pop when the count changes */}
+                <span className="relative inline-flex">
+                  <ShoppingCart />
+                  {cart.length > 0 && (
+                    <span key={cart.length} aria-hidden className="ig-cart__badge">
+                      <Figure>{cart.length}</Figure>
+                    </span>
+                  )}
+                </span>
+                <span className="hidden md:inline">Order</span>
               </Link>
             </Button>
           )}
