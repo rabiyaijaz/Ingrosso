@@ -48,8 +48,8 @@ export default async function PartsPage() {
             return (
               <li key={b.slug}>
                 <Link href={routes.brand(b.slug)} className="ig-brand-card group">
-                  <span className="relative z-[1] flex max-w-[58%] flex-col gap-2">
-                    <BrandMark brand={b.slug} size="sm" />
+                  <span className="relative z-[1] flex min-w-0 flex-col gap-1.5">
+                    <BrandMark brand={b.slug} size="xs" />
                     <span className="flex flex-col">
                       <span className="txt-compact-medium-plus text-ui-fg-base">{b.name}</span>
                       <span className="txt-compact-small text-ui-fg-subtle">{models} models · {b.series.length} series</span>
@@ -59,7 +59,7 @@ export default async function PartsPage() {
                     </span>
                   </span>
                   {BRAND_IMAGE[b.slug] && (
-                    <Image src={BRAND_IMAGE[b.slug]} alt="" width={240} height={240} sizes="160px" className="ig-brand-card__img" />
+                    <Image src={BRAND_IMAGE[b.slug]} alt="" width={168} height={168} sizes="84px" className="ig-brand-card__img" />
                   )}
                 </Link>
               </li>
