@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Container, Heading, Table, Text } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { GradeBadge } from "@/components/catalog/Grade"
+import { PartImage } from "@/components/catalog/PartImage"
 import { CartLineQty } from "@/components/commerce/CartLineQty"
 import { Figure } from "@/components/commerce/Figure"
 import { GateCallout } from "@/components/commerce/GateCallout"
@@ -58,10 +59,15 @@ export default async function CartPage() {
                 {priced.map(({ line, product, unit, total }) => (
                   <Table.Row key={product.slug} className="[&_td]:h-auto [&_td]:py-3">
                     <Table.Cell className="whitespace-normal">
-                      <Link href={routes.product(product.slug)} className="txt-compact-small-plus hover:text-ui-fg-interactive">{product.name}</Link>
-                      <div className="mt-1 flex items-center gap-2 txt-compact-xsmall text-ui-fg-muted">
-                        <Figure>{product.sku}</Figure>
-                        {product.grade && <GradeBadge grade={product.grade} />}
+                      <div className="flex items-start gap-3">
+                        <PartImage product={product} size={40} className="size-10 shrink-0" />
+                        <div className="min-w-0">
+                          <Link href={routes.product(product.slug)} className="txt-compact-small-plus hover:text-ui-fg-interactive">{product.name}</Link>
+                          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 txt-compact-xsmall text-ui-fg-muted">
+                            <Figure className="whitespace-nowrap">{product.sku}</Figure>
+                            {product.grade && <GradeBadge grade={product.grade} />}
+                          </div>
+                        </div>
                       </div>
                     </Table.Cell>
                     <Table.Cell>
