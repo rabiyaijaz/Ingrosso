@@ -27,7 +27,7 @@ export function CategoryNav({ categories, iconStyle }: { categories: { slug: str
 
   return (
     <nav aria-label="Categories" className="ig-catbar">
-      <ul className="mx-auto flex h-12 max-w-page items-center gap-1 overflow-x-auto px-[calc(var(--ig-gutter)-14px)]">
+      <ul className="ig-no-scrollbar mx-auto flex h-12 max-w-page items-center gap-1 overflow-x-auto px-[calc(var(--ig-gutter)-14px)]">
         {categories.map((c) => {
           const href = routes.category(c.slug)
           const active = pathname === href || pathname.startsWith(`${href}/`)

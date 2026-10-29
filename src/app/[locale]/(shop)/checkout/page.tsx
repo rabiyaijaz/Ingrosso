@@ -40,7 +40,7 @@ export default async function CheckoutPage() {
 
   const lines = items.map(({ line, product }) => {
     const unit = unitPriceAt(product, { ...viewer, state: "approved" }, line.qty) ?? 0
-    return { slug: product.slug, name: product.name, sku: product.sku, qty: line.qty, total: unit * line.qty }
+    return { slug: product.slug, name: product.name, sku: product.sku, category: product.category, grade: product.grade, qty: line.qty, total: unit * line.qty }
   })
 
   return (

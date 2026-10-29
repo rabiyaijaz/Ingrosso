@@ -11,6 +11,12 @@ import { formatMoney } from "@/lib/money"
 import { routes } from "@/lib/routes"
 import { CARRIERS, PAYMENTS, VAT_RATE, orderTotals, type CarrierId, type PaymentId } from "@/lib/totals"
 import { Figure } from "./Figure"
+import { OrderSummary, type SummaryLine } from "./OrderSummary"
+import { CardIcon, ChoiceCard } from "./ChoiceCard"
+import { Bolt, BuildingStorefront, CreditCard, DocumentText, MapPin, Paypal, Receipt, TruckFast } from "@medusajs/icons"
+
+const CARRIER_ICON: Record<CarrierId, React.ReactNode> = { postnl: <TruckFast />, ups: <Bolt />, collect: <BuildingStorefront /> }
+const PAYMENT_ICON: Record<PaymentId, React.ReactNode> = { card: <CreditCard />, paypal: <Paypal />, invoice: <Receipt /> }
 
 type StepId = "delivery" | "shipping" | "payment" | "review"
 const STEPS: { id: StepId; label: string }[] = [
@@ -20,7 +26,7 @@ const STEPS: { id: StepId; label: string }[] = [
   { id: "review", label: "Review" },
 ]
 
-type Line = { slug: string; name: string; sku: string; qty: number; total: Money }
+type Line = SummaryLine
 
 type Props = {
   lines: Line[]
@@ -71,14 +77,14 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
       <ProgressTabs value={step} onValueChange={(v) => setStep(v as StepId)} className="flex flex-col gap-8">
-        <ProgressTabs.List className="overflow-hidden rounded-xl shadow-elevation-card-rest">
+        <ProgressTabs.List className="ig-steps overflow-hidden rounded-xl shadow-elevation-card-rest">
           {STEPS.map((s, i) => (
             <ProgressTabs.Trigger
               key={s.id}
               value={s.id}
               disabled={i > reached}
               status={i < index || i < reached ? "completed" : i === index ? "in-progress" : "not-started"}
-              className="flex-1 justify-start"
+              className="ig-steps__tab"
             >
               {s.label}
             </ProgressTabs.Trigger>
@@ -87,9 +93,12 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
 
         <ProgressTabs.Content value="delivery" className="flex flex-col gap-5">
           <StepHead title="Where should it go?" body="Your saved delivery address. Add more addresses from your account." />
-          <Container className="flex flex-col gap-1 p-5">
-            <Text weight="plus">{company}</Text>
-            {address.map((l) => <Text key={l} size="small" className="text-ui-fg-subtle">{l}</Text>)}
+          <Container className="flex items-start gap-4 p-5">
+            <CardIcon><MapPin /></CardIcon>
+            <div className="flex flex-col gap-1">
+              <Text weight="plus">{company}</Text>
+              {address.map((l) => <Text key={l} size="small" className="text-ui-fg-subtle">{l}</Text>)}
+            </div>
           </Container>
           <label className="flex items-center gap-3 txt-compact-small">
             <Checkbox checked={sameInvoice} onCheckedChange={(v) => setSameInvoice(v === true)} />
@@ -106,7 +115,7 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
           <StepHead title="How should it ship?" body="Free PostNL delivery on orders over €500 before VAT." />
           <RadioGroup value={carrier} onValueChange={(v) => setCarrier(v as CarrierId)} className="flex flex-col gap-2">
             {CARRIERS.map((c) => (
-              <RadioGroup.ChoiceBox key={c.id} value={c.id} label={`${c.name} · ${carrierPrice(c.id)}`} description={c.detail} />
+              <ChoiceCard key={c.id} value={c.id} icon={CARRIER_ICON[c.id]} label={c.name} aside={carrierPrice(c.id)} detail={c.detail} />
             ))}
           </RadioGroup>
         </ProgressTabs.Content>
@@ -115,24 +124,27 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
           <StepHead title="How will you pay?" body="Card details are entered on the payment provider's page, never on ours." />
           <RadioGroup value={payment} onValueChange={(v) => setPayment(v as PaymentId)} className="flex flex-col gap-2">
             {PAYMENTS.map((p) => (
-              <RadioGroup.ChoiceBox key={p.id} value={p.id} label={p.name} description={p.detail} />
+              <ChoiceCard key={p.id} value={p.id} icon={PAYMENT_ICON[p.id]} label={p.name} detail={p.detail} />
             ))}
           </RadioGroup>
         </ProgressTabs.Content>
 
         <ProgressTabs.Content value="review" className="flex flex-col gap-5">
           <StepHead title="Check and place the order" body="Stock is reserved for you the moment the order is placed." />
-          <dl className="grid gap-x-6 gap-y-3 rounded-xl bg-ui-bg-subtle p-5 txt-compact-small sm:grid-cols-[160px_1fr]">
-            {[
-              ["Deliver to", `${company}, ${address.join(", ")}`],
-              ["Invoice to", sameInvoice ? "Same as delivery" : "Your invoice address on file"],
-              ["Reference", reference || "None"],
-              ["Shipping", CARRIERS.find((c) => c.id === carrier)!.name],
-              ["Payment", PAYMENTS.find((p) => p.id === payment)!.name],
-            ].map(([k, v]) => (
-              <div key={k} className="contents">
-                <dt className="text-ui-fg-subtle">{k}</dt>
-                <dd>{v}</dd>
+          <dl className="grid gap-3 sm:grid-cols-2">
+            {([
+              ["Deliver to", `${company}, ${address.join(", ")}`, <MapPin key="i" />],
+              ["Invoice to", sameInvoice ? "Same as delivery" : "Your invoice address on file", <Receipt key="i" />],
+              ["Shipping", CARRIERS.find((c) => c.id === carrier)!.name, CARRIER_ICON[carrier]],
+              ["Payment", PAYMENTS.find((p) => p.id === payment)!.name, PAYMENT_ICON[payment]],
+              ["Your reference", reference || "None", <DocumentText key="i" />],
+            ] as [string, string, React.ReactNode][]).map(([k, v, icon]) => (
+              <div key={k} className="flex items-start gap-3 rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest">
+                <CardIcon size="sm">{icon}</CardIcon>
+                <div className="flex min-w-0 flex-col gap-0.5 txt-compact-small">
+                  <dt className="text-ui-fg-subtle">{k}</dt>
+                  <dd className="txt-compact-small-plus text-ui-fg-base">{v}</dd>
+                </div>
               </div>
             ))}
           </dl>
@@ -155,26 +167,7 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
         </div>
       </ProgressTabs>
 
-      <Container className="flex h-fit flex-col gap-4 p-5 lg:sticky lg:top-6">
-        <Heading level="h2" className="txt-large-plus">Order summary</Heading>
-        <ul className="flex flex-col gap-3">
-          {lines.map((l) => (
-            <li key={l.slug} className="flex justify-between gap-3 txt-compact-small">
-              <span className="min-w-0">
-                <span className="block truncate">{l.name}</span>
-                <span className="text-ui-fg-muted"><Figure>{l.qty}</Figure> × <Figure>{l.sku}</Figure></span>
-              </span>
-              <Figure className="shrink-0">{money(l.total)}</Figure>
-            </li>
-          ))}
-        </ul>
-        <dl className="flex flex-col gap-2 border-t border-ui-border-base pt-4 txt-compact-small">
-          <Row label="Subtotal" value={money(totals.subtotal)} />
-          <Row label="Shipping" value={totals.shipping === 0 ? "Free" : money(totals.shipping)} />
-          <Row label={`VAT ${VAT_RATE}%`} value={money(totals.vat)} />
-          <Row label="Total" value={money(totals.total)} strong />
-        </dl>
-      </Container>
+      <OrderSummary lines={lines} totals={totals} masked={masked} freeShippingApplies={!!CARRIERS.find((c) => c.id === carrier)?.freeAbove} />
     </div>
   )
 }

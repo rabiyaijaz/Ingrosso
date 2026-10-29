@@ -139,14 +139,14 @@ export function ApplicationForm() {
 
   return (
     <ProgressTabs value={step} onValueChange={(v) => setStep(v as StepId)} className="flex flex-col gap-8">
-      <ProgressTabs.List className="overflow-hidden rounded-xl shadow-elevation-card-rest">
+      <ProgressTabs.List className="ig-steps overflow-hidden rounded-xl shadow-elevation-card-rest">
         {STEPS.map((s, i) => (
           <ProgressTabs.Trigger
             key={s.id}
             value={s.id}
             disabled={i > draft.reached}
             status={i < index || i < draft.reached ? "completed" : i === index ? "in-progress" : "not-started"}
-            className="flex-1 justify-start"
+            className="ig-steps__tab"
           >
             {s.label}
           </ProgressTabs.Trigger>

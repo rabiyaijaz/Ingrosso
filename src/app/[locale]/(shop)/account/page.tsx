@@ -3,7 +3,9 @@ import { Container, Heading, StatusBadge, Table, Text } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
 import { MaskToggle } from "@/components/account/MaskToggle"
 import { SignOutButton } from "@/components/account/SignOutButton"
+import { CardIcon } from "@/components/commerce/ChoiceCard"
 import { Figure } from "@/components/commerce/Figure"
+import { MapPin } from "@medusajs/icons"
 import { PageContainer, PageHeading } from "@/components/layout/Page"
 import { formatMoney } from "@/lib/money"
 import { readOrders } from "@/lib/orders"
@@ -121,11 +123,14 @@ export default async function AccountPage() {
           <Container className="p-5">
             <MaskToggle masked={viewer.state === "masked"} />
           </Container>
-          <Container className="flex flex-col gap-3 p-5">
-            <Heading level="h2" className="txt-compact-medium-plus">Delivery address</Heading>
-            <Text size="small" className="text-ui-fg-subtle">
-              Fix Point Repairs B.V.<br />Sample street 12<br />3011 AA Rotterdam<br />Netherlands
-            </Text>
+          <Container className="flex items-start gap-4 p-5">
+            <CardIcon><MapPin /></CardIcon>
+            <div className="flex flex-col gap-3">
+              <Heading level="h2" className="txt-compact-medium-plus">Delivery address</Heading>
+              <Text size="small" className="text-ui-fg-subtle">
+                Fix Point Repairs B.V.<br />Sample street 12<br />3011 AA Rotterdam<br />Netherlands
+              </Text>
+            </div>
           </Container>
         </aside>
       </div>
