@@ -299,40 +299,25 @@ body {
 .ig-with-icon:focus-within .ig-with-icon__icon { color: var(--ig-blue); }
 
 /*
-  Brand card (parts overview): compact glass card, brand and model count on
-  the left, the 3D device render in a fixed square on the right (every brand
-  the same size); it lifts and the render straightens on hover.
+  Brand row (parts overview): a slim one-line card, brand mark, name and
+  model count, with a quiet arrow. Plain surface, no render, so the part
+  tiles below stay the main thing on the page.
 */
 .ig-brand-card {
-  position: relative;
   display: flex;
-  min-height: 112px;
-  overflow: hidden;
-  padding: 14px 108px 14px 14px; /* the right side is the render's */
-  border-radius: 20px;
-  background:
-    radial-gradient(70% 90% at 100% 100%, color-mix(in srgb, var(--ig-blue) 16%, transparent), transparent 70%),
-    radial-gradient(50% 60% at 85% 10%, color-mix(in srgb, var(--ig-cyan) 14%, transparent), transparent 70%),
-    var(--bg-base);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 0 1px color-mix(in srgb, var(--ig-blue) 10%, var(--border-base)), 0 14px 30px -20px color-mix(in srgb, var(--ig-blue) 50%, transparent);
-  transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 12px 0 8px;
+  border-radius: 14px;
+  background: var(--bg-base);
+  box-shadow: 0 0 0 1px var(--border-base), 0 1px 2px rgba(15, 22, 32, 0.04);
+  transition: box-shadow 160ms ease, background-color 160ms ease;
   outline: none;
 }
-.ig-brand-card:hover, .ig-brand-card:focus-visible { transform: translateY(-3px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 0 1.5px color-mix(in srgb, var(--ig-blue) 40%, transparent), 0 22px 40px -22px var(--ig-blue); }
-.ig-brand-card__img {
-  /* Every render in the same square box, inside the card, clear of the text */
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  width: 84px;
-  height: 84px;
-  object-fit: contain;
-  filter: drop-shadow(0 8px 12px color-mix(in srgb, var(--ig-blue) 30%, transparent));
-  transform: translateY(-50%) rotate(-4deg);
-  transition: transform 320ms cubic-bezier(.2,.8,.2,1);
-}
-.ig-brand-card:hover .ig-brand-card__img { transform: translateY(-50%) rotate(0deg) scale(1.06); }
-@media (prefers-reduced-motion: reduce) { .ig-brand-card, .ig-brand-card__img { transition: none; } }
+.ig-brand-card:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--ig-blue) 35%, var(--border-base)), 0 6px 16px -10px color-mix(in srgb, var(--ig-blue) 45%, transparent); }
+.ig-brand-card:focus-visible { box-shadow: 0 0 0 2px var(--ig-blue); }
+@media (prefers-reduced-motion: reduce) { .ig-brand-card { transition: none; } }
 
 /* Hidden step panels take no space (their flex class would otherwise beat [hidden] and add gaps) */
 [role="tabpanel"][hidden] { display: none !important; }

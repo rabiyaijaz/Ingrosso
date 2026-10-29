@@ -7,7 +7,7 @@ import { GlassTile } from "@/components/marketing/GlassTile"
 import { BRANDS, PRODUCTS } from "@/lib/catalog"
 import { getCategories } from "@/lib/categories"
 import { routes } from "@/lib/routes"
-import { BRAND_IMAGE, CATEGORY_IMAGE } from "@/lib/visuals"
+import { CATEGORY_IMAGE } from "@/lib/visuals"
 
 export const metadata = { title: "All parts" }
 
@@ -34,7 +34,7 @@ export default async function PartsPage() {
         </form>
       </PageHeading>
 
-      {/* Start from the handset: one glass card per brand with its 3D device render */}
+      {/* Start from the handset: one slim row per brand, quiet so the part tiles lead */}
       <section aria-labelledby="by-device" className="flex flex-col gap-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="by-device" className="txt-large-plus">Start from the handset</h2>
@@ -42,25 +42,18 @@ export default async function PartsPage() {
             All devices <ArrowRight />
           </Link>
         </div>
-        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-2 lg:grid-cols-4">
           {BRANDS.map((b) => {
             const models = b.series.reduce((n, s) => n + s.models.length, 0)
             return (
               <li key={b.slug}>
                 <Link href={routes.brand(b.slug)} className="ig-brand-card group">
-                  <span className="relative z-[1] flex min-w-0 flex-col gap-1.5">
-                    <BrandMark brand={b.slug} size="xs" />
-                    <span className="flex flex-col">
-                      <span className="txt-compact-medium-plus text-ui-fg-base">{b.name}</span>
-                      <span className="txt-compact-small text-ui-fg-subtle">{models} models · {b.series.length} series</span>
-                    </span>
-                    <span className="mt-auto flex items-center gap-1 txt-compact-small-plus text-ui-fg-interactive">
-                      Choose a model <ArrowRight className="transition-transform group-hover:translate-x-1" />
-                    </span>
+                  <BrandMark brand={b.slug} size="xs" />
+                  <span className="flex min-w-0 flex-1 flex-col">
+                    <span className="truncate txt-compact-small-plus text-ui-fg-base">{b.name}</span>
+                    <span className="txt-compact-xsmall text-ui-fg-subtle">{models} models</span>
                   </span>
-                  {BRAND_IMAGE[b.slug] && (
-                    <Image src={BRAND_IMAGE[b.slug]} alt="" width={168} height={168} sizes="84px" className="ig-brand-card__img" />
-                  )}
+                  <ArrowRight className="shrink-0 text-ui-fg-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ui-fg-interactive" />
                 </Link>
               </li>
             )
