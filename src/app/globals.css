@@ -124,24 +124,15 @@ body {
 }
 
 /*
-  Hover scroll: a panel that scrolls on its own (wheel, trackpad, touch,
-  keyboard) with no scrollbar showing; a slim scrollbar appears on hover as
-  the hint that there is more. Used by the sticky filter panel.
+  Quiet scroll: a panel that scrolls on its own (wheel, trackpad, touch,
+  keyboard) and never shows a scrollbar. Used by the sticky filter panel.
 */
-.ig-scroll-hover {
+.ig-scroll-quiet {
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
-  scrollbar-gutter: stable;
 }
-.ig-scroll-hover::-webkit-scrollbar { width: 6px; }
-.ig-scroll-hover::-webkit-scrollbar-thumb { background: transparent; border-radius: 9999px; }
-.ig-scroll-hover:hover,
-.ig-scroll-hover:focus-within {
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--ig-ink) 22%, transparent) transparent;
-}
-.ig-scroll-hover:hover::-webkit-scrollbar-thumb,
-.ig-scroll-hover:focus-within::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--ig-ink) 22%, transparent); }
+.ig-scroll-quiet::-webkit-scrollbar { display: none; }
 
 /* Every figure — price, SKU, stock, quantity, order ref — aligns (NFR-05) */
 .ig-figure {

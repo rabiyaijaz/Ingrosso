@@ -84,6 +84,8 @@ Category, device-model and search pages share `catalog/ListingView`. The lab's *
 | `topbar` | B · Dropdown filter buttons with chevrons, applied-filter chips, count + sort, product cards |
 | `tabs` | C · Large grade-family tabs, side panel for grade/brand/availability, table |
 
+Filter order in every layout: Availability (one "In stock only" switch), Brand, Grade, Part. The sticky filter panel scrolls on its own with no visible scrollbar (`.ig-scroll-quiet`).
+
 Filter rules in every layout: real checkboxes with counts, a chevron on anything that opens, every active filter shown as a removable chip with Clear all, filters kept in the URL, no price sort (CAT-12), and "In stock only" shown to approved accounts only. On phones the filter panel folds behind one Filters button. The main app keeps `DEFAULT_LISTING` in `lib/listing-variants.ts` until a layout is chosen.
 
 ## Brand logos

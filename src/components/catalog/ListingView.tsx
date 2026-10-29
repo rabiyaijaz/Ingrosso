@@ -59,19 +59,7 @@ function TopbarLayout({ products, viewer, params, hrefFor, facets }: Props) {
       {/* z-20: the dropdown panels must open above the result cards */}
       <div className="relative z-20 flex flex-wrap items-center gap-2.5 rounded-2xl bg-ui-bg-base p-3 shadow-elevation-card-rest">
         <span className="px-2 txt-compact-small-plus text-ui-fg-subtle">Filter by</span>
-        <FilterDropdown label="Grade" count={selected(params, "grade").size}>
-          <GradeChecks options={f.grades} params={params} hrefFor={hrefFor} />
-        </FilterDropdown>
-        {facets.includes("brand") && f.brands.length > 1 && (
-          <FilterDropdown label="Brand" count={selected(params, "brand").size}>
-            <CheckList options={f.brands} paramKey="brand" params={params} hrefFor={hrefFor} icon={(v) => <BrandMark brand={v} variant="plain" />} />
-          </FilterDropdown>
-        )}
-        {facets.includes("cat") && f.cats.length > 1 && (
-          <FilterDropdown label="Part" count={selected(params, "cat").size}>
-            <CheckList options={f.cats} paramKey="cat" params={params} hrefFor={hrefFor} />
-          </FilterDropdown>
-        )}
+        {/* Same order as the filter panel: availability, brand, grade, part */}
         {f.inStock !== null && (
           <Link
             href={hrefFor({ ...params, stock: stockOn ? undefined : "in" })}
@@ -87,6 +75,19 @@ function TopbarLayout({ products, viewer, params, hrefFor, facets }: Props) {
             </span>
             In stock only
           </Link>
+        )}
+        {facets.includes("brand") && f.brands.length > 1 && (
+          <FilterDropdown label="Brand" count={selected(params, "brand").size}>
+            <CheckList options={f.brands} paramKey="brand" params={params} hrefFor={hrefFor} icon={(v) => <BrandMark brand={v} variant="plain" />} />
+          </FilterDropdown>
+        )}
+        <FilterDropdown label="Grade" count={selected(params, "grade").size}>
+          <GradeChecks options={f.grades} params={params} hrefFor={hrefFor} />
+        </FilterDropdown>
+        {facets.includes("cat") && f.cats.length > 1 && (
+          <FilterDropdown label="Part" count={selected(params, "cat").size}>
+            <CheckList options={f.cats} paramKey="cat" params={params} hrefFor={hrefFor} />
+          </FilterDropdown>
         )}
       </div>
       <ResultsBar shown={visible.length} total={products.length} params={params} hrefFor={hrefFor} />

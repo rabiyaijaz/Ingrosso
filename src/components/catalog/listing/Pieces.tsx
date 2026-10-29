@@ -107,7 +107,7 @@ export function FilterPanel({
   facets,
   params,
   hrefFor,
-  show = ["grade", "brand", "cat", "stock"],
+  show = ["stock", "brand", "grade", "cat"],
 }: {
   facets: Facets
   params: FacetParams
@@ -124,16 +124,18 @@ export function FilterPanel({
       <div className="mt-2">{body}</div>
     </details>
   )
+  // Fixed order in every layout: the one-click stock switch, then the
+  // narrowing order a repairer thinks in (brand → grade → part).
   const panel = (
     <div className="flex flex-col">
-      {show.includes("grade") && facets.grades.length > 0 && group("Grade", <GradeChecks options={facets.grades} params={params} hrefFor={hrefFor} />)}
+      {show.includes("stock") && facets.inStock !== null && group("Availability", <StockToggle count={facets.inStock} params={params} hrefFor={hrefFor} />)}
       {show.includes("brand") && facets.brands.length > 1 &&
         group(
           "Brand",
           <CheckList options={facets.brands} paramKey="brand" params={params} hrefFor={hrefFor} icon={(v) => <BrandMark brand={v} variant="plain" />} />
         )}
+      {show.includes("grade") && facets.grades.length > 0 && group("Grade", <GradeChecks options={facets.grades} params={params} hrefFor={hrefFor} />)}
       {show.includes("cat") && facets.cats.length > 1 && group("Part", <CheckList options={facets.cats} paramKey="cat" params={params} hrefFor={hrefFor} />)}
-      {show.includes("stock") && facets.inStock !== null && group("Availability", <StockToggle count={facets.inStock} params={params} hrefFor={hrefFor} />)}
     </div>
   )
   return (
@@ -145,8 +147,8 @@ export function FilterPanel({
         </summary>
         <div className="mt-4">{panel}</div>
       </details>
-      {/* Never taller than the screen while sticky: scrolls on its own, scrollbar shows on hover */}
-      <div className="ig-scroll-hover hidden max-h-[calc(100svh-2rem)] rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest lg:block">
+      {/* Never taller than the screen while sticky: scrolls on its own, no scrollbar */}
+      <div className="ig-scroll-quiet hidden max-h-[calc(100svh-2rem)] rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest lg:block">
         <div className="mb-3 flex items-center justify-between px-2">
           <Heading level="h2" className="txt-compact-medium-plus">Filters</Heading>
           {active > 0 && (
