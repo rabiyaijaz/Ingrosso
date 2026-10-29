@@ -1273,3 +1273,6 @@ body {
   .ig-card, .ig-inset { box-shadow: none !important; border: 1px solid #d0d5dd; background: #fff !important; }
   .ig-progress-fill { animation: none !important; }
 }
+/* A count that just changed (nav badges) */
+.ig-count-pop { animation: ig-badge-pop 360ms cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .ig-count-pop { animation: none; } }

@@ -1,6 +1,10 @@
 import { Heading, Text } from "@medusajs/ui"
 import { ArrowRight, Plus, ShoppingCart } from "@medusajs/icons"
 import { Button } from "@/components/ui/Button"
+import { CheckDraw } from "@/components/ui/CheckDraw"
+import { Chip } from "@/components/ui/Chip"
+import { EmptyState } from "@/components/ui/EmptyState"
+import { SearchField } from "@/components/ui/SearchField"
 import { BrandMark } from "@/components/brand/BrandMark"
 import { GradeBadge, GradeScale } from "@/components/catalog/Grade"
 import { PartGlyph } from "@/components/catalog/PartGlyph"
@@ -148,6 +152,52 @@ export default function SystemPage() {
               <BrandMark brand={b} variant="plain" />
             </span>
           ))}
+        </div>
+      </Block>
+
+      <Block title="Tabs">
+        <Text size="small" className="-mt-3 text-ui-fg-subtle">Segmented tabs (.ig-steps) for steps and views; icon tabs (.ig-icontabs) for a few big choices with a note.</Text>
+        <nav aria-label="Example views" data-fit className="ig-steps">
+          <a href="#tabs" aria-current="page" className="ig-steps__tab txt-compact-small-plus">To fulfil <span className="ig-figure txt-compact-xsmall text-ui-fg-muted">10</span></a>
+          <a href="#tabs" className="ig-steps__tab txt-compact-small-plus">Shipped <span className="ig-figure txt-compact-xsmall text-ui-fg-muted">24</span></a>
+          <a href="#tabs" className="ig-steps__tab txt-compact-small-plus">All</a>
+        </nav>
+        <nav aria-label="Example families" className="ig-icontabs max-w-[640px] grid-cols-3">
+          {(["Genuine", "Aftermarket", "Third-party"] as const).map((f, i) => (
+            <a key={f} href="#tabs" aria-current={i === 0 ? "page" : undefined} className="ig-icontabs__tab">
+              <span className="ig-icon-frame ig-glass-icon" data-size="md" data-family={f}><Plus /></span>
+              <span className="flex flex-col"><span className="ig-icontabs__label txt-compact-medium-plus">{f}</span><span className="ig-icontabs__note txt-compact-xsmall">Note</span></span>
+            </a>
+          ))}
+        </nav>
+      </Block>
+
+      <Block title="Chips, search, empty state">
+        <div className="flex flex-wrap items-center gap-2">
+          <Chip size="sm">Small</Chip>
+          <Chip size="md">Medium</Chip>
+          <Chip size="lg">Large</Chip>
+          <Chip selected>Selected</Chip>
+          <Chip static>Label</Chip>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <SearchField aria-label="Example search" placeholder="Search, small" className="w-[260px]" />
+          <SearchField size="md" aria-label="Example search, medium" placeholder="Search, medium" className="w-[260px]" />
+        </div>
+        <EmptyState title="Nothing here yet" icon={<ShoppingCart />} action={<Button variant="secondary">One action</Button>}>One line on what to do next.</EmptyState>
+      </Block>
+
+      <Block title="Cards and motion">
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="ig-card p-5 txt-compact-small">.ig-card: every card and panel</div>
+          <div className="ig-card ig-card-hover p-5 txt-compact-small">.ig-card-hover: lifts on hover</div>
+          <div className="ig-card p-5 txt-compact-small"><div className="ig-inset p-3">.ig-inset inside a card</div></div>
+        </div>
+        <div className="flex flex-wrap items-center gap-6 txt-compact-small">
+          <span className="flex items-center gap-2 text-ui-tag-green-icon"><CheckDraw className="size-6" /><span className="text-ui-fg-base">CheckDraw: done</span></span>
+          <span className="flex w-40 flex-col gap-1"><span className="h-1.5 overflow-hidden rounded-full bg-ui-bg-component"><span className="ig-progress-fill block h-full w-2/3 rounded-full bg-ig-blue" /></span>.ig-progress-fill</span>
+          <span className="ig-flash px-1">.ig-flash: a value changed</span>
+          <span className="ig-skeleton h-4 w-32" aria-hidden />
         </div>
       </Block>
     </PageContainer>

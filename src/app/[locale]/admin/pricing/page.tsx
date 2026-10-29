@@ -3,7 +3,10 @@ import { StatusBadge } from "@medusajs/ui"
 import { Plus } from "@medusajs/icons"
 import { AdminHeader, Panel } from "@/components/admin/Kit"
 import { Figure } from "@/components/commerce/Figure"
+import { resetTiers } from "@/app/admin-actions"
 import { Button } from "@/components/ui/Button"
+import { SubmitButton } from "@/components/ui/SubmitButton"
+import { getCategories } from "@/lib/categories"
 import { SAMPLE_PARTS, TERMS_SHORT, getCustomers, getTiers } from "@/lib/admin/data"
 import { tierUnit } from "@/lib/admin/pricing"
 import { euroWhole } from "@/lib/admin/stats"
@@ -14,11 +17,11 @@ import { routes } from "@/lib/routes"
 
 export const metadata = { title: "Price tiers" }
 
-const labelFor = (scope: string, target: string) =>
-  scope === "category" ? CATEGORIES.find((c) => c.slug === target)?.plural ?? target : scope === "grade" ? GRADES.find((g) => g.id === target)?.label ?? target : target
-
 export default async function PricingPage() {
-  const [tiers, customers] = await Promise.all([getTiers(), getCustomers()])
+  const [tiers, customers, categories] = await Promise.all([getTiers(), getCustomers(), getCategories()])
+  // Category names as the trade desk set them (added categories included)
+  const labelFor = (scope: string, target: string) =>
+    scope === "category" ? categories.find((c) => c.slug === target)?.plural ?? target : scope === "grade" ? GRADES.find((g) => g.id === target)?.label ?? target : target
   const parts = SAMPLE_PARTS.map((s) => productBySlug(s)).filter((p) => !!p)
 
   return (
@@ -28,6 +31,11 @@ export default async function PricingPage() {
         description="Each tier is a discount off the list price, with quantity breaks and its own rules for categories or grades. Every approved account is on one tier."
       >
         <Button asChild iconLeft={<Plus />}><Link href={routes.admin.tier("new")}>New tier</Link></Button>
+        <form action={resetTiers}>
+          <SubmitButton variant="secondary" done="Tiers reset to the defaults" confirm={{ title: "Reset every tier?", description: "The four standard tiers come back with their default discounts, breaks and rules. Custom tiers are removed.", confirmText: "Reset tiers" }}>
+            Reset to defaults
+          </SubmitButton>
+        </form>
       </AdminHeader>
 
       <div className="mb-6 grid gap-3 md:grid-cols-2 2xl:grid-cols-4">

@@ -6,6 +6,7 @@ import { clx, toast } from "@medusajs/ui"
 import { Plus, Tag, Trash, Users } from "@medusajs/icons"
 import { deleteTier, saveTier } from "@/app/admin-actions"
 import { Button } from "@/components/ui/Button"
+import { SubmitButton } from "@/components/ui/SubmitButton"
 import { WithIcon } from "@/components/ui/WithIcon"
 import { Field, NativeSelect, fieldClass } from "./Fields"
 import { tierUnit } from "@/lib/admin/pricing"
@@ -188,7 +189,7 @@ export function TierEditor({
         {!isNew && (
           <form action={deleteTier} className="ig-card flex flex-col gap-2 p-4">
             <input type="hidden" name="id" value={tier.id} />
-            <Button type="submit" variant="danger" size="sm" disabled={!canDelete} className="w-fit">Delete tier</Button>
+            <SubmitButton variant="danger" size="sm" disabled={!canDelete} className="w-fit" done="Tier deleted" confirm={{ title: `Delete ${t.name}?`, description: "Its rules and breaks are removed. No account is on it.", confirmText: "Delete tier" }}>Delete tier</SubmitButton>
             {!canDelete && <p className="txt-compact-small text-ui-fg-subtle">{deleteReason}</p>}
           </form>
         )}

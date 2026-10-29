@@ -12,7 +12,7 @@ import { routes } from "@/lib/routes"
 // of a customer's life, not a separate area) → Catalogue → Pricing.
 type Item = { href: string; label: string; icon: React.ReactNode; count?: number; exact?: boolean }
 
-export function AdminNav({ counts }: { counts: { newOrders: number; applications: number } }) {
+export function AdminNav({ counts }: { counts: { newOrders: number; applications: number; lowStock: number } }) {
   const path = usePathname()
   const groups: { title?: string; items: Item[] }[] = [
     { items: [{ href: routes.admin.home(), label: "Overview", icon: <ChartBar />, exact: true }] },
@@ -26,7 +26,7 @@ export function AdminNav({ counts }: { counts: { newOrders: number; applications
     {
       title: "Catalogue",
       items: [
-        { href: routes.admin.products(), label: "Products", icon: <ArchiveBox /> },
+        { href: routes.admin.products(), label: "Products", icon: <ArchiveBox />, count: counts.lowStock },
         { href: routes.admin.categories(), label: "Categories", icon: <ListTree /> },
       ],
     },
@@ -60,7 +60,8 @@ export function AdminNav({ counts }: { counts: { newOrders: number; applications
                   <span className={clx("shrink-0", active ? "" : "text-ui-fg-muted group-hover:text-ui-fg-base")}>{it.icon}</span>
                   <span className="flex-1">{it.label}</span>
                   {!!it.count && (
-                    <span className={clx("min-w-5 rounded-full px-1.5 text-center txt-compact-xsmall-plus", active ? "bg-white/25" : "bg-ui-tag-orange-bg text-ui-tag-orange-text")}>
+                    // Keyed on the count, so it pops when the queue changes
+                    <span key={it.count} className={clx("ig-count-pop min-w-5 rounded-full px-1.5 text-center txt-compact-xsmall-plus", active ? "bg-white/25" : "bg-ui-tag-orange-bg text-ui-tag-orange-text")}>
                       {it.count}
                     </span>
                   )}

@@ -6,6 +6,7 @@ import { deleteCategory, saveCategory } from "@/app/admin-actions"
 import { GLYPH_KEYS, PartGlassGlyph } from "@/components/catalog/PartIcon"
 import { Tag } from "@medusajs/icons"
 import { Button } from "@/components/ui/Button"
+import { SubmitButton } from "@/components/ui/SubmitButton"
 import { WithIcon } from "@/components/ui/WithIcon"
 import type { AdminCategory } from "@/lib/admin/types"
 import { Field, fieldClass } from "./Fields"
@@ -99,7 +100,7 @@ export function CategoryForm({ category, error, canDelete, deleteReason }: { cat
         {!isNew && (
           <form action={deleteCategory} className="ig-card flex flex-col gap-2 p-4">
             <input type="hidden" name="slug" value={category.slug} />
-            <Button type="submit" variant="danger" size="sm" disabled={!canDelete} className="w-fit">Delete category</Button>
+            <SubmitButton variant="danger" size="sm" disabled={!canDelete} className="w-fit" done="Category deleted" confirm={{ title: "Delete this category?", description: "It leaves the store's top bar. It holds no parts.", confirmText: "Delete category" }}>Delete category</SubmitButton>
             {!canDelete && <p className="txt-compact-small text-ui-fg-subtle">{deleteReason}</p>}
           </form>
         )}

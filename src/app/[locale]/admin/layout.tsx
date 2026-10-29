@@ -1,16 +1,19 @@
 import type { Metadata } from "next"
 import { AdminNav } from "@/components/admin/AdminNav"
-import { getCustomers, getOrders } from "@/lib/admin/data"
+import { getAdminProducts, getCustomers, getOrders } from "@/lib/admin/data"
+import { stockOf } from "@/lib/commerce"
 
 export const metadata: Metadata = { title: { default: "Trade desk", template: "%s · Trade desk · Ingrosso" } }
 
 // The trade desk: the same tokens, glass and components as the store, in a
 // working layout (sidebar, wide content). Every admin screen sits in here.
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [orders, customers] = await Promise.all([getOrders(), getCustomers()])
+  const [orders, customers, products] = await Promise.all([getOrders(), getCustomers(), getAdminProducts()])
   const counts = {
     newOrders: orders.filter((o) => o.status === "new").length,
     applications: customers.filter((c) => c.status === "pending").length,
+    // Running low or out: the same views as the Products tabs
+    lowStock: products.filter((p) => stockOf(p).available <= 12).length,
   }
   return (
     <div className="ig-admin min-h-svh lg:grid lg:grid-cols-[248px_minmax(0,1fr)]">
