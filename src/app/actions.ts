@@ -8,6 +8,8 @@ import { stockOf, unitPriceAt } from "@/lib/commerce"
 import { WATCH_COOKIE, readWatchList } from "@/lib/watch"
 import { LAB } from "@/lib/lab"
 import { THEME_COOKIE, isTheme, type ThemeId } from "@/lib/themes"
+import { LANG_COOKIE, MODE_COOKIE, isLang, isMode, type LangCode, type Mode } from "@/lib/prefs"
+import { ADDRESS_COOKIE, NOTIFY_COOKIE, isNotifyId, readAddresses, readNotify, type Address } from "@/lib/settings"
 import { ICON_STYLE_COOKIE, isIconStyle, type IconStyle } from "@/lib/icon-styles"
 import { LISTING_COOKIE, isListing, type ListingVariant } from "@/lib/listing-variants"
 import { ORDERS_COOKIE, readOrders, type PlacedOrder } from "@/lib/orders"
@@ -15,6 +17,7 @@ import { orderTotals, type CarrierId, type PaymentId } from "@/lib/totals"
 import { VIEW_COOKIE, VIEWER_STATES, getViewer, type ViewerState } from "@/lib/viewer"
 
 const COOKIE_OPTS = { path: "/", sameSite: "lax" as const, maxAge: 60 * 60 * 24 * 30 }
+const PREF_OPTS = { ...COOKIE_OPTS, maxAge: 60 * 60 * 24 * 365 }
 
 // Design-review only: switches which account state the storefront renders for.
 export async function setViewerState(state: ViewerState) {
@@ -124,6 +127,55 @@ export async function placeOrder(input: { carrier: CarrierId; payment: PaymentId
   return { ok: true as const, ref: order.ref }
 }
 
+// Preferences: Light or Dark, and language. Picking a mode also drops any
+// theme the lab toolbar was previewing, so the choice shows.
+export async function setMode(mode: Mode) {
+  if (!isMode(mode)) return
+  const store = await cookies()
+  store.set(MODE_COOKIE, mode, PREF_OPTS)
+  store.delete(THEME_COOKIE)
+  revalidatePath("/", "layout")
+}
+
+export async function setLanguage(lang: LangCode) {
+  if (!isLang(lang)) return
+  ;(await cookies()).set(LANG_COOKIE, lang, PREF_OPTS)
+  revalidatePath("/", "layout")
+}
+
+// Account settings ---------------------------------------------------------
+
+export async function saveAddress(kind: "delivery" | "billing", address: Address | null) {
+  const clean = (s: unknown) => String(s ?? "").trim().slice(0, 120)
+  if (address && (!clean(address.street) || !clean(address.city) || !clean(address.country)))
+    return { ok: false as const, error: "Street, city and country are needed." }
+  const current = await readAddresses()
+  const next = { ...current, [kind]: address && { street: clean(address.street), postcode: clean(address.postcode), city: clean(address.city), country: clean(address.country) } }
+  ;(await cookies()).set(ADDRESS_COOKIE, JSON.stringify(next), COOKIE_OPTS)
+  revalidatePath("/", "layout")
+  return { ok: true as const }
+}
+
+export async function setNotify(id: string, on: boolean) {
+  if (!isNotifyId(id)) return
+  const current = await readNotify()
+  ;(await cookies()).set(NOTIFY_COOKIE, JSON.stringify({ ...current, [id]: on }), COOKIE_OPTS)
+  revalidatePath("/", "layout")
+}
+
+// Company details were checked when the account was approved, so a change is
+// a request the trade desk reviews. Prototype: nothing is stored.
+export async function requestCompanyChange(formData: FormData) {
+  const text = String(formData.get("change") ?? "").trim()
+  if (!text) return
+}
+
+// Prototype: the password form checks the rules only
+export async function changePassword(formData: FormData) {
+  const next = String(formData.get("new") ?? "")
+  if (next.length < 10 || next !== String(formData.get("confirm") ?? "")) return
+}
+
 // Lab only: preview a colour theme across the whole site.
 export async function setLabTheme(theme: ThemeId) {
   if (!LAB || !isTheme(theme)) return
@@ -152,5 +204,7 @@ export async function resetPrototype() {
   store.set(CART_COOKIE, "[]", COOKIE_OPTS)
   store.set(ORDERS_COOKIE, "[]", COOKIE_OPTS)
   store.set(WATCH_COOKIE, "[]", COOKIE_OPTS)
+  store.delete(ADDRESS_COOKIE)
+  store.delete(NOTIFY_COOKIE)
   revalidatePath("/", "layout")
 }

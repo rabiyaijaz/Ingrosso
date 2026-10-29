@@ -27,6 +27,7 @@ export const routes = {
   checkout: (l: string = "en") => `/${l}/checkout`,
   order: (ref: string, l: string = "en") => `/${l}/orders/${ref}`,
   account: (l: string = "en") => `/${l}/account`,
+  accountSettings: (section?: string, l: string = "en") => `/${l}/account/settings${section ? `#${section}` : ""}`,
   system: (l: string = "en") => `/${l}/system`,
   admin: {
     home: (l: string = "en") => `/${l}/admin`,

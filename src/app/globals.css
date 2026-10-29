@@ -524,6 +524,57 @@ body {
 .ig-lock__shackle { animation: ig-shackle 2.4s cubic-bezier(.3,1.6,.5,1) infinite; }
 @keyframes ig-shackle { 0%, 20%, 70%, 100% { transform: translateY(0); } 35%, 55% { transform: translateY(-3px); } }
 
+/*
+  Preferences (layout/PrefControls): Light/Dark pill and the language button.
+  On the top strip they take the band's ink; elsewhere the surface's.
+*/
+.ig-mode {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--bg-ui-bg-component, rgba(0, 0, 0, 0.05));
+}
+.ig-mode__opt {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 26px;
+  border-radius: 999px;
+  color: var(--fg-muted, currentColor);
+  transition: background-color 160ms, color 160ms, box-shadow 160ms;
+  outline: none;
+}
+.ig-mode__opt:focus-visible { box-shadow: 0 0 0 2px var(--ig-blue); }
+.ig-mode__opt[aria-checked="true"] {
+  background: var(--bg-ui-bg-base, #fff);
+  color: var(--ig-blue);
+  box-shadow: 0 1px 2px rgba(15, 22, 32, 0.12), 0 0 0 1px rgba(15, 22, 32, 0.06);
+}
+.ig-mode[data-tone="band"] { background: color-mix(in srgb, currentColor 16%, transparent); }
+.ig-mode[data-tone="band"] .ig-mode__opt { width: 26px; height: 22px; color: inherit; opacity: 0.8; }
+.ig-mode[data-tone="band"] .ig-mode__opt:hover { opacity: 1; }
+.ig-mode[data-tone="band"] .ig-mode__opt[aria-checked="true"] { opacity: 1; background: currentColor; box-shadow: none; }
+.ig-mode[data-tone="band"] .ig-mode__opt[aria-checked="true"] svg { color: var(--ig-band-bg, var(--ig-blue)); }
+.ig-mode[data-tone="band"] .ig-mode__opt:focus-visible { box-shadow: 0 0 0 2px currentColor; }
+
+.ig-band-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 8px 0 7px;
+  border-radius: 999px;
+  color: inherit;
+  outline: none;
+  transition: background-color 160ms;
+}
+.ig-band-btn:hover, .ig-band-btn[data-state="open"] { background: color-mix(in srgb, currentColor 16%, transparent); }
+.ig-band-btn:focus-visible { box-shadow: 0 0 0 2px currentColor; }
+
+/* Right-to-left (Arabic, Urdu): arrows and chevrons point the reading way */
+[dir="rtl"] :is(.ig-flip-rtl, [aria-label="Breadcrumb"] li > svg, nav[aria-label="Brand"] svg:last-child, nav[aria-label="Series"] svg:last-child) { transform: scaleX(-1); }
+
 @media (prefers-reduced-motion: reduce) {
   .ig-strip__line, .ig-strip__anim, .ig-strip__anim *, .ig-strip__anim::after { animation: none !important; }
   .ig-truck { transform: translateX(12px); }

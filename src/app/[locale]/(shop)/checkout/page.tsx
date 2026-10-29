@@ -7,12 +7,10 @@ import { PageContainer, PageHeading } from "@/components/layout/Page"
 import { cartWithProducts } from "@/lib/cart"
 import { unitPriceAt } from "@/lib/commerce"
 import { routes } from "@/lib/routes"
+import { addressLines, readAddresses } from "@/lib/settings"
 import { getViewer } from "@/lib/viewer"
 
 export const metadata = { title: "Checkout" }
-
-// Sample saved address for the sample approved account.
-const SAMPLE_ADDRESS = ["Sample street 12", "3011 AA Rotterdam", "Netherlands"]
 
 export default async function CheckoutPage() {
   const viewer = await getViewer()
@@ -38,6 +36,7 @@ export default async function CheckoutPage() {
     )
   }
 
+  const { delivery, billing } = await readAddresses()
   const lines = items.map(({ line, product }) => {
     const unit = unitPriceAt(product, { ...viewer, state: "approved" }, line.qty) ?? 0
     return { slug: product.slug, name: product.name, sku: product.sku, category: product.category, grade: product.grade, qty: line.qty, total: unit * line.qty }
@@ -51,7 +50,8 @@ export default async function CheckoutPage() {
         subtotal={lines.reduce((s, l) => s + l.total, 0)}
         masked={viewer.state === "masked"}
         company={viewer.company ?? ""}
-        address={SAMPLE_ADDRESS}
+        address={addressLines(delivery)}
+        invoice={billing ? addressLines(billing) : undefined}
       />
     </PageContainer>
   )

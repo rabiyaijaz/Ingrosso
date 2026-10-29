@@ -1,10 +1,7 @@
 import Link from "next/link"
-import { clx } from "@medusajs/ui"
 
 import { Button } from "@/components/ui/Button"
-import { ShoppingCart, User } from "@medusajs/icons"
 import { Logo } from "@/components/brand/Logo"
-import { Figure } from "@/components/commerce/Figure"
 import { getCategories } from "@/lib/categories"
 import { readCart } from "@/lib/cart"
 import { deviceTree, searchStarters } from "@/lib/public"
@@ -16,9 +13,13 @@ import { CategoryNav } from "./CategoryNav"
 import { DeviceMenu } from "./DeviceMenu"
 import { SearchBox } from "./SearchBox"
 import { StripTicker } from "./StripTicker"
+import { PrefControls } from "./PrefControls"
+import { AccountMenu } from "./AccountMenu"
+import { getPrefs } from "@/lib/prefs-server"
 
 export async function SiteHeader() {
   const viewer = await getViewer()
+  const prefs = await getPrefs()
   const cart = await readCart()
   const units = cart.reduce((n, l) => n + l.qty, 0)
   const iconStyle = await getIconStyle()
@@ -32,8 +33,10 @@ export async function SiteHeader() {
     // including the landing page, so it keeps its own field and button styles.
     <header data-ui className="relative z-30 bg-ui-bg-base">
       <div className="ig-surface-blue">
-        <div className="mx-auto max-w-page px-[var(--ig-gutter)] txt-compact-small">
+        <div className="relative mx-auto max-w-page px-[var(--ig-gutter)] txt-compact-small">
           <StripTicker canOrder={canOrder} />
+          {/* Preferences for everyone, signed in or not */}
+          <PrefControls mode={prefs.mode} lang={prefs.lang} className="absolute inset-y-0 end-[var(--ig-gutter)] hidden md:flex" />
         </div>
       </div>
 
@@ -43,12 +46,7 @@ export async function SiteHeader() {
         <SearchBox starters={starters} className="hidden flex-1 md:block md:max-w-[640px]" />
         <div className="ml-auto flex items-center gap-2">
           {signedIn ? (
-            <Button asChild variant="transparent" size="large">
-              <Link href={routes.account()}>
-                <User />
-                <span className="hidden lg:inline">Account</span>
-              </Link>
-            </Button>
+            <AccountMenu company={viewer.company ?? "Your account"} state={viewer.state} mode={prefs.mode} lang={prefs.lang} />
           ) : (
             <>
               <Button asChild variant="transparent" size="large" className="hidden sm:inline-flex">

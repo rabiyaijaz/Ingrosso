@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { Heading, StatusBadge, Table, Text } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
-import { MaskToggle } from "@/components/account/MaskToggle"
 import { SignOutButton } from "@/components/account/SignOutButton"
 import { CardIcon } from "@/components/commerce/ChoiceCard"
 import { Figure } from "@/components/commerce/Figure"
-import { BellAlert, MapPin } from "@medusajs/icons"
+import { BellAlert, CogSixTooth, MapPin } from "@medusajs/icons"
+import { addressLines, readAddresses } from "@/lib/settings"
 import { NotifyMe } from "@/components/commerce/NotifyMe"
 import { ReorderButton } from "@/components/commerce/ReorderButton"
 import { CheckDraw } from "@/components/ui/CheckDraw"
@@ -34,7 +34,7 @@ const STATUS_LABEL = { new: "Received", picking: "Picking", packed: "Packed", sh
 export default async function AccountPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const sp = await searchParams
   const viewer = await getViewer()
-  const [changes, watching] = await Promise.all([getOrderChanges(), readWatchList()])
+  const [changes, watching, addresses] = await Promise.all([getOrderChanges(), readWatchList(), readAddresses()])
   // Orders placed here show where the trade desk has them
   const placed = (await readOrders()).map((o) => {
     const s = changes[o.ref]?.status ?? "new"
@@ -106,7 +106,8 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     <PageContainer className="flex flex-col gap-8 pt-10">
       <PageHeading title={viewer.company ?? "Your account"} description="Approved trade account">
         <div className="flex flex-wrap items-center gap-3">
-          <StatusBadge color="green">Approved · Trade standard price list</StatusBadge>
+          <StatusBadge color="green">{viewer.state === "masked" ? "Approved · prices hidden" : "Approved · Trade standard price list"}</StatusBadge>
+          <Button asChild variant="secondary" iconLeft={<CogSixTooth />}><Link href={routes.accountSettings()}>Settings</Link></Button>
           <SignOutButton />
         </div>
       </PageHeading>
@@ -149,9 +150,6 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
         </section>
 
         <aside className="flex flex-col gap-6">
-          <div className="ig-card p-5">
-            <MaskToggle masked={viewer.state === "masked"} />
-          </div>
           {/* Parts the buyer asked to hear about */}
           <div className="ig-card flex flex-col gap-3 p-5">
             <Heading level="h2" className="flex items-center gap-2 txt-compact-medium-plus"><BellAlert className="text-ui-fg-interactive" /> Back-in-stock alerts</Heading>
@@ -173,8 +171,9 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             <div className="flex flex-col gap-3">
               <Heading level="h2" className="txt-compact-medium-plus">Delivery address</Heading>
               <Text size="small" className="text-ui-fg-subtle">
-                Fix Point Repairs B.V.<br />Sample street 12<br />3011 AA Rotterdam<br />Netherlands
+                {[viewer.company, ...addressLines(addresses.delivery)].map((l) => <span key={l} className="block">{l}</span>)}
               </Text>
+              <Link href={routes.accountSettings("addresses")} className="txt-compact-small-plus text-ui-fg-interactive hover:underline">Change</Link>
             </div>
           </div>
         </aside>

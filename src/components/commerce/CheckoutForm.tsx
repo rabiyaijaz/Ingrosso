@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, RadioGroup, Text, Textarea, clx, toast } from "@medusajs/ui"
@@ -35,17 +36,19 @@ type Props = {
   masked: boolean
   company: string
   address: string[]
+  /** The saved invoice address, when it differs from delivery */
+  invoice?: string[]
 }
 
 // Four-step checkout, matching the application form's step pattern.
 // Totals shown here are display only; placeOrder re-prices on the server.
-export function CheckoutForm({ lines, subtotal, masked, company, address }: Props) {
+export function CheckoutForm({ lines, subtotal, masked, company, address, invoice }: Props) {
   const router = useRouter()
   const [step, setStep] = useState<StepId>("delivery")
   const [reached, setReached] = useState(0)
   const [reference, setReference] = useState("")
   const [note, setNote] = useState("")
-  const [sameInvoice, setSameInvoice] = useState(true)
+  const [sameInvoice, setSameInvoice] = useState(!invoice)
   const [carrier, setCarrier] = useState<CarrierId>("postnl")
   const [payment, setPayment] = useState<PaymentId>("invoice")
   const [terms, setTerms] = useState(false)
@@ -104,13 +107,14 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
         </div>
 
         <ProgressTabs.Content value="delivery" className="ig-panel-in flex flex-col gap-5">
-          <StepHead title="Where should it go?" body="Your registered delivery address. To change it, contact the trade desk." />
+          <StepHead title="Where should it go?" body="Your saved delivery address." />
           <div className="ig-card flex items-start gap-4 p-5">
             <CardIcon><MapPin /></CardIcon>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-1 flex-col gap-1">
               <Text weight="plus">{company}</Text>
               {address.map((l) => <Text key={l} size="small" className="text-ui-fg-subtle">{l}</Text>)}
             </div>
+            <Link href={routes.accountSettings("addresses")} className="txt-compact-small-plus text-ui-fg-interactive hover:underline">Change</Link>
           </div>
           <label className="flex items-center gap-3 txt-compact-small">
             <Checkbox checked={sameInvoice} onCheckedChange={(v) => setSameInvoice(v === true)} />
@@ -153,7 +157,7 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
           <div className="grid gap-3 sm:grid-cols-2">
             {([
               ["Deliver to", `${company}, ${address.join(", ")}`, <MapPin key="i" />, "delivery"],
-              ["Invoice to", sameInvoice ? "Same as delivery" : "Your invoice address on file", <Receipt key="i" />, "delivery"],
+              ["Invoice to", sameInvoice ? "Same as delivery" : invoice ? invoice.join(", ") : "Your invoice address on file", <Receipt key="i" />, "delivery"],
               ["Shipping", CARRIERS.find((c) => c.id === carrier)!.name, CARRIER_ICON[carrier], "shipping"],
               ["Payment", PAYMENTS.find((p) => p.id === payment)!.name, PAYMENT_ICON[payment], "payment"],
               ["Your reference", reference || "None", <DocumentText key="i" />, "delivery"],

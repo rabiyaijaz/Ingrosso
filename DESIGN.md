@@ -216,6 +216,24 @@ Prototype data: sample customers, 30 days of generated orders, and the trade des
 - **After:** the order page shows the warehouse status and tracking as the trade desk moves it, with Buy again, Print invoice and All orders at the top. The account lists orders with live status and Buy again, and the back-in-stock alerts.
 - **Account:** signing in returns you to the page that asked; after applying, a one-time "Application sent" with what happens next.
 
+## Preferences and the account (decided 29 Oct 2026)
+
+Two kinds of setting, kept apart:
+
+- **Preferences** belong to the person on this device, signed in or not: **Light / Dark** and **Language**. Cookies `ig_mode` and `ig_lang` (`src/lib/prefs.ts`), read on the server so there is no flash.
+  - Light is the default. Dark is the Obsidian neon theme. Cobalt and Amber stay lab-only previews; choosing Light or Dark clears a lab preview.
+  - 10 languages, each listed in its own script: English, Italiano, Deutsch, Français, Español, Português, Türkçe, 中文, العربية, اردو. Arabic and Urdu set `dir="rtl"` and mirror the layout. The text is English until translations land; choosing a language sets direction and is remembered.
+  - Where: the right end of the blue top strip (`layout/PrefControls`, md and up), again in the Account menu, and under Account settings → Preferences. All three use the same hooks.
+- **The account** is the trade relationship. The header's **Account menu** (`layout/AccountMenu`) shows the company and its status, Orders and alerts, Account settings, Hide prices on screen, Appearance, Language, and Sign out.
+- **Account settings** (`/account/settings`): one page, a side nav that follows the scroll, one card per section.
+  1. Company: as approved; changes are a request the trade desk reviews.
+  2. Addresses: delivery and invoice (invoice falls back to delivery). Checkout and the account overview read these.
+  3. Payment and credit: price list, credit limit, the payment methods checkout offers, where invoices are.
+  4. Notifications: order updates, back-in-stock, price changes, new parts and offers.
+  5. Sign-in and security: change password.
+  6. Preferences: appearance, language, hide prices on screen.
+- Not built, on purpose: team members (not wanted for now); prices with or without VAT.
+
 ## Rules carried from the BRD
 
 - Prices and stock are read in one place only: `src/lib/commerce.ts` (R2).
