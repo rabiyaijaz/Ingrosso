@@ -460,38 +460,30 @@ body {
   100% { transform: translateX(60px); }
 }
 
-/* 2 · Euro coins dropping onto a stack */
-.ig-coin {
+/* 2 · Order total fills to the threshold, the parcel hops and is ticked */
+.ig-parcel { display: flex; align-items: center; gap: 4px; padding-left: 2px; }
+.ig-parcel__track {
+  position: relative;
+  width: 28px;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 28%, transparent);
+  overflow: hidden;
+}
+.ig-parcel__track::after {
+  content: "";
   position: absolute;
-  left: 18px;
-  bottom: calc(1px + var(--n) * 4px);
-  width: 16px;
-  height: 5px;
-  border-radius: 50%;
+  inset: 0;
+  border-radius: inherit;
   background: currentColor;
-  box-shadow: inset 0 -1.5px 0 color-mix(in srgb, var(--ig-blue) 45%, white);
-  animation: ig-coin-drop 2.4s cubic-bezier(.5,0,.6,1.4) infinite;
-  animation-delay: calc(var(--n) * 0.22s);
+  transform-origin: left;
+  animation: ig-parcel-fill 2.8s cubic-bezier(.4,0,.2,1) infinite;
 }
-.ig-coin--top {
-  left: 17px;
-  bottom: 9px;
-  width: 18px;
-  height: 18px;
-  display: grid;
-  place-items: center;
-  font: 700 11px/1 var(--font-sans, inherit);
-  color: var(--ig-blue);
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ig-blue) 35%, white);
-  animation: ig-coin-drop 2.4s cubic-bezier(.5,0,.6,1.4) infinite 0.44s, ig-coin-spin 2.4s ease-in-out infinite 0.44s;
-}
-@keyframes ig-coin-drop {
-  0%   { transform: translateY(-22px); opacity: 0; }
-  20%  { transform: translateY(0); opacity: 1; }
-  85%  { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(0); opacity: 0; }
-}
-@keyframes ig-coin-spin { 20% { rotate: y 0deg; } 55% { rotate: y 360deg; } 100% { rotate: y 360deg; } }
+.ig-parcel__box { flex-shrink: 0; animation: ig-parcel-hop 2.8s cubic-bezier(.3,1.6,.5,1) infinite; }
+.ig-parcel__tick { stroke-dasharray: 1; animation: ig-parcel-tick 2.8s ease-out infinite; }
+@keyframes ig-parcel-fill { 0% { transform: scaleX(0); } 45%, 88% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes ig-parcel-hop { 0%, 44% { transform: translateY(0); } 52% { transform: translateY(-4px); } 62%, 100% { transform: translateY(0); } }
+@keyframes ig-parcel-tick { 0%, 52% { stroke-dashoffset: 1; opacity: 1; } 68%, 88% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
 
 /* Shared glint: a small four-point sparkle */
 .ig-glint {

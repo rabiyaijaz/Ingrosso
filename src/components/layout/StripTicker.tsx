@@ -13,7 +13,7 @@ export function StripTicker({ canOrder }: { canOrder: boolean }) {
   const cutoff = useCutoffText()
   const lines = [
     { anim: <TruckAnim />, text: cutoff },
-    { anim: <CoinAnim />, text: "Free delivery on orders over €500" },
+    { anim: <ParcelAnim />, text: "Free delivery on orders over €500" },
     { anim: <GradeAnim />, text: "Every part graded, from Genuine to Third-party" },
     canOrder
       ? { anim: <TagAnim />, text: "Your trade prices are on" }
@@ -74,14 +74,17 @@ function TruckAnim() {
   )
 }
 
-// Euro coins dropping onto a stack, the last one spinning with a glint
-function CoinAnim() {
+// The order total fills up to the threshold, the parcel hops and a tick
+// draws on it: free delivery unlocked
+function ParcelAnim() {
   return (
-    <span aria-hidden className="ig-strip__anim ig-coins">
-      <span className="ig-coin" style={{ "--n": 0 } as React.CSSProperties} />
-      <span className="ig-coin" style={{ "--n": 1 } as React.CSSProperties} />
-      <span className="ig-coin ig-coin--top" style={{ "--n": 2 } as React.CSSProperties}>€</span>
-      <span className="ig-glint" />
+    <span aria-hidden className="ig-strip__anim ig-parcel">
+      <span className="ig-parcel__track" />
+      <svg viewBox="0 0 18 18" width="17" height="17" fill="none" className="ig-parcel__box">
+        <path d="M2 5.5L9 2l7 3.5v7.6L9 16.5l-7-3.4z" fill="currentColor" />
+        <path d="M2 5.5L9 9l7-3.5M9 9v7.5" stroke="var(--ig-blue)" strokeOpacity=".35" strokeWidth="1" strokeLinejoin="round" />
+        <path className="ig-parcel__tick" d="M5.6 11.2l1.9 1.9 3.6-3.8" stroke="var(--ig-blue)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" pathLength={1} />
+      </svg>
     </span>
   )
 }
