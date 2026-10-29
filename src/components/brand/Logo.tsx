@@ -6,8 +6,8 @@ import { routes } from "@/lib/routes"
 type LogoProps = { tone?: "light" | "dark"; size?: "sm" | "md"; href?: string | null; className?: string }
 
 // The crystal "I" mark plus the wordmark set in the UI face. One component,
-// used everywhere the brand shows. The mark is the golden-core edition (clear
-// glass, blue "I", warm core), which reads on light, blue and dark grounds;
+// used everywhere the brand shows. The mark is the frosted silver glass
+// edition (blue crystal "I", soft warm core), which reads on light, blue and dark grounds;
 // tone only sets the wordmark colour.
 export function Logo({ tone = "light", size = "md", href = routes.home(), className }: LogoProps) {
   const mark = size === "sm" ? 28 : 34
