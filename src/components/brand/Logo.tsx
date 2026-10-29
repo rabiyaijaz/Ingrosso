@@ -6,15 +6,15 @@ import { routes } from "@/lib/routes"
 type LogoProps = { tone?: "light" | "dark"; size?: "sm" | "md"; href?: string | null; className?: string }
 
 // The crystal "I" mark plus the wordmark set in the UI face. One component,
-// used everywhere the brand shows. tone="light" (light canvas) uses the
-// sapphire light-edition mark; tone="dark" (blue bands, dark sections) uses
-// the clear-glass dark-edition mark.
+// used everywhere the brand shows. The mark is the golden-core edition (clear
+// glass, blue "I", warm core), which reads on light, blue and dark grounds;
+// tone only sets the wordmark colour.
 export function Logo({ tone = "light", size = "md", href = routes.home(), className }: LogoProps) {
   const mark = size === "sm" ? 28 : 34
   const body = (
     <span className={clx("inline-flex items-center gap-2.5", className)}>
       <Image
-        src={tone === "light" ? "/brand/logo-light.webp" : "/brand/logo-dark.webp"}
+        src="/brand/logo-mark.webp"
         alt=""
         width={mark}
         height={mark}
