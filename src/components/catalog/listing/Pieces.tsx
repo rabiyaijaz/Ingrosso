@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Heading, clx } from "@medusajs/ui"
-import { CheckMini, ChevronDown, Component, Puzzle, ShieldCheck, SquareTwoStack, XMark } from "@medusajs/icons"
+import { CheckMini, ChevronDown, SquareTwoStack, XMark } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
 import { AddToOrder } from "@/components/commerce/AddToOrder"
 import { Figure } from "@/components/commerce/Figure"
@@ -11,7 +11,7 @@ import { commercialView } from "@/lib/commerce"
 import { routes } from "@/lib/routes"
 import type { Viewer } from "@/lib/viewer"
 import { pruneModels, selected, toggle, type FacetParams } from "../Facets"
-import { FAMILIES, GradeBadge, GradeIcon } from "../Grade"
+import { FAMILIES, FAMILY_ICON, FAMILY_NOTE, GradeBadge, GradeIcon } from "../Grade"
 import { PartImage } from "../PartImage"
 import { SortSelect } from "./Client"
 import { SORTS, activeFilters, clearAll, type FindOption, type GradeOption, type Option, type buildFacets } from "./model"
@@ -251,9 +251,7 @@ export function FamilyTabs({ products, params, hrefFor }: { products: Product[];
   // Each family with its glass icon, finished like the grade icons of that family
   const tabs: { id?: string; label: string; icon: React.ReactNode; family: string; note: string }[] = [
     { id: undefined, label: "All grades", icon: <SquareTwoStack />, family: "", note: `${GRADES.length} grades` },
-    { id: "Genuine", label: "Genuine", icon: <ShieldCheck />, family: "Genuine", note: "From the manufacturer" },
-    { id: "Aftermarket", label: "Aftermarket", icon: <Component />, family: "Aftermarket", note: "Made to the spec" },
-    { id: "Third-party", label: "Third-party", icon: <Puzzle />, family: "Third-party", note: "Lowest cost" },
+    ...FAMILIES.map((f) => { const Icon = FAMILY_ICON[f]; return { id: f as string, label: f, icon: <Icon />, family: f as string, note: FAMILY_NOTE[f] } }),
   ]
   return (
     <nav aria-label="Grade family" className="grid grid-cols-2 gap-1.5 rounded-[22px] bg-[color-mix(in_srgb,var(--fg-base)_5%,transparent)] p-1.5 sm:grid-cols-4">

@@ -10,6 +10,8 @@ import {
   StackPerspective,
   Sun,
   BadgeCheck,
+  Component,
+  ShieldCheck,
 } from "@medusajs/icons"
 import { GRADES, gradeById, type Grade, type GradeId } from "@/lib/catalog"
 
@@ -31,6 +33,11 @@ const ICONS: Record<GradeId, React.ComponentType<{ className?: string }>> = {
 }
 
 export const FAMILIES: Grade["family"][] = ["Genuine", "Aftermarket", "Third-party"]
+
+// One icon and one short note per grade family, shared by every family switch
+// (the grade tabs on listings and on the landing page)
+export const FAMILY_ICON: Record<Grade["family"], React.ComponentType> = { Genuine: ShieldCheck, Aftermarket: Component, "Third-party": Puzzle }
+export const FAMILY_NOTE: Record<Grade["family"], string> = { Genuine: "From the manufacturer", Aftermarket: "Made to the spec", "Third-party": "Lowest cost" }
 
 // The grade's glass icon, in the shared rounded-square icon frame
 // (.ig-icon-frame + .ig-glass-icon in globals.css). `bare` drops the frame

@@ -18,7 +18,8 @@ import { GlassActionTile, GlassTile } from "@/components/marketing/GlassTile"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
 
-export const metadata = { title: "Ingrosso — Trade repair parts in every grade" }
+// absolute: the home page title stands alone, without the " · Ingrosso" template
+export const metadata = { title: { absolute: "Ingrosso — Trade repair parts in every grade" } }
 
 const zigzag = (teeth: number, depth = 10, edges: "bottom" | "both" = "bottom") => {
   const pts: string[] = []

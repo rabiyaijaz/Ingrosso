@@ -3,32 +3,44 @@
 import { useState } from "react"
 import { clx } from "@medusajs/ui"
 import { GRADES } from "@/lib/catalog"
-import { GradeIcon } from "@/components/catalog/Grade"
+import { FAMILIES, FAMILY_ICON, GradeIcon } from "@/components/catalog/Grade"
 
-const FAMILIES = ["Genuine", "Aftermarket", "Third-party"] as const
-
-// Plain text tabs over the grade families; the list below changes in place.
+// The three grade families as clear tabs, the same switch as the grade tabs on
+// part listings: a soft track, each family with its glass icon and a short
+// note, the chosen one as a white card. The list below changes in place.
 export function GradeTabs() {
   const [family, setFamily] = useState<(typeof FAMILIES)[number]>("Genuine")
   return (
-    <div className="flex flex-col gap-8">
-      <div role="tablist" aria-label="Grade family" className="flex flex-wrap gap-x-7 gap-y-2">
-        {FAMILIES.map((f) => (
-          <button
-            key={f}
-            role="tab"
-            type="button"
-            aria-selected={f === family}
-            aria-controls="grade-panel"
-            onClick={() => setFamily(f)}
-            className={clx(
-              "text-[18px] leading-7 transition-colors outline-none focus-visible:underline",
-              f === family ? "text-ig-ink font-medium" : "text-ig-ink-soft hover:text-ig-ink"
-            )}
-          >
-            {f}
-          </button>
-        ))}
+    <div className="flex flex-col gap-6">
+      <div role="tablist" aria-label="Grade family" className="grid grid-cols-1 gap-1.5 rounded-[22px] bg-[color-mix(in_srgb,var(--fg-base)_5%,transparent)] p-1.5 sm:grid-cols-3">
+        {FAMILIES.map((f) => {
+          const on = f === family
+          const Icon = FAMILY_ICON[f]
+          const count = GRADES.filter((g) => g.family === f).length
+          return (
+            <button
+              key={f}
+              role="tab"
+              type="button"
+              aria-selected={on}
+              aria-controls="grade-panel"
+              onClick={() => setFamily(f)}
+              className={clx(
+                "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-none transition-[background-color,box-shadow] focus-visible:shadow-borders-focus",
+                on
+                  ? "bg-ui-bg-base shadow-[0_0_0_1.5px_color-mix(in_srgb,var(--ig-blue)_45%,transparent),0_8px_20px_-12px_var(--ig-blue)]"
+                  : "hover:bg-[color-mix(in_srgb,var(--bg-base)_70%,transparent)]"
+              )}
+            >
+              <span className="ig-icon-frame ig-glass-icon" data-size="md" data-family={f}><Icon /></span>
+              <span className="flex min-w-0 flex-col">
+                <span className={clx("txt-compact-medium-plus", on ? "text-ig-ink" : "text-ig-ink-soft group-hover:text-ig-ink")}>{f}</span>
+                {/* Count only: this column is too narrow for the note without cutting it off */}
+                <span className="txt-compact-xsmall text-ig-ink-soft">{count} grades</span>
+              </span>
+            </button>
+          )
+        })}
       </div>
       <ul id="grade-panel" role="tabpanel" className="flex flex-col gap-5">
         {GRADES.filter((g) => g.family === family).map((g) => (
