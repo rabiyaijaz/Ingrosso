@@ -39,6 +39,7 @@ Light, glassy and minimal, in the Apple style: very light blue gradients, froste
 - **Feature bands:** glassy bright blue (`.ig-surface-blue`): blue gradient, soft white light, fine glass grain, white text. Used for the approval section, closing text, footer, top strip and apply panel. No grey or slate bands.
 - **Light sections:** `Ambient` gives a soft gradient with drifting light and scroll parallax.
 - **Part tiles:** `GlassTile` on a deep black-to-blue, mostly blue, background with a breathing glow, cursor tilt and light sweep; label on a frosted strip below the picture.
+- **Landing pictures:** two photographs only. The office plinth (`scene-office`) for the hero, and the floating tiles (`scene-office-wide`) for the four questions beside it, panning one stop per question. Every other section uses the simple logo as its picture (`marketing/LogoStage`, `tone="light"` or `"dark"`).
 - **Brand pictures:** `MotionScene` (focus-in, breathing, glow pulse, light sweep, rising sparkles, scroll and cursor parallax).
 - **Top strip:** a small delivery truck drives along a moving road beside the dispatch countdown; trade promises slide in one after another on the right (`CutoffCountdown withTruck`, `StripTicker`).
 - **Big menus** (landing footer): full-width rows with hairlines, a glass arrow tile that turns solid blue on hover, and a soft blue wash (`.ig-menu`).

@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { clx } from "@medusajs/ui"
 import { DeviceFinder } from "@/components/catalog/DeviceFinder"
@@ -12,7 +11,7 @@ import { BrandMark } from "@/components/brand/BrandMark"
 import { BRANDS, CATEGORIES, PRODUCTS, partCount } from "@/lib/catalog"
 import { ALL_BRANDS_IMAGE, CATEGORY_IMAGE } from "@/lib/visuals"
 import { Ambient } from "@/components/marketing/Ambient"
-import { MotionScene } from "@/components/marketing/MotionScene"
+import { LogoStage } from "@/components/marketing/LogoStage"
 import { GlassActionTile, GlassTile } from "@/components/marketing/GlassTile"
 import { deviceTree } from "@/lib/public"
 import { routes } from "@/lib/routes"
@@ -50,15 +49,18 @@ const QUESTIONS = [
 
 const FRAGMENTS = [<FitFragment key="fit" />, <GradeFragment key="grade" />, <PriceFragment key="price" />, <ShipFragment key="ship" />]
 
-// Landing imagery is Ingrosso logo scenes only (public/brand). Part and device
-// renders (lib/visuals) appear in tiles, never as page imagery.
-// One scene for the hero, then one per question, in order.
+// Landing imagery is two photographs only: the office plinth for the hero and
+// the floating tiles for the questions beside it. Every other section uses
+// the simple logo (LogoStage). Part and device renders appear in tiles only.
+// The wide tiles picture pans across its width, one stop per question.
+const TILES = "/brand/scene-office-wide.webp"
+const TILES_ALT = "Glass Ingrosso tiles floating through a bright office"
 const STAGE = [
   { src: "/brand/scene-office.webp", alt: "The Ingrosso mark on a glass plinth in a bright office" },
-  { src: "/brand/mark-glass.webp", alt: "The Ingrosso mark as a frosted glass tile" },
-  { src: "/brand/mark-glow.webp", alt: "The Ingrosso mark lit from within on a dark ground" },
-  { src: "/brand/scene-network.webp", alt: "The Ingrosso mark on a plinth over a glowing world map" },
-  { src: "/brand/scene-space-wide.webp", alt: "Glass Ingrosso tiles floating against a starfield" },
+  { src: TILES, alt: TILES_ALT, position: "8% center" },
+  { src: TILES, alt: TILES_ALT, position: "45% center" },
+  { src: TILES, alt: TILES_ALT, position: "70% center" },
+  { src: TILES, alt: TILES_ALT, position: "96% center" },
 ]
 
 // Part tiles: one per category, each linking to its category.
@@ -145,9 +147,7 @@ export default async function HomePage() {
       <section className="relative isolate overflow-hidden">
       <Ambient variant="soft" />
       <div className="relative z-[1] mx-auto grid max-w-page items-center gap-10 px-[var(--ig-gutter)] py-[clamp(88px,9vw,160px)] lg:grid-cols-2">
-        <div className="relative mx-auto aspect-square w-full max-w-[640px] overflow-hidden" data-reveal>
-          <Image src="/brand/scene-dark.webp" alt="The Ingrosso mark on a glass plinth in a dark showroom" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
-        </div>
+        <LogoStage className="mx-auto aspect-square w-full max-w-[640px]" />
         {/* Heading and claim first, then the grades to explore, then the actions */}
         <div className="flex flex-col gap-9" data-reveal>
           <div className="flex flex-col gap-5">
@@ -294,11 +294,7 @@ export default async function HomePage() {
 
       {/* Closing photograph, text beside */}
       <section className="overflow-hidden">
-        <div className="relative h-[60svh] overflow-hidden lg:h-[86svh]">
-          <MotionScene glowX="50%" glowY="48%">
-            <Image src="/brand/scene-office-wide.webp" alt="Glass Ingrosso tiles floating through a bright office" fill sizes="100vw" className="object-cover" />
-          </MotionScene>
-        </div>
+        <LogoStage tone="dark" className="h-[44svh] lg:h-[60svh]" />
         <div className="ig-surface-blue overflow-hidden">
         <Ambient variant="blue" />
         <div className="relative z-[1] mx-auto grid max-w-page gap-8 px-[var(--ig-gutter)] py-16 lg:grid-cols-12 lg:py-24" data-reveal>
@@ -315,9 +311,7 @@ export default async function HomePage() {
 
       {/* Footer: photograph half, menu half */}
       <footer className="grid bg-ig-paper lg:min-h-[100svh] lg:grid-cols-2">
-        <div className="relative h-[50svh] overflow-hidden lg:h-auto">
-          <Image src="/brand/mark-glow.webp" alt="The Ingrosso mark lit from within, close up" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" />
-        </div>
+        <LogoStage tone="dark" className="h-[50svh] lg:h-auto" />
         <div className="flex flex-col justify-between gap-16 px-[var(--ig-gutter)] py-14 lg:px-[6vw] lg:pt-20">
           <div className="flex flex-col gap-10">
             <Logo size="sm" href={routes.home()} />
