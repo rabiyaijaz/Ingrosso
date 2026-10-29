@@ -66,7 +66,12 @@ Every icon that sits in a frame (grade icons, brand logos, feature icons) uses `
 - **Wide marks** (a wordmark such as Samsung's) use `data-wide`: twice as wide, same height and radius.
 - **Finish:** `.ig-glass-icon` with `data-family`: `Genuine` solid blue glass, `Aftermarket` clear glass with a blue glyph, `Third-party` clear glass with a grey glyph, `Brand` clear glass with an ink logo that turns the brand colour on hover.
 
-Where each size is used: `xs` in grade badges and brand rows; `sm` in filter chips and the device finder; `md` in the grade list and page headings; `lg` in feature fragments, the device tile and model tiles.
+Where each size is used: `xs` in grade badges and brand rows; `sm` in the device finder; `md` in the grade list and page headings; `lg` in feature fragments, the device tile and model tiles.
+
+**Frame or no frame:**
+
+- **Rounded-square containers** (tags, badges, list rows, tiles): the icon goes in a frame.
+- **Pill buttons and chips** (buttons, filter chips, anything fully rounded): the icon goes in bare, with no frame (`GradeIcon bare` / `.ig-icon-bare`, `BrandMark variant="plain"`, or a plain icon in `Button`). A bare grade icon is tinted by family and takes the chip's text colour when the chip is selected.
 
 ## Brand logos
 

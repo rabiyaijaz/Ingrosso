@@ -50,11 +50,11 @@ export function GradeFilterBar({
                     aria-pressed={on}
                     scroll={false}
                     className={clx(
-                      "inline-flex h-9 items-center gap-2 rounded-full pl-1.5 pr-3.5 txt-compact-small-plus transition-colors outline-none focus-visible:shadow-borders-focus",
+                      "inline-flex h-9 items-center gap-2 rounded-full pl-3 pr-3.5 txt-compact-small-plus transition-colors outline-none focus-visible:shadow-borders-focus",
                       on ? "bg-ig-blue text-ig-on-accent" : "bg-ui-bg-subtle text-ui-fg-base hover:bg-ui-bg-subtle-hover"
                     )}
                   >
-                    <GradeIcon grade={g.id} size="sm" />
+                    <GradeIcon grade={g.id} bare />
                     {g.label}
                     <Figure className={clx("txt-compact-xsmall", on ? "opacity-70" : "text-ui-fg-muted")}>{count}</Figure>
                   </Link>

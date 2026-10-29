@@ -33,10 +33,29 @@ const ICONS: Record<GradeId, React.ComponentType<{ className?: string }>> = {
 export const FAMILIES: Grade["family"][] = ["Genuine", "Aftermarket", "Third-party"]
 
 // The grade's glass icon, in the shared rounded-square icon frame
-// (.ig-icon-frame + .ig-glass-icon in globals.css).
-export function GradeIcon({ grade, size = "sm", className }: { grade: GradeId; size?: "xs" | "sm" | "md" | "lg" | "xl"; className?: string }) {
+// (.ig-icon-frame + .ig-glass-icon in globals.css). `bare` drops the frame
+// for use inside pill buttons and chips (.ig-icon-bare): the glyph alone,
+// tinted by family, or the chip's own colour when the chip is selected.
+export function GradeIcon({
+  grade,
+  size = "sm",
+  bare,
+  className,
+}: {
+  grade: GradeId
+  size?: "xs" | "sm" | "md" | "lg" | "xl"
+  bare?: boolean
+  className?: string
+}) {
   const g = gradeById(grade)
   const Icon = ICONS[grade]
+  if (bare) {
+    return (
+      <span aria-hidden data-family={g.family} className={clx("ig-icon-bare", className)}>
+        <Icon />
+      </span>
+    )
+  }
   return (
     <span aria-hidden data-family={g.family} data-size={size} className={clx("ig-icon-frame ig-glass-icon", className)}>
       <Icon />

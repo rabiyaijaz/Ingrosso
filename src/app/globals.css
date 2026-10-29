@@ -162,6 +162,17 @@ body {
 .ig-icon-frame[data-wide] svg { width: calc(var(--frame) * 1.6); height: calc(var(--frame) * 0.36); }
 
 /*
+  Bare icon: the glyph alone, no frame. Used inside pill buttons and chips,
+  where a frame would sit awkwardly in the round shape. Tinted by family;
+  takes the chip's text colour when the chip is selected (aria-pressed).
+*/
+.ig-icon-bare { display: inline-flex; flex-shrink: 0; color: var(--ig-blue); }
+.ig-icon-bare svg { width: 18px; height: 18px; }
+.ig-icon-bare[data-family="Third-party"] { color: var(--ig-ink-soft); }
+[aria-pressed="true"] > .ig-icon-bare,
+[aria-current="page"] > .ig-icon-bare { color: currentColor; }
+
+/*
   Glass grade icon: a frosted tile with a top sheen and an inner edge, in the
   brand's glass style. data-family sets the tint: Genuine is a solid glass of
   the accent, Aftermarket a clear glass with an accent glyph, Third-party a
