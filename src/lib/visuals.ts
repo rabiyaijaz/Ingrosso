@@ -37,4 +37,4 @@ export const BRAND_IMAGE: Record<string, string> = {
   google: "/ecosystem/google.webp",
   xiaomi: "/ecosystem/xiaomi.webp",
 }
-export const ALL_BRANDS_IMAGE = "/ecosystem/all.webp"
+export const ALL_BRANDS_IMAGE = "/ecosystem/all.png"
