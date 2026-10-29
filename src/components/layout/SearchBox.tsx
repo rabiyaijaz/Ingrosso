@@ -30,7 +30,7 @@ function saveRecent(q: string) {
 
 // Bold the part of a suggestion that matches what was typed, only where a
 // word starts with it (so "g" marks Galaxy, not the g inside Samsung)
-function Highlight({ text, q }: { text: string; q: string }) {
+export function Highlight({ text, q }: { text: string; q: string }) {
   const needle = q.trim()
   const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   const m = needle ? new RegExp(`(^|[^\\p{L}\\p{N}])(${escaped})`, "iu").exec(text) : null
@@ -216,7 +216,7 @@ export function SearchBox({ className, starters }: { className?: string; starter
         <ul
           id={listId}
           role="listbox"
-          className="absolute inset-x-0 top-[calc(100%+6px)] z-50 max-h-[420px] overflow-auto rounded-2xl bg-ui-bg-base p-1.5 shadow-elevation-flyout"
+          className="ig-no-scrollbar absolute inset-x-0 top-[calc(100%+6px)] z-50 max-h-[420px] overflow-auto rounded-2xl bg-ui-bg-base p-1.5 shadow-elevation-flyout"
         >
           {hits.map((h, i) => (
             <li

@@ -55,8 +55,24 @@ export function buildFacets(products: Product[], params: FacetParams, viewer: Vi
       .filter((g) => g.options.length)
   }
 
-  return { grades, cats, brands, models, inStock }
+  // Suggestions for "search within these parts": the models and SKUs in the
+  // list as it stands without the search itself
+  const forFind = without("find")
+  const modelCount = new Map<string, number>()
+  forFind.forEach((p) => p.models.forEach((m) => modelCount.set(m, (modelCount.get(m) ?? 0) + 1)))
+  const findOptions: FindOption[] = [
+    ...[...modelCount.entries()]
+      .map(([slug, count]) => ({ ref: findModel(slug), count }))
+      .filter((x) => x.ref)
+      .sort((a, b) => b.count - a.count)
+      .map(({ ref, count }) => ({ value: ref!.model.name, label: ref!.model.name, detail: `${ref!.model.codes.join(" · ")} · ${count} part${count === 1 ? "" : "s"}`, kind: "model" as const })),
+    ...forFind.map((p) => ({ value: p.sku, label: p.sku, detail: p.name, kind: "sku" as const })),
+  ]
+
+  return { grades, cats, brands, models, inStock, findOptions }
 }
+
+export type FindOption = { value: string; label: string; detail: string; kind: "model" | "sku" }
 
 export type ModelGroup = { series: string; options: Option[] }
 

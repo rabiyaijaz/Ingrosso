@@ -14,7 +14,8 @@ import { pruneModels, selected, toggle, type FacetParams } from "../Facets"
 import { FAMILIES, GradeBadge, GradeIcon } from "../Grade"
 import { PartImage } from "../PartImage"
 import { SortSelect } from "./Client"
-import { SORTS, activeFilters, clearAll, type GradeOption, type Option, type buildFacets } from "./model"
+import { SORTS, activeFilters, clearAll, type FindOption, type GradeOption, type Option, type buildFacets } from "./model"
+import { FindField } from "./FindField"
 
 type Href = (p: FacetParams) => string
 type Facets = ReturnType<typeof buildFacets>
@@ -93,26 +94,11 @@ export function GradeChecks({ options, params, hrefFor }: { options: GradeOption
 }
 
 // ─── Search within the list ─────────────────────────────────────────────────
-// A plain GET form, so it works without JavaScript and the text stays in the
-// URL with every other filter. Matches name, SKU, model name or model code.
-export function FindInList({ params, hrefFor, className }: { params: FacetParams; hrefFor: Href; className?: string }) {
+// A plain GET form, so the text stays in the URL with every other filter.
+// Matches name, SKU, model name or model code; suggests from the list itself.
+export function FindInList({ params, hrefFor, options, className }: { params: FacetParams; hrefFor: Href; options: FindOption[]; className?: string }) {
   const target = new URL(hrefFor({ ...params, find: undefined }), "http://x")
-  return (
-    <form action={target.pathname} method="get" role="search" className={clx("relative", className)}>
-      {[...target.searchParams].map(([k, v]) => (
-        <input key={k} type="hidden" name={k} value={v} />
-      ))}
-      <MagnifyingGlass aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ui-fg-muted" />
-      <input
-        type="search"
-        name="find"
-        defaultValue={params.find ?? ""}
-        aria-label="Search within these parts"
-        placeholder="Model, code or SKU"
-        className="h-9 w-full rounded-full bg-ui-bg-field pl-9 pr-3 txt-compact-small text-ui-fg-base shadow-borders-base outline-none transition-shadow placeholder:text-ui-fg-muted hover:bg-ui-bg-field-hover focus:shadow-borders-interactive-with-active"
-      />
-    </form>
-  )
+  return <FindField action={target.pathname} hidden={[...target.searchParams]} initial={params.find} options={options} className={className} />
 }
 
 // Brands, each opening its models (grouped by series) once ticked. Unticking
@@ -198,7 +184,7 @@ export function FilterPanel({
           <ChevronDown className="transition-transform group-open/m:rotate-180" />
         </summary>
         <div className="mt-4 flex flex-col gap-3">
-          <FindInList params={params} hrefFor={hrefFor} />
+          <FindInList params={params} hrefFor={hrefFor} options={facets.findOptions} />
           {panel}
         </div>
       </details>
@@ -214,7 +200,7 @@ export function FilterPanel({
               </Link>
             )}
           </div>
-          <FindInList params={params} hrefFor={hrefFor} />
+          <FindInList params={params} hrefFor={hrefFor} options={facets.findOptions} />
         </div>
         <div className="ig-scroll-quiet min-h-0 flex-1 p-4 pt-3">{panel}</div>
       </div>
