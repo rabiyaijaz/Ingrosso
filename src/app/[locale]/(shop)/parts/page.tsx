@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, MagnifyingGlass } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
@@ -6,7 +7,7 @@ import { GlassTile } from "@/components/marketing/GlassTile"
 import { BRANDS, PRODUCTS } from "@/lib/catalog"
 import { getCategories } from "@/lib/categories"
 import { routes } from "@/lib/routes"
-import { CATEGORY_IMAGE } from "@/lib/visuals"
+import { BRAND_IMAGE, CATEGORY_IMAGE } from "@/lib/visuals"
 
 export const metadata = { title: "All parts" }
 
@@ -33,38 +34,54 @@ export default async function PartsPage() {
         </form>
       </PageHeading>
 
-      <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-        {categories.map((c) => (
-          <li key={c.slug}>
-            <GlassTile
-              href={routes.category(c.slug)}
-              src={CATEGORY_IMAGE[c.slug] ?? CATEGORY_IMAGE.tools}
-              label={c.plural}
-              detail={`${count(c.slug)} part${count(c.slug) === 1 ? "" : "s"}`}
-            />
-          </li>
-        ))}
-      </ul>
-
-      <section className="flex flex-col gap-3 rounded-2xl bg-ui-bg-base p-5 shadow-elevation-card-rest">
+      {/* Start from the handset: one glass card per brand with its 3D device render */}
+      <section aria-labelledby="by-device" className="flex flex-col gap-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="txt-compact-medium-plus">Or start from the handset</h2>
+          <h2 id="by-device" className="txt-large-plus">Start from the handset</h2>
           <Link href={routes.devices()} className="flex items-center gap-1 txt-compact-small-plus text-ui-fg-interactive hover:underline">
             All devices <ArrowRight />
           </Link>
         </div>
-        <ul className="flex flex-wrap gap-2">
-          {BRANDS.map((b) => (
-            <li key={b.slug}>
-              <Link href={routes.brand(b.slug)} className="flex h-10 items-center gap-2 rounded-full px-4 txt-compact-small-plus text-ui-fg-base shadow-borders-base transition-colors hover:bg-ui-bg-base-hover">
-                <BrandMark brand={b.slug} variant="plain" />
-                {b.name}
-                <span className="txt-compact-xsmall text-ui-fg-muted">{b.series.reduce((n, s) => n + s.models.length, 0)} models</span>
-              </Link>
+        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {BRANDS.map((b) => {
+            const models = b.series.reduce((n, s) => n + s.models.length, 0)
+            return (
+              <li key={b.slug}>
+                <Link href={routes.brand(b.slug)} className="ig-brand-card group">
+                  <span className="relative z-[1] flex max-w-[58%] flex-col gap-2">
+                    <BrandMark brand={b.slug} size="sm" />
+                    <span className="flex flex-col">
+                      <span className="txt-compact-medium-plus text-ui-fg-base">{b.name}</span>
+                      <span className="txt-compact-small text-ui-fg-subtle">{models} models · {b.series.length} series</span>
+                    </span>
+                    <span className="mt-auto flex items-center gap-1 txt-compact-small-plus text-ui-fg-interactive">
+                      Choose a model <ArrowRight className="transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </span>
+                  {BRAND_IMAGE[b.slug] && (
+                    <Image src={BRAND_IMAGE[b.slug]} alt="" width={240} height={240} sizes="160px" className="ig-brand-card__img" />
+                  )}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </section>
+
+      <section aria-labelledby="by-part" className="flex flex-col gap-3">
+        <h2 id="by-part" className="txt-large-plus">Or browse by part</h2>
+        <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+          {categories.map((c) => (
+            <li key={c.slug}>
+              <GlassTile
+                href={routes.category(c.slug)}
+                src={CATEGORY_IMAGE[c.slug] ?? CATEGORY_IMAGE.tools}
+                label={c.plural}
+                detail={`${count(c.slug)} part${count(c.slug) === 1 ? "" : "s"}`}
+              />
             </li>
           ))}
         </ul>
-      </section>
-    </PageContainer>
+      </section>    </PageContainer>
   )
 }
