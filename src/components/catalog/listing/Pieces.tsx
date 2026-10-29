@@ -183,7 +183,6 @@ export function FilterPanel({
   // narrowing order a repairer thinks in (brand → grade → part).
   const panel = (
     <div className="flex flex-col">
-      <FindInList params={params} hrefFor={hrefFor} className="mb-3" />
       {show.includes("stock") && facets.inStock !== null && group("Availability", <StockToggle count={facets.inStock} params={params} hrefFor={hrefFor} />)}
       {show.includes("brand") && facets.brands.length > 1 &&
         group("Brand", <BrandChecks facets={facets} params={params} hrefFor={hrefFor} />)}
@@ -198,19 +197,26 @@ export function FilterPanel({
           Filters{active ? ` (${active})` : ""}
           <ChevronDown className="transition-transform group-open/m:rotate-180" />
         </summary>
-        <div className="mt-4">{panel}</div>
-      </details>
-      {/* Never taller than the screen while sticky: scrolls on its own, no scrollbar */}
-      <div className="ig-scroll-quiet hidden max-h-[calc(100svh-2rem)] rounded-2xl bg-ui-bg-base p-4 shadow-elevation-card-rest lg:block">
-        <div className="mb-3 flex items-center justify-between px-2">
-          <Heading level="h2" className="txt-compact-medium-plus">Filters</Heading>
-          {active > 0 && (
-            <Link href={hrefFor(clearAll(params))} scroll={false} className="txt-compact-small text-ui-fg-interactive hover:underline">
-              Clear all
-            </Link>
-          )}
+        <div className="mt-4 flex flex-col gap-3">
+          <FindInList params={params} hrefFor={hrefFor} />
+          {panel}
         </div>
-        {panel}
+      </details>
+      {/* Never taller than the screen while sticky. The heading and search stay
+          put; only the filter groups below them scroll, with no scrollbar. */}
+      <div className="hidden max-h-[calc(100svh-2rem)] flex-col rounded-2xl bg-ui-bg-base shadow-elevation-card-rest lg:flex">
+        <div className="flex flex-col gap-3 border-b border-ui-border-base p-4 pb-3">
+          <div className="flex items-center justify-between px-2">
+            <Heading level="h2" className="txt-compact-medium-plus">Filters</Heading>
+            {active > 0 && (
+              <Link href={hrefFor(clearAll(params))} scroll={false} className="txt-compact-small text-ui-fg-interactive hover:underline">
+                Clear all
+              </Link>
+            )}
+          </div>
+          <FindInList params={params} hrefFor={hrefFor} />
+        </div>
+        <div className="ig-scroll-quiet min-h-0 flex-1 p-4 pt-3">{panel}</div>
       </div>
     </aside>
   )

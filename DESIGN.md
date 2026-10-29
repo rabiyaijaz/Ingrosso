@@ -93,7 +93,7 @@ Every listing has a **search within these parts** field (`FindInList`, `?find=`)
 
 Filter order in every layout: Availability (one "In stock only" switch), Brand, Grade, Part. Ticking a brand opens its models underneath, grouped by series (`BrandChecks`, `?model=`); unticking the brand clears its models.
 
-Prices in lists: the unit price, then the best quantity-break price as a blue tag (stacked-boxes icon, `25+ · €197.10`). Stock and price never wrap. The sticky filter panel scrolls on its own with no visible scrollbar (`.ig-scroll-quiet`).
+Prices in lists: the unit price, then the best quantity-break price as a blue tag (stacked-boxes icon, `25+ · €197.10`). Stock and price never wrap. In the sticky filter panel the heading and the search stay fixed; only the filter groups below scroll, with no visible scrollbar (`.ig-scroll-quiet`).
 
 Filter rules in every layout: real checkboxes with counts, a chevron on anything that opens, every active filter shown as a removable chip with Clear all, filters kept in the URL, no price sort (CAT-12), and "In stock only" shown to approved accounts only. On phones the filter panel folds behind one Filters button. The main app keeps `DEFAULT_LISTING` in `lib/listing-variants.ts` until a layout is chosen.
 
