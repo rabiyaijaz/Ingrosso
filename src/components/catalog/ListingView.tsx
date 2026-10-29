@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/Button"
 import { FacetGroup, GradeFilterBar, applyFacets, selected, type FacetParams } from "./Facets"
 import { ProductTable } from "./ProductTable"
 import { FilterDropdown } from "./listing/Client"
-import { ActiveFilters, BrandChecks, CheckList, FamilyTabs, FindInList, FilterPanel, GradeChecks, ProductCards, ResultsBar } from "./listing/Pieces"
+import { ActiveFilters, BrandChecks, CheckList, FamilyTabs, FindInList, FilterPanel, GradeChecks, ProductCards, ResultsBar, listingView } from "./listing/Pieces"
 import { buildFacets, filterProducts, sortProducts } from "./listing/model"
 
 type Props = {
@@ -32,8 +32,9 @@ export async function ListingView(props: Props) {
   return <CurrentLayout {...props} />
 }
 
-// A · Filter sidebar + table: the industrial-supplier pattern (Grainger,
-// McMaster-Carr, Digi-Key). Every filter in one sticky panel on the left.
+// A · Filter sidebar: the industrial-supplier pattern (Grainger,
+// McMaster-Carr, Digi-Key). Every filter in one sticky panel on the left;
+// results as the list (table) or, switched on by the buyer, as cards.
 function SidebarLayout({ products, viewer, params, hrefFor, facets, groupByCategory }: Props) {
   const f = buildFacets(products, params, viewer)
   const visible = sortProducts(filterProducts(products, params, viewer), params.sort)
@@ -41,9 +42,13 @@ function SidebarLayout({ products, viewer, params, hrefFor, facets, groupByCateg
     <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
       <FilterPanel facets={f} params={params} hrefFor={hrefFor} show={["grade", ...facets, "stock"]} />
       <div className="flex min-w-0 flex-col gap-4">
-        <ResultsBar shown={visible.length} total={products.length} params={params} hrefFor={hrefFor} />
+        <ResultsBar shown={visible.length} total={products.length} params={params} hrefFor={hrefFor} views />
         <ActiveFilters params={params} hrefFor={hrefFor} />
-        <ProductTable products={visible} viewer={viewer} groupByCategory={groupByCategory && !params.sort} />
+        {listingView(params) === "cards" ? (
+          <ProductCards products={visible} viewer={viewer} />
+        ) : (
+          <ProductTable products={visible} viewer={viewer} groupByCategory={groupByCategory && !params.sort} />
+        )}
       </div>
     </div>
   )

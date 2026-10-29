@@ -21,7 +21,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       <ListingView
         products={products}
         viewer={viewer}
-        params={{ grade: sp.grade, cat: sp.cat, brand: sp.brand, model: sp.model, find: sp.find, fam: sp.fam, stock: sp.stock, sort: sp.sort }}
+        params={{ grade: sp.grade, cat: sp.cat, brand: sp.brand, model: sp.model, find: sp.find, fam: sp.fam, stock: sp.stock, sort: sp.sort, view: sp.view }}
         hrefFor={(fp) => {
           // One query string, whether or not there is a search term (an empty q has no "?")
           const qs = new URLSearchParams(Object.entries({ q, ...fp }).filter((e): e is [string, string] => !!e[1]))

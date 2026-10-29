@@ -117,4 +117,5 @@ export function activeFilters(params: FacetParams) {
   return chips
 }
 
-export const clearAll = (params: FacetParams): FacetParams => ({ sort: params.sort })
+// Clears the filters; keeps how the results are shown (sort, list or cards)
+export const clearAll = (params: FacetParams): FacetParams => ({ sort: params.sort, view: params.view })

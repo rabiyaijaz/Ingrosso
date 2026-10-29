@@ -8,7 +8,8 @@ export const LISTING_VARIANTS = [
 
 export type ListingVariant = (typeof LISTING_VARIANTS)[number]["id"]
 
-export const DEFAULT_LISTING: ListingVariant = "current"
+// Chosen layout: the filter sidebar, with a List / Cards switch
+export const DEFAULT_LISTING: ListingVariant = "sidebar"
 
 export const LISTING_COOKIE = "ig_lab_listing"
 

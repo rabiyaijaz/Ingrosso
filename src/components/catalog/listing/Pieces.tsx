@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { EmptyState } from "@/components/ui/EmptyState"
 import { Heading, clx } from "@medusajs/ui"
-import { CheckMini, ChevronDown, SquareTwoStack, XMark } from "@medusajs/icons"
+import { CheckMini, ChevronDown, GridLayout, ListBullet, SquareTwoStack, XMark } from "@medusajs/icons"
 import { BrandMark } from "@/components/brand/BrandMark"
 import { AddToOrder } from "@/components/commerce/AddToOrder"
 import { Figure } from "@/components/commerce/Figure"
@@ -235,14 +235,39 @@ export function ActiveFilters({ params, hrefFor }: { params: FacetParams; hrefFo
 }
 
 // ─── Results bar: count + sort ──────────────────────────────────────────────
-export function ResultsBar({ shown, total, params, hrefFor }: { shown: number; total: number; params: FacetParams; hrefFor: Href }) {
+export function ResultsBar({ shown, total, params, hrefFor, views }: { shown: number; total: number; params: FacetParams; hrefFor: Href; views?: boolean }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <p className="txt-compact-medium text-ui-fg-subtle">
         <Figure className="font-medium text-ui-fg-base">{shown}</Figure> of <Figure>{total}</Figure> parts
       </p>
-      <SortSelect value={params.sort ?? ""} options={SORTS.map((s) => ({ ...s, href: hrefFor({ ...params, sort: s.value || undefined }) }))} />
+      <div className="flex items-center gap-2">
+        {views && <ViewToggle params={params} hrefFor={hrefFor} />}
+        <SortSelect value={params.sort ?? ""} options={SORTS.map((s) => ({ ...s, href: hrefFor({ ...params, sort: s.value || undefined }) }))} />
+      </div>
     </div>
+  )
+}
+
+// List (the table, default) or Cards. Kept in the URL with the filters, so
+// changing a filter keeps the view and a link opens the same view.
+export const listingView = (params: FacetParams) => (params.view === "cards" ? "cards" : "list")
+
+function ViewToggle({ params, hrefFor }: { params: FacetParams; hrefFor: Href }) {
+  const on = listingView(params)
+  const opts = [
+    { id: "list", label: "List", icon: <ListBullet />, href: hrefFor({ ...params, view: undefined }) },
+    { id: "cards", label: "Cards", icon: <GridLayout />, href: hrefFor({ ...params, view: "cards" }) },
+  ]
+  return (
+    <nav aria-label="View" data-fit className="ig-steps">
+      {opts.map((o) => (
+        <Link key={o.id} href={o.href} scroll={false} aria-current={on === o.id ? "page" : undefined} className="ig-steps__tab txt-compact-small-plus">
+          {o.icon}
+          <span className="sr-only sm:not-sr-only">{o.label}</span>
+        </Link>
+      ))}
+    </nav>
   )
 }
 

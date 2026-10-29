@@ -28,7 +28,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
       <ListingView
         products={products}
         viewer={viewer}
-        params={{ grade: sp.grade, brand: sp.brand, model: sp.model, find: sp.find, fam: sp.fam, stock: sp.stock, sort: sp.sort }}
+        params={{ grade: sp.grade, brand: sp.brand, model: sp.model, find: sp.find, fam: sp.fam, stock: sp.stock, sort: sp.sort, view: sp.view }}
         hrefFor={(fp) => routes.category(cat.slug, fp)}
         facets={["brand"]}
       />

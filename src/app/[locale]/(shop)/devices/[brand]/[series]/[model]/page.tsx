@@ -23,7 +23,7 @@ export default async function ModelPage({ params, searchParams }: { params: Prom
   if (!ref || ref.brand.slug !== p.brand || ref.series.slug !== p.series) notFound()
   const viewer = await getViewer()
   const { brand, series, model } = ref
-  const facetParams = { grade: sp.grade, cat: sp.cat, find: sp.find, fam: sp.fam, stock: sp.stock, sort: sp.sort }
+  const facetParams = { grade: sp.grade, cat: sp.cat, find: sp.find, fam: sp.fam, stock: sp.stock, sort: sp.sort, view: sp.view }
 
   return (
     <PageContainer className="flex flex-col gap-8 pt-6">
