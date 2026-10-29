@@ -71,30 +71,30 @@ export function OrderSummary({
         <p className="-mt-2 txt-compact-xsmall text-ui-fg-subtle"><CutoffCountdown /></p>
       </aside>
 
-      {/* Free delivery: a light strip under the summary; the truck drives along as the order grows */}
+      {/* Free delivery: one line and a bar under the summary; the truck drives along as the order grows */}
       {freeShippingApplies && !masked && (
-        <div className="rounded-2xl bg-ui-bg-subtle px-4 py-3">
-          <p className="txt-compact-small text-ui-fg-base">
+        <div className="px-1 pt-1" title={`Free PostNL delivery over ${formatMoney(FREE_SHIPPING_FROM)} before VAT`}>
+          <p className="txt-compact-small text-ui-fg-subtle">
             {left > 0 ? (
               <>
-                <Figure className="txt-compact-small-plus">{formatMoney(left)}</Figure> more for free delivery
+                <Figure className="text-ui-fg-base">{formatMoney(left)}</Figure> to free delivery
               </>
             ) : (
-              <span className="txt-compact-small-plus">Free delivery unlocked</span>
+              <span className="text-ui-fg-base">Free delivery</span>
             )}
           </p>
-          <div className="relative mt-3 h-1.5 rounded-full bg-ui-bg-component" role="progressbar" aria-label="Towards free delivery" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}>
+          {/* Track in ink, so it reads on the page canvas in every theme */}
+          <div className="relative mt-3 h-1.5 rounded-full bg-[color-mix(in_srgb,var(--fg-base)_12%,transparent)]" role="progressbar" aria-label="Towards free delivery" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}>
             <span className="ig-summary__fill absolute inset-y-0 left-0 rounded-full" style={{ width: `${progress * 100}%` }} />
             <span aria-hidden className={clx("ig-summary__truck absolute -top-[16px]", left <= 0 && "is-done")} style={{ left: `calc(${progress * 100}% - 10px)` }}>
               <svg viewBox="0 0 24 16" width="20" height="13" fill="none">
                 <path d="M1.5 3.2c0-.66.54-1.2 1.2-1.2h10.1c.66 0 1.2.54 1.2 1.2V12H1.5z" fill="currentColor" />
                 <path d="M14 5.5h4.3c.4 0 .78.2 1 .53l2.4 3.4c.14.2.2.44.2.68V12H14z" fill="currentColor" opacity=".7" />
-                <circle cx="5.5" cy="12.6" r="2" fill="currentColor" stroke="var(--bg-subtle)" strokeWidth="1.2" />
-                <circle cx="17.5" cy="12.6" r="2" fill="currentColor" stroke="var(--bg-subtle)" strokeWidth="1.2" />
+                <circle cx="5.5" cy="12.6" r="2" fill="currentColor" stroke="var(--ig-paper)" strokeWidth="1.2" />
+                <circle cx="17.5" cy="12.6" r="2" fill="currentColor" stroke="var(--ig-paper)" strokeWidth="1.2" />
               </svg>
             </span>
           </div>
-          <p className="mt-2 txt-compact-xsmall text-ui-fg-subtle">PostNL is free over {formatMoney(FREE_SHIPPING_FROM)} before VAT.</p>
         </div>
       )}
     </div>

@@ -12,7 +12,6 @@ import { routes } from "@/lib/routes"
 import { CARRIERS, PAYMENTS, VAT_RATE, orderTotals, type CarrierId, type PaymentId } from "@/lib/totals"
 import { Figure } from "./Figure"
 import { OrderSummary, type SummaryLine } from "./OrderSummary"
-import { StepLabel } from "@/components/ui/StepLabel"
 import { CardIcon, ChoiceCard } from "./ChoiceCard"
 import { Bolt, BuildingStorefront, CreditCard, DocumentText, MapPin, Paypal, Receipt, TruckFast } from "@medusajs/icons"
 
@@ -78,19 +77,29 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
       <ProgressTabs value={step} onValueChange={(v) => setStep(v as StepId)} className="flex flex-col gap-8">
-        <ProgressTabs.List className="ig-steps">
-          {STEPS.map((s, i) => (
-            <ProgressTabs.Trigger
-              key={s.id}
-              value={s.id}
-              disabled={i > reached}
-              status={i < index || i < reached ? "completed" : i === index ? "in-progress" : "not-started"}
-              className={clx("ig-steps__tab", (i < index || i < reached) && i !== index && "is-done")}
-            >
-              <StepLabel n={i + 1} label={s.label} hint={s.hint} done={(i < index || i < reached) && i !== index} />
-            </ProgressTabs.Trigger>
-          ))}
-        </ProgressTabs.List>
+        {/* Steps and the next action in one row at the top, so moving on never needs a scroll */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <ProgressTabs.List className="ig-steps">
+            {STEPS.map((s, i) => (
+              <ProgressTabs.Trigger
+                key={s.id}
+                value={s.id}
+                status={i < index || i < reached ? "completed" : i === index ? "in-progress" : "not-started"}
+                className="ig-steps__tab"
+              >
+                {s.label}
+              </ProgressTabs.Trigger>
+            ))}
+          </ProgressTabs.List>
+          <div className="flex items-center gap-2">
+            {index > 0 && <Button variant="secondary" onClick={() => setStep(STEPS[index - 1].id)}>Back</Button>}
+            {step === "review" ? (
+              <Button onClick={place} isLoading={pending}>Place order</Button>
+            ) : (
+              <Button onClick={() => go(index + 1)}>Continue</Button>
+            )}
+          </div>
+        </div>
 
         <ProgressTabs.Content value="delivery" className="flex flex-col gap-5">
           <StepHead title="Where should it go?" body="Your saved delivery address. Add more addresses from your account." />
@@ -157,15 +166,6 @@ export function CheckoutForm({ lines, subtotal, masked, company, address }: Prop
             </div>
           </div>
         </ProgressTabs.Content>
-
-        <div className={clx("flex items-center gap-3", index > 0 ? "justify-between" : "justify-end")}>
-          {index > 0 && <Button variant="secondary" size="large" onClick={() => setStep(STEPS[index - 1].id)}>Back</Button>}
-          {step === "review" ? (
-            <Button size="large" onClick={place} isLoading={pending}>Place order</Button>
-          ) : (
-            <Button size="large" onClick={() => go(index + 1)}>Continue</Button>
-          )}
-        </div>
       </ProgressTabs>
 
       <OrderSummary lines={lines} totals={totals} masked={masked} freeShippingApplies={!!CARRIERS.find((c) => c.id === carrier)?.freeAbove} />

@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Checkbox, Heading, Hint, Input, Label, ProgressTabs, Select, Text, clx } from "@medusajs/ui"
 import { Button } from "@/components/ui/Button"
-import { StepLabel } from "@/components/ui/StepLabel"
 import { submitApplication } from "@/app/actions"
 import { LAB } from "@/lib/lab"
 import { routes } from "@/lib/routes"
@@ -147,9 +146,9 @@ export function ApplicationForm() {
             value={s.id}
             disabled={i > draft.reached}
             status={i < index || i < draft.reached ? "completed" : i === index ? "in-progress" : "not-started"}
-            className={clx("ig-steps__tab", (i < index || i < draft.reached) && i !== index && "is-done")}
+            className="ig-steps__tab"
           >
-            <StepLabel n={i + 1} label={s.label} hint={s.hint} done={(i < index || i < draft.reached) && i !== index} />
+              {s.label}
           </ProgressTabs.Trigger>
         ))}
       </ProgressTabs.List>

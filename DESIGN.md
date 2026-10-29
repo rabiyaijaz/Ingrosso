@@ -80,7 +80,7 @@ Where each size is used: `xs` in grade badges and brand rows; `sm` in the device
 - **Card heads** (address, delivery and payment options, review cards, the order summary): a plain icon in the accent colour, no frame (`commerce/ChoiceCard` `CardIcon`).
 - **Order views** (cart, checkout summary): a small part picture beside each line; totals as plain rows, the grand total in larger type, no coloured band.
 
-**Steppers** (checkout, application): `ui/StepLabel` inside Medusa ProgressTabs with `.ig-steps`. Equal-width steps, only as wide as needed; a numbered rounded-square badge that becomes a tick when done; name plus a short hint (hidden on phones); a joining line that fills with the accent; the current step has a filled badge. Kept light: no cards or glow.
+**Step tabs** (checkout, application): a light segmented control (`.ig-steps`): one rounded track, equal-width steps with centred labels and Medusa's status icon, the current step as a white pill. Checkout steps are all clickable, with Back and Continue in the same row at the top; the application form opens steps as they are reached, because each is checked before moving on.
 
 ## Part listings (layouts under review)
 
